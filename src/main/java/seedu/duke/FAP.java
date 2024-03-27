@@ -13,7 +13,6 @@ import seedu.duke.ui.Ui;
 
 public class FAP {
 
-
     public static ModuleList moduleList = new ModuleList();
     public static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
 
