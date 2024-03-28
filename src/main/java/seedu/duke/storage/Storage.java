@@ -64,14 +64,20 @@ public class Storage {
 
     private static Module getModule(String line) throws ModuleException {
         try {
-            String[] parts = line.split(" ", 5);
+            String[] parts = line.split(" ", 6);
             String moduleCode = parts[0];
-            int moduleMC = Integer.parseInt(parts[1]);
-            String moduleGrade = parts[2];
+            String moduleGrade = parts[1];
+            int moduleMC = Integer.parseInt(parts[2]);
             int moduleDate = Integer.parseInt(parts[3]);
             String moduleDescription = parts[4];
+            String moduleStatus = parts[5];
             Module module = new Module(moduleCode, moduleMC, moduleDate, moduleDescription);
-            module.setModuleGrade(moduleGrade);
+            if (moduleStatus.equals("true")) {
+                module.setModuleStatus(true);
+            }
+            if (!moduleGrade.equals("null")) {
+                module.setModuleGrade(moduleGrade);
+            }
             return module;
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ModuleException("Module data is corrupted.");
@@ -83,7 +89,8 @@ public class Storage {
                 module.getModuleGrade() + ' ' +
                 module.getModuleMC() + ' ' +
                 module.getModuleDate() + ' ' +
-                module.getModuleDescription();
+                module.getModuleDescription() + ' ' +
+                module.getModuleStatus();
     }
 
 }

@@ -15,6 +15,7 @@ public class Module {
         this.moduleCode = moduleCode;
         this.moduleMC = moduleMC;
         this.moduleDate = moduleDate;
+        this.moduleTaken = false;
         this.moduleGrade = null;
         this.moduleDescription = moduleDescription;
     }

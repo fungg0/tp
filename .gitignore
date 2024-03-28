@@ -17,3 +17,4 @@ bin/
 text-ui-test/EXPECTED-UNIX.TXT
 src/squenceDiag.puml
 src/ModulePUML.puml
+data/ModuleData.txt
