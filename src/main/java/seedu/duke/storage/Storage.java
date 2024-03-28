@@ -2,6 +2,7 @@ package seedu.duke.storage;
 
 import seedu.duke.exceptions.ModuleException;
 import seedu.duke.modules.Module;
+import static seedu.duke.FAP.jsonManager;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -54,7 +55,7 @@ public class Storage {
             while (input.hasNext()) {
                 String line = input.nextLine();
                 Module module = getModule(line);
-                moduleList.addModule(module);
+                moduleList.add(module);
             }
             input.close();
         } catch (ModuleException | FileNotFoundException e) {
@@ -64,13 +65,18 @@ public class Storage {
 
     private static Module getModule(String line) throws ModuleException {
         try {
-            String[] parts = line.split(" ", 6);
+            String[] parts = line.split(" ", 4);
             String moduleCode = parts[0];
             String moduleGrade = parts[1];
-            int moduleMC = Integer.parseInt(parts[2]);
-            int moduleDate = Integer.parseInt(parts[3]);
-            String moduleDescription = parts[4];
-            String moduleStatus = parts[5];
+            int moduleDate = Integer.parseInt(parts[2]);
+            String moduleStatus = parts[3];
+            if (jsonManager.moduleExist(moduleCode)) {
+                jsonManager.getModuleInfo(moduleCode);
+            } else {
+                throw new ModuleException("Module does not exist in NUS.");
+            }
+            int moduleMC = jsonManager.getModuleMC();
+            String moduleDescription = jsonManager.getModuleDescription();
             Module module = new Module(moduleCode, moduleMC, moduleDate, moduleDescription);
             if (moduleStatus.equals("true")) {
                 module.setModuleStatus(true);
@@ -87,9 +93,7 @@ public class Storage {
     public static String toString(Module module) {
         return module.getModuleCode() + ' ' +
                 module.getModuleGrade() + ' ' +
-                module.getModuleMC() + ' ' +
                 module.getModuleDate() + ' ' +
-                module.getModuleDescription() + ' ' +
                 module.getModuleStatus();
     }
 

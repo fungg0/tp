@@ -1,1 +1,5 @@
-CS1010 A 4 2 programming true
+CS1010 A 2 true
+CS2030 A 4 true
+CS2040 A 4 true
+CS2100 A 4 true
+CS4240 B 5 true
