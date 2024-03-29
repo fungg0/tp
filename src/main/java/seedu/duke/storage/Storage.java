@@ -79,7 +79,7 @@ public class Storage {
             String moduleDescription = jsonManager.getModuleDescription();
             Module module = new Module(moduleCode, moduleMC, moduleDate, moduleDescription);
             if (moduleStatus.equals("true")) {
-                module.setModuleStatus(true);
+                module.setModuleTaken(true);
             }
             if (!moduleGrade.equals("null")) {
                 module.setModuleGrade(moduleGrade);
