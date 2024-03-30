@@ -19,7 +19,7 @@ public abstract class CommandMetadata {
     static {
         logger.setLevel(Level.OFF);
 
-        argRegexMap.put("name", "n/(?<name>[A-Za-z ]+)");
+        argRegexMap.put("name", "n/(?<name>[A-Za-z]+(?: [A-Za-z]+)*)");
         argRegexMap.put("currentSem", "curr/(?<currentSem>[1-8])");
         argRegexMap.put("graduationSem", "grad/(?<graduationSem>[1-8])");
         argRegexMap.put("courseCode", "c/(?<courseCode>[A-Za-z]{2,3}\\d{4}[A-Za-z]?)");
