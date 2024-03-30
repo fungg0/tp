@@ -41,7 +41,7 @@ public class FAPTest {
 
     @Test
     public void testInit() {
-        String simulatedUserInput = "init n/bob" + System.lineSeparator();
+        String simulatedUserInput = "init n/bob curr/4 grad/8" + System.lineSeparator();
         provideInput(simulatedUserInput);
 
         FAP.main(new String[]{});
@@ -54,7 +54,8 @@ public class FAPTest {
                 "__________________________________________________",
                 "__________________________________________________",
                 "Hello bob!",
-                "What would you like to do today?",
+                "You are currently in Semester 4",
+                "and expected to graduate in Semester 8",
                 "__________________________________________________",
                 "An error occurred: No line found"
         ).replace(System.lineSeparator(), "\n");
@@ -75,7 +76,7 @@ public class FAPTest {
                 "What can I do for you?",
                 "__________________________________________________",
                 "__________________________________________________",
-                "init command: Error in name",
+                "init command: Invalid argument format/delimiters used",
                 "__________________________________________________",
                 "An error occurred: No line found"
         ).replace(System.lineSeparator(), "\n");

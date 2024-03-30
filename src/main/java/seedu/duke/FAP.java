@@ -7,6 +7,7 @@ import static seedu.duke.storage.Storage.loadModulesFromFile;
 import static seedu.duke.storage.Storage.saveModulesToFile;
 import static seedu.duke.ui.Ui.printGreeting;
 
+import seedu.duke.user.User;
 import seedu.duke.command.Command;
 import seedu.duke.json.JsonManager;
 import seedu.duke.modules.ModuleList;
@@ -15,6 +16,7 @@ import seedu.duke.ui.Ui;
 
 public class FAP {
 
+    public static User user = new User();
     public static ModuleList moduleList = new ModuleList();
     public static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
 
@@ -24,6 +26,7 @@ public class FAP {
         LOGGER.setLevel(Level.OFF);
         try {
             loadModulesFromFile();
+            user.resetModuleStatuses();
             printGreeting();
             assert moduleList != null : "moduleList should not be null";
             runApplication();
@@ -46,6 +49,7 @@ public class FAP {
                 LOGGER.log(Level.INFO, "User input: " + userInput);
                 Command command = Parser.getCommand(userInput);
                 command.execute(userInput);
+                user.resetModuleStatuses();
                 saveModulesToFile("data/moduleList.txt");
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
