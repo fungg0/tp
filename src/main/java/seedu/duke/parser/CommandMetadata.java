@@ -147,7 +147,6 @@ public abstract class CommandMetadata {
         for (int i = 0; i < groupArguments.length; i++) {
             validateUserArguments(userInputParts[i+1], groupArguments[i]);
         }
-        return;
     }
 
     protected abstract Command createCommandInstance(Map<String, String> args);

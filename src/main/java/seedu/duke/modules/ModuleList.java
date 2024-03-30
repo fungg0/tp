@@ -47,8 +47,15 @@ public class ModuleList {
         System.out.println("Added the new module: " + module.getModuleCode() + "\n" + module.getModuleDescription());
     }
 
+    public void add(Module module) {
+        if (module == null) {
+            throw new IllegalArgumentException("Module cannot be null.");
+        }
+        moduleList.add(module);
+    }
+
     public void printModules() {
-        for (Module module:moduleList) {
+        for (Module module : moduleList) {
             System.out.println(module.getModuleCode());
         }
     }
@@ -84,14 +91,14 @@ public class ModuleList {
         double sumOfGPA = 0;
 
         for (Module module : moduleList) {
-            if(module.getModuleGrade() == null || module.getModuleGrade().equals("CS") ||
-                    module.getModuleGrade().equals("CU") ) {
+            if (module.getModuleGrade() == null || module.getModuleGrade().equals("CS") ||
+                    module.getModuleGrade().equals("CU")) {
                 continue;
             }
             totalMC += module.getModuleMC();
             sumOfGPA += module.getGradeNumber() * module.getModuleMC();
         }
-        if (sumOfGPA == 0) {
+        if (totalMC == 0) {
             LOGGER.log(Level.INFO, "No modules with grades available to tabulate GPA.");
             throw new GpaNullException("No countable grades present to tally.");
         }
@@ -119,7 +126,7 @@ public class ModuleList {
         }
         return false;
     }
-    
+
     public ArrayList<String> getModulesToComplete() {
         ArrayList<String> modulesToComplete = new ArrayList<>();
         for (CEGModules cegModule : CEGModules.values()) {
@@ -130,3 +137,6 @@ public class ModuleList {
         return modulesToComplete;
     }
 }
+
+//code mc date grade description
+//code date grade
