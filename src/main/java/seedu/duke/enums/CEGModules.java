@@ -1,9 +1,6 @@
 package seedu.duke.enums;
 
 public enum CEGModules {
-    GESS(4),
-    GEC(4),
-    GEN(4),
     ES2631(4),
     CS1010(4),
     GEA1000(4),
