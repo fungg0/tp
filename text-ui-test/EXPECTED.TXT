@@ -1,6 +1,6 @@
 __________________________________________________
-Hello James Gosling! This is your CEG Future Academic Planner!
-What would you like to do today?
+Hello! This is your CEG Future Academic Planner!
+What can I do for you?
 __________________________________________________
 __________________________________________________
 Hello James Gosling!
