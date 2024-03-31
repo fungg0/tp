@@ -1,0 +1,48 @@
+@startuml
+
+class Storage {
+    - INITIALISED_USER: String
+    + saveModulesToFile(filePath: String): void
+    + ensureDirectoryExists(filePath: String): void
+    + createFile(filePath: String): void
+    + loadDataFromFile(filePath: String): void
+    - wipeFileClean(filePath: String): void
+    - processFile(input: Scanner): void
+    - processInitialUserLine(line: String): boolean
+    - processModuleLine(line: String): void
+    - getModule(line: String): Module
+    + toString(module: Module): String
+    + toString(user: User): String
+}
+
+class Module {
+    - moduleCode: String
+    - moduleMC: int
+    - moduleDate: int
+    - moduleDescription: String
+    - moduleTaken: boolean
+    - moduleGrade: String
+}
+
+class User {
+    - name: String
+    - currentSemester: int
+    - graduationSemester: int
+}
+
+class ModuleException {
+}
+
+class StorageException {
+}
+
+class UserException {
+}
+
+Storage ..> Module : uses
+Storage ..> User : uses
+Storage ..> StorageException : throws
+Storage ..> ModuleException : throws
+Storage ..> UserException : throws
+
+@enduml

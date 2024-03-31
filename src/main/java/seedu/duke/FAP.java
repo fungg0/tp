@@ -1,11 +1,13 @@
 package seedu.duke;
 
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static seedu.duke.storage.Storage.loadModulesFromFile;
+import static seedu.duke.storage.Storage.loadDataFromFile;
 import static seedu.duke.storage.Storage.saveModulesToFile;
 import static seedu.duke.ui.Ui.printGreeting;
+import static seedu.duke.ui.Ui.printUserGreeting;
 
 import seedu.duke.user.User;
 import seedu.duke.command.Command;
@@ -21,13 +23,19 @@ public class FAP {
     public static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
 
     public static JsonManager jsonManager = new JsonManager();
+    public static String filePath = Paths.get(System.getProperty("user.dir"),
+            "data", "CS2113_AY2324S2_FAP_Storage.txt").toString();
 
     public static void main(String[] args) {
         LOGGER.setLevel(Level.OFF);
         try {
-            loadModulesFromFile();
+            loadDataFromFile(filePath);
             user.resetModuleStatuses();
-            printGreeting();
+            if (user.getName().equals("")) {
+                printGreeting();
+            } else {
+                printUserGreeting(user.getName(), user.getCurrentSemester(), user.getGraduationSemester());
+            }
             assert moduleList != null : "moduleList should not be null";
             runApplication();
         } catch (AssertionError e) {
@@ -50,10 +58,15 @@ public class FAP {
                 Command command = Parser.getCommand(userInput);
                 command.execute(userInput);
                 user.resetModuleStatuses();
-                saveModulesToFile("data/moduleList.txt");
+                saveModulesToFile(filePath);
+                if (userInput.equals("bye")) {
+                    continueRunning = false;
+                    ui.close();
+                }
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
                 System.out.println("An error occurred: " + e.getMessage());
+                ui.close();
                 continueRunning = false; // Exit loop on error
             }
         }
