@@ -3,6 +3,7 @@ package seedu.duke.parser;
 import seedu.duke.command.Command;
 import seedu.duke.exceptions.ParserException;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -18,7 +19,9 @@ public abstract class CommandMetadata {
     static {
         logger.setLevel(Level.OFF);
 
-        argRegexMap.put("name", "n/(?<name>[A-Za-z0-9 ]+)");
+        argRegexMap.put("name", "n/(?<name>[A-Za-z]+(?: [A-Za-z]+)*)");
+        argRegexMap.put("currentSem", "curr/(?<currentSem>[1-8])");
+        argRegexMap.put("graduationSem", "grad/(?<graduationSem>[1-8])");
         argRegexMap.put("courseCode", "c/(?<courseCode>[A-Za-z]{2,3}\\d{4}[A-Za-z]?)");
         argRegexMap.put("semester", "w/(?<semester>[1-8])");
         argRegexMap.put("mc", "m/(?<mc>[1-9]|1[0-2])");
@@ -57,6 +60,10 @@ public abstract class CommandMetadata {
 
     protected String[] getGroupArguments() {
         return groupArguments;
+    }
+
+    protected String getArgRegex(String groupName) {
+        return argRegexMap.get(groupName);
     }
 
     protected Map<String, String> getArgRegexMap() {
@@ -126,18 +133,48 @@ public abstract class CommandMetadata {
         if (!matcher.matches()) {
             logger.log(Level.INFO, "Regex pattern: " + argRegex);
             logger.log(Level.INFO, "UserInput Argument: " + argument);
-            throw new ParserException(keyword + " command: Error in " + argumentName);
+            throw new ParserException(keyword + " command: Invalid " + argumentName + " format/order");
         }
+    }
+
+    /**
+     * Splits the user input string into parts based on the regular expressions defined for each argument.
+     * Eg. Given String = "init n/John Doe curr/4 grad/6" : Return String[] ["init", "n/John Doe", "curr/4", "grad/6"]
+     * Requires use of groupArguments and argRegexMap
+     *
+     * @param userInput The user input string to be split.
+     * @return An array of strings containing the parts of the user input.
+     */
+    private String[] splitUserInput(String userInput) {
+        // Build the regex pattern to split the userInput
+        StringBuilder regexPatternBuilder = new StringBuilder("\\s+(?=");
+        for (String str : groupArguments) {
+            // Get the delimiter for the current argument
+            String delimiter = getArgRegex(str).replaceFirst("\\(\\?<[^>]+>.*\\)", "");
+            // Append the delimiter to the regex pattern
+            regexPatternBuilder.append(delimiter).append("|");
+        }
+        // Remove the trailing "|" character and close the lookahead assertion
+        regexPatternBuilder.deleteCharAt(regexPatternBuilder.length() - 1);
+        regexPatternBuilder.append(")");
+
+        // Convert regex pattern to string
+        String regexSplitPattern = regexPatternBuilder.toString();
+
+        // Split userInput based on the constructed regex pattern
+        String[] userInputParts = userInput.split(regexSplitPattern);
+        return userInputParts;
     }
 
     protected void validateUserInput(String userInput) throws IllegalArgumentException, ParserException {
         assert userInput != null : "userInput should not be null at this point";
 
-        String[] userInputParts = userInput.split("\\s+");
+        String[] userInputParts = splitUserInput(userInput);
+        logger.log(Level.INFO, "userInputParts: " + Arrays.toString(userInputParts));
         assert userInputParts[0].equalsIgnoreCase(keyword) : "userInput should match keyword at this point";
 
         if (userInputParts.length != regexLength) {
-            throw new ParserException(keyword + " command: Invalid argument length");
+            throw new ParserException(keyword + " command: Invalid argument format/delimiters used");
         }
 
         // Check user arguments
@@ -147,7 +184,6 @@ public abstract class CommandMetadata {
         for (int i = 0; i < groupArguments.length; i++) {
             validateUserArguments(userInputParts[i+1], groupArguments[i]);
         }
-        return;
     }
 
     protected abstract Command createCommandInstance(Map<String, String> args);
