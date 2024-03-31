@@ -15,6 +15,10 @@ public class Ui {
         this.in = new Scanner(System.in);
     }
 
+    public void close() {
+        in.close();
+    }
+
     public String getUserCommand() {
         printHyphens();
         String currentLine = in.nextLine();

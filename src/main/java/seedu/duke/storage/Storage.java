@@ -26,7 +26,7 @@ public class Storage {
             for (Module module : moduleList.getTakenModuleList()) {
                 writer.write(toString(module) + System.lineSeparator());
             }
-        } catch (IOException e) {
+        } catch (IOException | SecurityException e) {
             throw new StorageException("An error occurred while saving modules to file: " + filePath);
         }
     }
@@ -35,7 +35,8 @@ public class Storage {
         File file = new File(filePath);
         File parentDir = file.getParentFile();
         if (!parentDir.exists() && !parentDir.mkdirs()) {
-            throw new StorageException("Failed to create directories for path: " + filePath);
+            throw new StorageException("Failed to create directories for path: " + filePath +
+                    ". Check permissions and disk space.");
         }
     }
 
@@ -64,24 +65,38 @@ public class Storage {
             throw new StorageException("File cannot be read, check permissions: " + filePath);
         }
         try (Scanner input = new Scanner(file)) {
-            if (!input.hasNext()) {
+            if (!input.hasNextLine()) {
                 return; // Early return if file is empty
             }
             processFile(input);
+        } catch (IOException | StorageException e) {
+            wipeFileClean(filePath);
+            throw new StorageException("Error loading data from file: " + filePath +
+                    e.getMessage() + " File has been wiped clean.");
+        }
+    }
+
+    private static void wipeFileClean(String filePath) throws StorageException {
+        try (FileWriter writer = new FileWriter(filePath, false)) {
+            writer.write(""); // Writing an empty string to overwrite the file content.
         } catch (IOException e) {
-            throw new StorageException("Error loading data from file: " + filePath);
+            throw new StorageException("Failed to wipe file clean: " + filePath);
         }
     }
 
     private static void processFile(Scanner input) throws StorageException {
         boolean isUserInitialised = false;
-        while (input.hasNext()) {
-            String line = input.nextLine();
-            if (!isUserInitialised) {
-                isUserInitialised = processInitialUserLine(line);
-                continue;
+        try {
+            while (input.hasNextLine()) {
+                String line = input.nextLine();
+                if (!isUserInitialised) {
+                    isUserInitialised = processInitialUserLine(line);
+                    continue;
+                }
+                processModuleLine(line);
             }
-            processModuleLine(line);
+        } catch (StorageException e) {
+            throw new StorageException("Error processing file: " + e.getMessage());
         }
     }
 
@@ -100,11 +115,9 @@ public class Storage {
             if (!name.isEmpty()) {
                 user.setUserInfo(name, currentSemester, graduationSemester);
             }
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new StorageException("Failed to parse user semester information: " + e.getMessage());
-        }
-        catch (UserException e) {
+        } catch (UserException e) {
             throw new StorageException("Failed to set user info due to: " + e.getMessage());
         }
         return true;
@@ -126,16 +139,27 @@ public class Storage {
             if (!jsonManager.moduleExist(moduleCode)) {
                 throw new StorageException("Module " + moduleCode + " does not exist in NUS.");
             }
+            if (moduleDate < 1 || moduleDate > 8) {
+                throw new StorageException("Invalid semester date for module " + moduleCode + ": " + moduleDate);
+            }
+            if (!moduleStatus.equals("true") && !moduleStatus.equals("false")) {
+                throw new StorageException("Invalid module status for module " + moduleCode + ": " + moduleStatus);
+            }
+            if (!moduleGrade.equals("null") && !moduleGrade.matches("[A-F][+-]?")) {
+                throw new StorageException("Invalid module grade for module " + moduleCode + ": " + moduleGrade);
+            }
+            jsonManager.getModuleInfo(moduleCode);
             int moduleMC = jsonManager.getModuleMC();
             String moduleDescription = jsonManager.getModuleDescription();
             Module module = new Module(moduleCode, moduleMC, moduleDate, moduleDescription);
             module.setModuleTaken("true".equals(moduleStatus));
-            if (!"null".equals(moduleGrade)) {
+            if (!moduleGrade.equals("null")) {
                 module.setModuleGrade(moduleGrade);
             }
             return module;
-        } catch (RuntimeException | ModuleException e) {
-            throw new StorageException("Error processing module line: " + line + " due to: " + e.getMessage());
+        } catch (RuntimeException | ModuleException | StorageException e) {
+            throw new StorageException("Error processing module line: " + line + System.lineSeparator() +
+                    "This is due to: " + e.getMessage());
         }
     }
 

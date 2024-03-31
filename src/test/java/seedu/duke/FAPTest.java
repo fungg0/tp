@@ -41,7 +41,8 @@ public class FAPTest {
 
     @Test
     public void testInit() {
-        String simulatedUserInput = "init n/bob curr/4 grad/8" + System.lineSeparator();
+        String simulatedUserInput = "init n/bob curr/4 grad/8" + System.lineSeparator() +
+                "bye" + System.lineSeparator();
         provideInput(simulatedUserInput);
 
         FAP.main(new String[]{});
@@ -49,15 +50,17 @@ public class FAPTest {
         String output = testOut.toString().replace(System.lineSeparator(), "\n");
 
         String expectedOutput = buildExpectedOutput(
-                "Hello! This is your CEG Future Academic Planner!",
-                "What can I do for you?",
+                "__________________________________________________",
+                "Hello bob! This is your CEG Future Academic Planner!",
+                "What would you like to do today?",
                 "__________________________________________________",
                 "__________________________________________________",
                 "Hello bob!",
                 "You are currently in Semester 4",
                 "and expected to graduate in Semester 8",
                 "__________________________________________________",
-                "An error occurred: No line found"
+                "__________________________________________________",
+                "Bye. Enjoy your studies!"
         ).replace(System.lineSeparator(), "\n");
 
         assertTrue(output.contains(expectedOutput));
@@ -65,20 +68,22 @@ public class FAPTest {
 
     @Test
     public void invalidInitTest() {
-        String simulatedUserInput = "init n/" + System.lineSeparator();
+        String simulatedUserInput = "init n/" + System.lineSeparator() +
+                "bye" + System.lineSeparator();
         provideInput(simulatedUserInput);
         FAP.main(new String[]{});
         String output = testOut.toString().replace(System.lineSeparator(), "\n");
 
         String expectedOutput = buildExpectedOutput(
                 "__________________________________________________",
-                "Hello! This is your CEG Future Academic Planner!",
-                "What can I do for you?",
+                "Hello bob! This is your CEG Future Academic Planner!",
+                "What would you like to do today?",
                 "__________________________________________________",
                 "__________________________________________________",
                 "init command: Invalid argument format/delimiters used",
                 "__________________________________________________",
-                "An error occurred: No line found"
+                "__________________________________________________",
+                "Bye. Enjoy your studies!"
         ).replace(System.lineSeparator(), "\n");
 
         assertTrue(output.contains(expectedOutput));
