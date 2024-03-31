@@ -51,6 +51,24 @@ resources. It embodies key software design principles and showcases thoughtful a
        }
    }
    ```
+   #### UML Diagram
+
+   ![FAP class diagram](diagrams/FAP.png)
+
+   Below is a brief description of the UML diagram that outlines the structure and relationships of the `FAP` class:
+
+    - **Classes:** `FAP`, `ModuleList`, `Ui`, `Parser`, and `Command`.
+    - **Associations:** `FAP` has associations with `ModuleList` for managing modules and `LOGGER` for logging. It
+      uses `Ui`
+      for user interactions, `Parser` for parsing commands, and `Command` for executing actions.
+    - **Flow:** The diagram would show `FAP` at the center, indicating its role in orchestrating the application flow
+      and
+      its interactions with other components.
+
+   This section highlights the central role of the `FAP` class in coordinating the application's functionality,
+   emphasizing
+   its design as a modular, maintainable, and extensible entry point.
+
 
 2. **Running the Application Loop:**
 
@@ -338,134 +356,162 @@ resources. It embodies key software design principles and showcases thoughtful a
    module codes and Module Credits (MCs).
 7. **Viewing GPA**
 
-    The `ViewGpaCommand` class is responsible for displaying the current GPA attained by the student. It 
-    accesses `ModuleList`, which looks through all `Module` object contained in the list. If the `Module` is marked as
-    taken and has been assigned a valid grade with `GradeCommand` by the user, its grades will be included into the 
-    calculation.
+   The `ViewGpaCommand` class is responsible for displaying the current GPA attained by the student. It
+   accesses `ModuleList`, which looks through all `Module` object contained in the list. If the `Module` is marked as
+   taken and has been assigned a valid grade with `GradeCommand` by the user, its grades will be included into the
+   calculation.
 
-    This is the formula used for tabulation of GPA.
-    `GPA = SUM(Course Grade Point * Course Units) / SUM(Course Units Counted Towards GPA)`
-    
-    Below is the sequence diagram for `ViewGpaCommand`.
-    ![View Gpa Command Sequence Diagram](diagrams/ViewGpaCommand.png)
+   This is the formula used for tabulation of GPA.
+   `GPA = SUM(Course Grade Point * Course Units) / SUM(Course Units Counted Towards GPA)`
+
+   Below is the sequence diagram for `ViewGpaCommand`.
+   ![View Gpa Command Sequence Diagram](diagrams/ViewGpaCommand.png)
 
 8. **Parsing UserInput**
 
-    The `Parser` class, together with the `CommandMetadata` class parses user input to 
-    **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no 
-    matching command is found, it returns an `Invalid` command instance.
-    <br />
-    <br />
-    **High Level Overview:**
-    
-    The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
-    for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords and
-    parsed arguments.**
-    <br />
-    <br />
-    The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
-    identify a given user command.
-    <br />
-    <br />
-    Below is a diagram that shows this relationship
+   The `Parser` class, together with the `CommandMetadata` class parses user input to
+   **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no
+   matching command is found, it returns an `Invalid` command instance.
+   <br />
+   <br />
+   **High Level Overview:**
 
-    ![ParserClassDiagram.png](diagrams/ParserClassDiagram.png)
-    <br />
-    <br />
-    **Use of regular expressions (Regex) in FAP:** 
-    
-    The add command class requires a user input that best 
-    matches this string
+   The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
+   for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
+   and
+   parsed arguments.**
+   <br />
+   <br />
+   The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
+   identify a given user command.
+   <br />
+   <br />
+   Below is a diagram that shows this relationship
+
+   ![ParserClassDiagram.png](diagrams/ParserClassDiagram.png)
+   <br />
+   <br />
+   **Use of regular expressions (Regex) in FAP:**
+
+   The add command class requires a user input that best
+   matches this string
     ```
     add c/COURSECODE w/SEMESTERTAKEN
     ```
-    where `COURSECODE` and `SEMESTERTAKEN` have their defined restrictions: `COURSECODE` should best match an actual
-    course code at NUS, `SEMESTERTAKEN` should be a number value in some range. The `COURSECODE` and `SEMESTERTAKEN` 
-    will thus have their own argument regex pattern.
-    <br />
-    <br />
-    A simple example would be that `SEMESTERTAKEN` would be a number ranging from 1-8 to represent a normal honours 
-    pathway for a CEG student (FAP's target user). A regex pattern for that would look like `w/(?<semester>[1-8])`. 
-    An **argument name capturing group** `semester` is enclosed within the brackets so that the argument group will be 
-    **named** and thus the argument value (anywhere between `1-8`) can be referenced/called by using the 
-    `matcher.group()` method.
-    Meanwhile, the `Pattern` and `Matcher` methods used for regex would handle the checks that the argument value given 
-    is indeed between `1-8`
-    <br />
-    <br />
-    A userInput regex would thus follow this convention:
+   where `COURSECODE` and `SEMESTERTAKEN` have their defined restrictions: `COURSECODE` should best match an actual
+   course code at NUS, `SEMESTERTAKEN` should be a number value in some range. The `COURSECODE` and `SEMESTERTAKEN`
+   will thus have their own argument regex pattern.
+   <br />
+   <br />
+   A simple example would be that `SEMESTERTAKEN` would be a number ranging from 1-8 to represent a normal honours
+   pathway for a CEG student (FAP's target user). A regex pattern for that would look like `w/(?<semester>[1-8])`.
+   An **argument name capturing group** `semester` is enclosed within the brackets so that the argument group will be
+   **named** and thus the argument value (anywhere between `1-8`) can be referenced/called by using the
+   `matcher.group()` method.
+   Meanwhile, the `Pattern` and `Matcher` methods used for regex would handle the checks that the argument value given
+   is indeed between `1-8`
+   <br />
+   <br />
+   A userInput regex would thus follow this convention:
     ```
     keyword argument_1 argument_2 ...
     ```
-    This full regex pattern for a command itself can be generated by having a `keyword`, as well as all the 
-   `argument group names` (a name to use so as to _reference_ the argument) and the `argument regex pattern` 
-    corresponding to that name reference. Typically, these arguments would be spaced out and thus a `\s+` (representing
-    at least one whitespace character) is placed between the gaps of the regex pattern for 
-    `keyword, argument_1, argument_2...`
-    <br />
-    <br />
-    While regex allows the `userInput` checks to be prudent, as well as potentially offering the flexibility for string
-    inputs to allow a different order of arguments, there are limitations where it becomes hard to determine the exact 
-    error of the user's input solely based on the regular expressions, because it solely returns a true/false value 
-    if the string value itself fits the criteria given). Regardless, we think the use of regex in FAP can help provide 
-    us **safety in the arguments** that passes through to the commands via the userInput.
-    <br />
-    <br />
-  **Developer usage FAP: Parser & CommandMetadata class as of v2.0**: **How to create a new command**
-  - First, we need a `Command` type class to return as an object. In the future, this may be expanded to any `T` type.
-  - Second, we need a string that would be used to create this `Command` instance. This string should follow the format `keyword argument_1 argument_2` where arguments are **optional**.
-  - Third, for every argument available, make a **regex pattern with name capturing** that encloses the value within the brackets. (e.g., `n/(?<name>[A-Za-z0-9 ]+)`, `g/(?<grade>[ab][+-]?|[cd][+]?|f|cs|cu)`)
-  
-  - **Using example `add c/COURSECODE w/SEMESTERTAKEN`**
+   This full regex pattern for a command itself can be generated by having a `keyword`, as well as all the
+   `argument group names` (a name to use so as to _reference_ the argument) and the `argument regex pattern`
+   corresponding to that name reference. Typically, these arguments would be spaced out and thus a `\s+` (representing
+   at least one whitespace character) is placed between the gaps of the regex pattern for
+   `keyword, argument_1, argument_2...`
+   <br />
+   <br />
+   While regex allows the `userInput` checks to be prudent, as well as potentially offering the flexibility for string
+   inputs to allow a different order of arguments, there are limitations where it becomes hard to determine the exact
+   error of the user's input solely based on the regular expressions, because it solely returns a true/false value
+   if the string value itself fits the criteria given). Regardless, we think the use of regex in FAP can help provide
+   us **safety in the arguments** that passes through to the commands via the userInput.
+   <br />
+   <br />
+   **Developer usage FAP: Parser & CommandMetadata class as of v2.0**: **How to create a new command**
+
+- First, we need a `Command` type class to return as an object. In the future, this may be expanded to any `T` type.
+- Second, we need a string that would be used to create this `Command` instance. This string should follow the
+  format `keyword argument_1 argument_2` where arguments are **optional**.
+- Third, for every argument available, make a **regex pattern with name capturing** that encloses the value within the
+  brackets. (e.g., `n/(?<name>[A-Za-z0-9 ]+)`, `g/(?<grade>[ab][+-]?|[cd][+]?|f|cs|cu)`)
+
+- **Using example `add c/COURSECODE w/SEMESTERTAKEN`**
     - Create a subclass that extends `CommandMetadata`.
-    - Put in the `keyword` (e.g., `add`) and `groupArgumentNames` (e.g., `{"courseCode", "semester"}`) in the superclass constructor.
-    - Define the argument regex pattern in the static variable `argsRegexMap` Note: Currently, `argsRegexMap` is in the superclass `CommandMetadata`. (e.g., `argRegexMap.put("semester", "w/(?<semester>[1-8])")`). 
-    - Override the method `createCommandInstance(Map<String, String> args)` to implement the method on how to create the `Command` object you want. Return the `Command` instance.
-      - `Map<String, String> args` contains the `groupArgumentName : argumentValue` pairing.
+    - Put in the `keyword` (e.g., `add`) and `groupArgumentNames` (e.g., `{"courseCode", "semester"}`) in the superclass
+      constructor.
+    - Define the argument regex pattern in the static variable `argsRegexMap` Note: Currently, `argsRegexMap` is in the
+      superclass `CommandMetadata`. (e.g., `argRegexMap.put("semester", "w/(?<semester>[1-8])")`).
+    - Override the method `createCommandInstance(Map<String, String> args)` to implement the method on how to create
+      the `Command` object you want. Return the `Command` instance.
+        - `Map<String, String> args` contains the `groupArgumentName : argumentValue` pairing.
     - In the `Parser` class, add the created `CommandMetadata` subclass to `metadataList`.
-    - The `Parser` method `getCommand(String userInput)` will help validate the `userInput`. If the `userInput` matches the string you wanted, then `getCommand(String userInput)` will return the Command instance you require.
-  
-  Sample example code:
+    - The `Parser` method `getCommand(String userInput)` will help validate the `userInput`. If the `userInput` matches
+      the string you wanted, then `getCommand(String userInput)` will return the Command instance you require.
+
+Sample example code:
+
   ```java
   public class AddCommandMetadata extends CommandMetadata {
-      private static final String ADD_KEYWORD = "add";
-      private static final String[] ADD_ARGUMENTS = {"courseCode", "semester"};
-  
-      public AddCommandMetadata() {
-          super(ADD_KEYWORD, ADD_ARGUMENTS);
-      }
-  
-      // Add Command Creator
-      @Override
-      protected Command createCommandInstance(Map<String, String> args) {
-          try {
-              String moduleCode = args.getOrDefault("courseCode", "COURSECODE_ERROR");
-              String semester = args.getOrDefault("semester", "SEMESTER_ERROR");
-              int semesterInt = Integer.parseInt(semester);
-  
-              return new AddCommand(moduleCode, semesterInt);
-          } catch (ModuleNotFoundException e) {
-              LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
-              System.out.println("An error occurred: " + e.getMessage());
-          }
-          return new InvalidCommand();
-      }
-  }
+    private static final String ADD_KEYWORD = "add";
+    private static final String[] ADD_ARGUMENTS = {"courseCode", "semester"};
+
+    public AddCommandMetadata() {
+        super(ADD_KEYWORD, ADD_ARGUMENTS);
+    }
+
+    // Add Command Creator
+    @Override
+    protected Command createCommandInstance(Map<String, String> args) {
+        try {
+            String moduleCode = args.getOrDefault("courseCode", "COURSECODE_ERROR");
+            String semester = args.getOrDefault("semester", "SEMESTER_ERROR");
+            int semesterInt = Integer.parseInt(semester);
+
+            return new AddCommand(moduleCode, semesterInt);
+        } catch (ModuleNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+        return new InvalidCommand();
+    }
+}
   ```
-#### UML Diagram
+Design & Implementation
+Storage Class
 
-![FAP class diagram](diagrams/FAP.png)
+The Storage class is crucial for persisting user data between sessions, ensuring that module information and user preferences are not lost even after the application is closed. It interacts with the file system to load and save data, employing error handling to manage potential IO exceptions gracefully.
+Key Responsibilities
 
-Below is a brief description of the UML diagram that outlines the structure and relationships of the `FAP` class:
+- **File Management:** Ensures necessary directories and files exist at application startup or creates them if they don't.
+- **Data Persistence:** Serializes and deserializes user data, including modules and user information, to and from a designated file.
+- **Error Handling:** Captures and throws custom exceptions to signal file access or data integrity issues, facilitating robust error management in higher-level components.
 
-- **Classes:** `FAP`, `ModuleList`, `Ui`, `Parser`, and `Command`.
-- **Associations:** `FAP` has associations with `ModuleList` for managing modules and `LOGGER` for logging. It uses `Ui`
-  for user interactions, `Parser` for parsing commands, and `Command` for executing actions.
-- **Flow:** The diagram would show `FAP` at the center, indicating its role in orchestrating the application flow and
-  its interactions with other components.
+**Implementation Details**
 
-This section highlights the central role of the `FAP` class in coordinating the application's functionality, emphasizing
-its design as a modular, maintainable, and extensible entry point.
+- **Initialization:** Verifies the presence of required directories/files or creates them. This is crucial for first-time application runs on a user's machine.
+
+- **Saving Data:**
+    The `saveModulesToFile` method serializes the current state of moduleList and user into a human-readable format (or a structured format like JSON/XML, depending on implementation) and writes it to a file. This method is invoked at critical points, such as application shutdown or after any operation that alters user data.
+
+- **Loading Data:**
+    The `loadDataFromFile` method reads the file contents, deserializes them back into the application's data structures (moduleList and user), and ensures that the application state reflects the persisted data. This method is typically called at application startup.
+
+- **Data Integrity and Error Management:**
+    Implements `try-catch` blocks to manage `IOExceptions` and custom exceptions, ensuring the application can handle and recover from unexpected issues during file operations.
+
+   ### UML Diagram
+
+   A simplified UML diagram for the Storage class and its interaction with the Module, User, and exception classes is shown below:
+-    ![View Storage Class](diagrams/Storage.png)
+
+   ### Integration with FAP
+
+   The FAP class incorporates the Storage class to manage application data persistence. At startup, FAP calls Storage.loadDataFromFile to restore the previous session's state. Before termination or at regular intervals, FAP invokes Storage.saveModulesToFile to save the current state.
+
+   This integration ensures that the application's data lifecycle is managed efficiently, providing a seamless user experience across sessions.
 
 ---
 
