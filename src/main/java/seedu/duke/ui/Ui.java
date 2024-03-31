@@ -123,6 +123,7 @@ public class Ui {
             System.out.println(paddedModuleCode + paddedModuleMC);
         }
         System.out.println("+---------------------------+------------+");
+        System.out.println("Be sure to also complete your GESS, GEC, and GEN modules.");
     }
 
     public static void printHyphens() {
