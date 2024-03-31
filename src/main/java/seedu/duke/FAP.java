@@ -3,9 +3,9 @@ package seedu.duke;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static seedu.duke.storage.Storage.loadModulesFromFile;
-import static seedu.duke.storage.Storage.saveModulesToFile;
+import static seedu.duke.storage.Storage.*;
 import static seedu.duke.ui.Ui.printGreeting;
+import static seedu.duke.ui.Ui.printUserGreeting;
 
 import seedu.duke.user.User;
 import seedu.duke.command.Command;
@@ -25,9 +25,13 @@ public class FAP {
     public static void main(String[] args) {
         LOGGER.setLevel(Level.OFF);
         try {
-            loadModulesFromFile();
+            loadDataFromFile();
             user.resetModuleStatuses();
-            printGreeting();
+            if (user.getName().equals("")) {
+                printGreeting();
+            } else {
+                printUserGreeting(user.getName(), user.getCurrentSemester(), user.getGraduationSemester());
+            }
             assert moduleList != null : "moduleList should not be null";
             runApplication();
         } catch (AssertionError e) {

@@ -1,8 +1,9 @@
 package seedu.duke.storage;
 
 import seedu.duke.exceptions.ModuleException;
+import seedu.duke.exceptions.UserException;
 import seedu.duke.modules.Module;
-import static seedu.duke.FAP.jsonManager;
+import seedu.duke.user.User;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,12 +13,15 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-import static seedu.duke.FAP.moduleList;
+import static seedu.duke.FAP.*;
 
 public class Storage {
 
+    public static final String INITIALISED_USER = "InitialisedUser";
+
     public static void saveModulesToFile(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(toString(user) + System.lineSeparator());
             for (Module module : moduleList.getTakenModuleList()) {
                 writer.write(toString(module) + System.lineSeparator());
             }
@@ -44,7 +48,7 @@ public class Storage {
         }
     }
 
-    public static void loadModulesFromFile() {
+    public static void loadDataFromFile() {
         try {
             String filePath = Paths.get(System.getProperty("user.dir"), "data", "moduleList.txt").toString();
             File file = new File(filePath);
@@ -52,13 +56,30 @@ public class Storage {
                 createFile(filePath);
             }
             Scanner input = new Scanner(file);
+            if (!input.hasNext()) {
+                input.close();
+                return;
+            }
+            String line = input.nextLine();
+            if (line.startsWith(INITIALISED_USER)) {
+                String[] parts = line.split(" ", 4);
+                int currentSemester = Integer.parseInt(parts[1]);
+                int graduationSemester = Integer.parseInt(parts[2]);
+                String name = parts[3];
+                if (!name.isEmpty()) {
+                    user.setUserInfo(name, currentSemester, graduationSemester);
+                }
+            } else {
+                Module module = getModule(line);
+                moduleList.add(module);
+            }
             while (input.hasNext()) {
-                String line = input.nextLine();
+                line = input.nextLine();
                 Module module = getModule(line);
                 moduleList.add(module);
             }
             input.close();
-        } catch (ModuleException | FileNotFoundException e) {
+        } catch (ModuleException | FileNotFoundException | UserException e) {
             System.out.println("An error occurred while loading modules from file: " + e.getMessage());
         }
     }
@@ -95,6 +116,13 @@ public class Storage {
                 module.getModuleGrade() + ' ' +
                 module.getModuleDate() + ' ' +
                 module.getModuleStatus();
+    }
+
+    public static String toString(User user) {
+        return INITIALISED_USER + ' ' +
+                user.getCurrentSemester() + ' ' +
+                user.getGraduationSemester() + ' ' +
+                user.getName();
     }
 
 }
