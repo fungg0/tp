@@ -66,10 +66,6 @@ public class FAPTest {
 
         String expectedOutput = buildExpectedOutput(
                 "__________________________________________________",
-                "Hello bob! This is your CEG Future Academic Planner!",
-                "What would you like to do today?",
-                "__________________________________________________",
-                "__________________________________________________",
                 "Hello bob!",
                 "You are currently in Semester 4",
                 "and expected to graduate in Semester 8",
@@ -90,10 +86,6 @@ public class FAPTest {
         String output = testOut.toString().replace(System.lineSeparator(), "\n");
 
         String expectedOutput = buildExpectedOutput(
-                "__________________________________________________",
-                "Hello bob! This is your CEG Future Academic Planner!",
-                "What would you like to do today?",
-                "__________________________________________________",
                 "__________________________________________________",
                 "init command: Invalid argument format/delimiters used",
                 "__________________________________________________",
