@@ -3,6 +3,7 @@ package seedu.duke.parser;
 import seedu.duke.command.Command;
 import seedu.duke.command.AddCommand;
 import seedu.duke.command.InvalidCommand;
+import seedu.duke.exceptions.ModuleAlreadyExistException;
 import seedu.duke.exceptions.ModuleNotFoundException;
 
 import java.util.Map;
@@ -29,6 +30,9 @@ public class AddCommandMetadata extends CommandMetadata {
             return new AddCommand(moduleCode, semesterInt);
         } catch (ModuleNotFoundException e) {
             LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
+            System.out.println("An error occurred: " + e.getMessage());
+        } catch (ModuleAlreadyExistException e) {
+            LOGGER.log(Level.WARNING, "An error occurred: " + e.getMessage());
             System.out.println("An error occurred: " + e.getMessage());
         }
         return new InvalidCommand();
