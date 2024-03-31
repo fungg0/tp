@@ -30,7 +30,8 @@ public class UiTest {
         String expectedOutput = buildExpectedOutput(
                 "__________________________________________________",
                 "Hello! This is your CEG Future Academic Planner!",
-                "What can I do for you?"
+                "What would you like to do today?",
+                "__________________________________________________"
         );
         assertEquals(expectedOutput , outContent.toString());
     }

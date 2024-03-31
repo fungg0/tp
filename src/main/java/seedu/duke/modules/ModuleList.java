@@ -9,6 +9,7 @@ import seedu.duke.user.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import static seedu.duke.FAP.LOGGER;
@@ -135,6 +136,24 @@ public class ModuleList {
             }
         }
         return modulesToComplete;
+    }
+
+    public int calculateTotalMCs() {
+        return calculateMCs(module -> true);
+    }
+
+    public int calculateTakenMCs() {
+        return calculateMCs(Module::getModuleStatus);
+    }
+
+    private int calculateMCs(Predicate<Module> predicate) {
+        int totalMCs = 0;
+        for (Module module : moduleList) {
+            if (predicate.test(module)) {
+                totalMCs += module.getModuleMC();
+            }
+        }
+        return totalMCs;
     }
 
     public void clearModules() {

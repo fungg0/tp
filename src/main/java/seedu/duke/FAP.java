@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import static seedu.duke.storage.Storage.loadDataFromFile;
 import static seedu.duke.storage.Storage.saveModulesToFile;
 import static seedu.duke.ui.Ui.printGreeting;
-import static seedu.duke.ui.Ui.printUserGreeting;
+import static seedu.duke.ui.Ui.printCommandGuide;
 
 import seedu.duke.user.User;
 import seedu.duke.command.Command;
@@ -30,12 +30,8 @@ public class FAP {
         LOGGER.setLevel(Level.OFF);
         try {
             loadDataFromFile(filePath);
-            user.resetModuleStatuses();
-            if (user.getName().equals("")) {
-                printGreeting();
-            } else {
-                printUserGreeting(user.getName(), user.getCurrentSemester(), user.getGraduationSemester());
-            }
+            printGreeting(user.getName());
+            printCommandGuide();
             assert moduleList != null : "moduleList should not be null";
             runApplication();
         } catch (AssertionError e) {

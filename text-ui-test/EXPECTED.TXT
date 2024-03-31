@@ -1,11 +1,22 @@
 __________________________________________________
 Hello! This is your CEG Future Academic Planner!
-What can I do for you?
+What would you like to do today?
+__________________________________________________
+Available Commands:
+NOTE: "<WORD>" represents a user-typed argument that is required for the command
+1. init n/<NAME> curr/<CURR_SEM> grad/<GRAD_SEM> - Set name, current & expected grad semester
+2. add c/<COURSE_CODE> w/<WHEN> - Add a module to your schedule
+3. remove c/<COURSE_CODE> - Remove a module from your schedule
+4. grade c/<COURSE_CODE> g/<GRADE> - Add or change a module grade
+5. gpa - View your GPA
+6. desiredgpa <GPA> - Calculates grades needed to achieve a desired GPA
+7. view - View modules on your schedule
+8. graduate - View remaining core modules and MCs left to graduate
 __________________________________________________
 __________________________________________________
-Hello James Gosling!
+Greetings James Gosling! Your details are updated:
 You are currently in Semester 1
-and expected to graduate in Semester 8
+You are expected to graduate in Semester 8
 __________________________________________________
 __________________________________________________
 Bye. Enjoy your studies!
