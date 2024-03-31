@@ -1,0 +1,2 @@
+InitialisedUser 1 8 James Gosling
+CS1010 null 1 true

@@ -1,2 +1,2 @@
-init n/James Gosling curr/4 grad/8
+init n/James Gosling curr/1 grad/8
 bye

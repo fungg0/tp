@@ -1,10 +1,10 @@
 __________________________________________________
-Hello! This is your CEG Future Academic Planner!
-What can I do for you?
+Hello James Gosling! This is your CEG Future Academic Planner!
+What would you like to do today?
 __________________________________________________
 __________________________________________________
 Hello James Gosling!
-You are currently in Semester 4
+You are currently in Semester 1
 and expected to graduate in Semester 8
 __________________________________________________
 __________________________________________________
