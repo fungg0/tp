@@ -136,6 +136,10 @@ public class ModuleList {
         }
         return modulesToComplete;
     }
+
+    public void clearModules() {
+        moduleList.clear();
+    }
 }
 
 //code mc date grade description
