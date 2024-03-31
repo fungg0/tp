@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-import static seedu.duke.FAP.*;
+import static seedu.duke.FAP.jsonManager;
+import static seedu.duke.FAP.moduleList;
+import static seedu.duke.FAP.user;
 
 public class Storage {
 
@@ -48,41 +50,60 @@ public class Storage {
         }
     }
 
-    public static void loadDataFromFile() {
-        try {
-            String filePath = Paths.get(System.getProperty("user.dir"), "data", "moduleList.txt").toString();
-            File file = new File(filePath);
-            if (!file.exists()) {
-                createFile(filePath);
-            }
-            Scanner input = new Scanner(file);
+    public static void loadDataFromFile(String filePath) {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            createFile(filePath);
+            return; // Early return if file does not exist
+        }
+
+        try (Scanner input = new Scanner(file)) {
             if (!input.hasNext()) {
-                input.close();
-                return;
+                return; // Early return if file is empty
             }
-            String line = input.nextLine();
-            if (line.startsWith(INITIALISED_USER)) {
-                String[] parts = line.split(" ", 4);
-                int currentSemester = Integer.parseInt(parts[1]);
-                int graduationSemester = Integer.parseInt(parts[2]);
-                String name = parts[3];
-                if (!name.isEmpty()) {
-                    user.setUserInfo(name, currentSemester, graduationSemester);
-                }
-            } else {
-                Module module = getModule(line);
-                moduleList.add(module);
-            }
-            while (input.hasNext()) {
-                line = input.nextLine();
-                Module module = getModule(line);
-                moduleList.add(module);
-            }
-            input.close();
-        } catch (ModuleException | FileNotFoundException | UserException e) {
-            System.out.println("An error occurred while loading modules from file: " + e.getMessage());
+            processFile(input);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + e.getMessage());
+        } catch (ModuleException | UserException e) {
+            System.out.println("Error loading data: " + e.getMessage());
         }
     }
+
+    private static void processFile(Scanner input) throws ModuleException, UserException {
+        boolean isUserInitialised = false;
+        while (input.hasNext()) {
+            String line = input.nextLine();
+            if (!isUserInitialised) {
+                isUserInitialised = processInitialUserLine(line);
+                continue;
+            }
+            processModuleLine(line);
+        }
+    }
+
+    private static boolean processInitialUserLine(String line) throws UserException, ModuleException {
+        if (line.startsWith(INITIALISED_USER)) {
+            String[] parts = line.split(" ", 4);
+            if (parts.length < 4) {
+                throw new UserException("User data is corrupted.");
+            }
+            int currentSemester = Integer.parseInt(parts[1]);
+            int graduationSemester = Integer.parseInt(parts[2]);
+            String name = parts[3];
+            if (!name.isEmpty()) {
+                user.setUserInfo(name, currentSemester, graduationSemester);
+            }
+            return true;
+        }
+        processModuleLine(line); // Process this line as module data if it does not start with INITIALISED_USER
+        return false;
+    }
+
+    private static void processModuleLine(String line) throws ModuleException {
+        Module module = getModule(line);
+        moduleList.add(module);
+    }
+
 
     private static Module getModule(String line) throws ModuleException {
         try {
@@ -94,7 +115,7 @@ public class Storage {
             if (jsonManager.moduleExist(moduleCode)) {
                 jsonManager.getModuleInfo(moduleCode);
             } else {
-                throw new ModuleException("Module does not exist in NUS.");
+                throw new ModuleException("Module" + moduleCode + " does not exist in NUS.");
             }
             int moduleMC = jsonManager.getModuleMC();
             String moduleDescription = jsonManager.getModuleDescription();

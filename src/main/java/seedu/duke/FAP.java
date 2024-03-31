@@ -1,5 +1,6 @@
 package seedu.duke;
 
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,11 +22,12 @@ public class FAP {
     public static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
 
     public static JsonManager jsonManager = new JsonManager();
+    public static String filePath = Paths.get(System.getProperty("user.dir"), "data", "moduleList.txt").toString();
 
     public static void main(String[] args) {
         LOGGER.setLevel(Level.OFF);
         try {
-            loadDataFromFile();
+            loadDataFromFile(filePath);
             user.resetModuleStatuses();
             if (user.getName().equals("")) {
                 printGreeting();
@@ -54,7 +56,7 @@ public class FAP {
                 Command command = Parser.getCommand(userInput);
                 command.execute(userInput);
                 user.resetModuleStatuses();
-                saveModulesToFile("data/moduleList.txt");
+                saveModulesToFile(filePath);
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
                 System.out.println("An error occurred: " + e.getMessage());
