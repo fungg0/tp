@@ -15,6 +15,10 @@ public class Ui {
         this.in = new Scanner(System.in);
     }
 
+    public void close() {
+        in.close();
+    }
+
     public String getUserCommand() {
         printHyphens();
         String currentLine = in.nextLine();
@@ -38,6 +42,23 @@ public class Ui {
         printHyphens();
         System.out.println("Hello! This is your CEG Future Academic Planner!");
         System.out.println("What can I do for you?");
+    }
+
+    // Prints if name is present
+    public static void printUserGreeting(String name, int startSem, int gradSem) {
+        printHyphens();
+        System.out.println("Hello " + name + "! This is your CEG Future Academic Planner!");
+        System.out.println("What would you like to do today?");
+    }
+
+    public static void printUserInfo(String name, int startSem, int gradSem) {
+        String greeting = name.equals("") ? "Hello!" : "Hello " + name + "!";
+        String currentSemesterInfo = String.format("You are currently in Semester %d", startSem);
+        String graduationSemesterInfo = String.format("and expected to graduate in Semester %d", gradSem);
+
+        System.out.println(greeting);
+        System.out.println(currentSemesterInfo);
+        System.out.println(graduationSemesterInfo);
     }
 
     // Helper function for printModulePlan()

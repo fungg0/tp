@@ -4,6 +4,7 @@ import seedu.duke.enums.CEGModules;
 import seedu.duke.exceptions.GpaNullException;
 import seedu.duke.exceptions.ModuleException;
 import seedu.duke.exceptions.ModuleNotFoundException;
+import seedu.duke.user.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +14,6 @@ import java.util.logging.Level;
 import static seedu.duke.FAP.LOGGER;
 
 public class ModuleList {
-    private static final int NUM_SEMESTERS = 8;
 
     protected ArrayList<Module> moduleList;
 
@@ -107,7 +107,7 @@ public class ModuleList {
 
     public Map<Integer, ArrayList<Module>> groupModulesBySemester() {
         Map<Integer, ArrayList<Module>> moduleBySemMap = new HashMap<>();
-        for (int i = 1; i <= NUM_SEMESTERS; i++) {
+        for (int i = 1; i <= User.MAX_NUM_SEMESTERS; i++) {
             moduleBySemMap.put(i, new ArrayList<>());
         }
 
@@ -135,6 +135,10 @@ public class ModuleList {
             }
         }
         return modulesToComplete;
+    }
+
+    public void clearModules() {
+        moduleList.clear();
     }
 }
 

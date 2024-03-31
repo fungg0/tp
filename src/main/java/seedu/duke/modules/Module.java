@@ -50,6 +50,10 @@ public class Module {
         this.moduleGrade = moduleGrade;
     }
 
+    public void setModuleGradeNull() {
+        this.moduleGrade = null;
+    }
+
     public int getModuleMC() {
         return moduleMC;
     }

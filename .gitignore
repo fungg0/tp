@@ -17,4 +17,5 @@ bin/
 text-ui-test/EXPECTED-UNIX.TXT
 src/squenceDiag.puml
 src/ModulePUML.puml
-data/moduleList.txt
+data/CS2113_AY2324S2_FAP_Storage.txt
+text-ui-test/data

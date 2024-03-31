@@ -17,7 +17,7 @@ public class ParserTest {
 
     @Test
     public void testInitCommand() {
-        String userInput = "init n/John Doe";
+        String userInput = "init n/John Doe curr/1 grad/8";
         Command command = Parser.getCommand(userInput);
         assertTrue(command instanceof InitCommand);
     }

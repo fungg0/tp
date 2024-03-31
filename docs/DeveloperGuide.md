@@ -51,6 +51,24 @@ resources. It embodies key software design principles and showcases thoughtful a
        }
    }
    ```
+   #### UML Diagram
+
+   ![FAP class diagram](diagrams/FAP.png)
+
+   Below is a brief description of the UML diagram that outlines the structure and relationships of the `FAP` class:
+
+    - **Classes:** `FAP`, `ModuleList`, `Ui`, `Parser`, and `Command`.
+    - **Associations:** `FAP` has associations with `ModuleList` for managing modules and `LOGGER` for logging. It
+      uses `Ui`
+      for user interactions, `Parser` for parsing commands, and `Command` for executing actions.
+    - **Flow:** The diagram would show `FAP` at the center, indicating its role in orchestrating the application flow
+      and
+      its interactions with other components.
+
+   This section highlights the central role of the `FAP` class in coordinating the application's functionality,
+   emphasizing
+   its design as a modular, maintainable, and extensible entry point.
+
 
 2. **Running the Application Loop:**
 
@@ -78,251 +96,102 @@ resources. It embodies key software design principles and showcases thoughtful a
    }
    ```
 3. **Module Class:**
-
-   Represents individual modules with attributes for code, grade, credits, status, and semester. The main methods being
-   run are the getter and setters as seen below
-
-    ```java
-    public void setModuleGrade(String moduleGrade) throws ModuleException {
-
-        if (moduleGrade != null && !moduleGrade.matches("A\\+|A|A-|B\\+|B|B-|C\\+|C|D\\+|D|F|CS|CU")) {
-            throw new IllegalArgumentException("Invalid module grade.");
-        }
-        if (!moduleTaken) {
-            throw new ModuleException("Module needs to be taken before its grade can be updated.");
-        }
-        this.moduleGrade = moduleGrade;
-    }
-
-    public int getModuleMC() {
-        return moduleMC;
-    }
-
-    public void setModuleMC(int moduleMC) {
-        if (moduleMC <= 0) {
-            throw new IllegalArgumentException("Module MC (Modular Credits) must be positive.");
-        }
-        this.moduleMC = moduleMC;
-    }
-
-    public boolean getModuleStatus() {
-        return moduleTaken;
-    }
-
-    public void setModuleStatus(boolean moduleTaken) {
-        this.moduleTaken = moduleTaken;
-    }
-
-    public int getModuleDate() {
-        return moduleDate;
-    }
-
-    public void setModuleDate(int moduleDate) {
-        if (moduleDate <= 0) {
-            throw new IllegalArgumentException("Module date must be a positive number.");
-        }
-        this.moduleDate = moduleDate;
-    }
-
-    public double getGradeNumber () {
-        switch (moduleGrade) {
-        case "A+":
-            //fall through
-        case "A":
-            return 5.0;
-        case "A-":
-            return 4.5;
-        case "B+":
-            return 4.0;
-        case "B":
-            return 3.5;
-        case "B-":
-            return 3.0;
-        case "C+":
-            return 2.5;
-        case "C":
-            return 2.0;
-        case "D+":
-            return 1.5;
-        case "D":
-            return 1.0;
-        case "F":
-            return 0;
-        default:
-            throw new IllegalStateException("Invalid or unassigned module grade.");
-        }
-    }
-    ```
+  
+   #### Purpose
+  
+   Represents an academic module, holding information such as the module code, credits (MCs), grade, and description.
+  
+   #### Key Methods
+  
+   - **`setModuleGrade(String moduleGrade)`**  
+    Sets the grade for the module. Validates the grade format and throws `ModuleException` if the module hasn't been taken yet.
+  
+   - **`getGradeNumber()`**  
+     Returns a numerical value associated with the module's grade, used for GPA calculation.
 
 4. **ModuleList Class:**
-   Represents a list of objects of module class. It is used for storing modules and facilitating accessing of modules.
-   The methods it contains are mainly for either accessing or editing certain attributes of the modules the modulelist
-   contains.
-    ```java
-     public Module getModule(String courseCode) throws ModuleNotFoundException {
-        if (courseCode == null || courseCode.trim().isEmpty()) {
-            throw new IllegalArgumentException("Course code cannot be null or empty.");
-        }
-        courseCode = courseCode.toUpperCase(); // Convert once and reuse, improving efficiency
-
-        for (Module module : takenModuleList) {
-            if (module.getModuleCode().equals(courseCode)) {
-                return module;
-            }
-        }
-        throw new ModuleNotFoundException("Module " + courseCode + " not found!");
-     }
-
-     public ArrayList<Module> getTakenModuleList() {
-        return takenModuleList;
-     }
-
-     public void addModule(Module module) {
-        if (module == null) {
-            throw new IllegalArgumentException("Module cannot be null.");
-        }
-     takenModuleList.add(module);
-     }
-
-     public void printModules() {
-        for (Module module:takenModuleList) {
-            System.out.println(module.getModuleCode());
-        }
-     }
-     public void removeModule(Module module) {
-        assert module != null : "Module cannot be null";
-        // The remove operation returns false if the item was not found
-        boolean removed = takenModuleList.remove(module);
-        if (!removed) {
-            System.out.println("Module not found in either list.");
-        }
-     }
-
-     public void changeModuleGrade(String moduleCode, String grade) {
-        if (moduleCode == null || moduleCode.trim().isEmpty()) {
-            throw new IllegalArgumentException("Module code cannot be null or empty.");
-        }
-        try{
-            Module toChange = getModule(moduleCode);
-            toChange.setModuleGrade(grade);
-            System.out.println("Grade for " + moduleCode + " updated to " + grade);
-            assert toChange.getModuleGrade().equals(grade) : "Grade is not updated successfully";
-
-        } catch (ModuleNotFoundException e){
-            System.out.println("Module not found in list");
-        } catch (ModuleException e){
-            System.out.println(e.getMessage());
-        }
-     }
-
-     public double tallyGPA() throws GpaNullException {
-        int totalMC = 0;
-        double sumOfGPA = 0;
-        for (Module module : takenModuleList) {
-            if(module.getModuleGrade() == null || module.getModuleGrade().equals("CS") ||
-                    module.getModuleGrade().equals("CU") ) {
-                continue;
-            }
-            totalMC += module.getModuleMC();
-            sumOfGPA += module.getGradeNumber() * module.getModuleMC();
-        }
-        if(sumOfGPA == 0) {
-            LOGGER.log(Level.INFO, "No modules with grades available to tabulate GPA.");
-            throw new GpaNullException("No countable grades present to tally.");
-        }
-        return sumOfGPA/(double)totalMC;
-     }
-
-     public Map<Integer, ArrayList<Module>> groupModulesBySemester() {
-        Map<Integer, ArrayList<Module>> moduleBySemMap = new HashMap<>();
-        for (int i = 1; i <= NUM_SEMESTERS; i++) {
-            moduleBySemMap.put(i, new ArrayList<>());
-        }
-
-        for (Module module : takenModuleList) {
-            moduleBySemMap.get(module.getModuleDate()).add(module);
-        }
-
-        return moduleBySemMap;
-     }
-    ```
-
+    
+   #### Purpose
+    
+   Manages a collection of `Module` objects. It facilitates operations such as adding, removing, retrieving modules, calculating GPA, and grouping modules by semester.
+    
+   #### Key Methods
+    
+   - **`addModule(Module module)`**  
+     Adds a new module to the list.  
+     Throws `IllegalArgumentException` if the module is `null`.
+   
+   - **`getModule(String courseCode)`**  
+     Retrieves a module by its course code.  
+     Throws `ModuleNotFoundException` if the module is not found.
+    
+   - **`removeModule(Module module)`**  
+     Removes a specified module from the list.
+    
+   - **`changeModuleGrade(String moduleCode, String grade)`**  
+     Changes the grade of a module identified by its course code.
+    
+   - **`tallyGPA()`**  
+     Calculates and returns the GPA based on the modules in the list.  
+     Throws `GpaNullException` if there are no modules with countable grades.
+    
+   - **`groupModulesBySemester()`**  
+     Groups modules by their semester and returns a map where each key is a semester, and each value is a list of modules in that semester.
+    
+   #### Error Handling
+    
+   Uses exceptions to handle errors, such as when trying to access or modify modules that don't exist.
+    
 5. **Getting module details from Json File (JsonManager Class):**
-   The JsonManager class is responsible for initiating of processes required to load the json file. It also helps to
-   retrieve the relevant data such as module credit and description based on the parsed module code.
-
-   This is the constructor that should always get called first to allow the json file to be loaded
-    ```java
-    public JsonManager() {
-
-        this.inputStream = this.getClass().getResourceAsStream("/moduleInfo.json");
-        if (inputStream == null) {
-            throw new RuntimeException("Cannot find resource file");
-        }
-
-        this.gson = new Gson();
-
-        try (InputStreamReader reader = new InputStreamReader(inputStream)) {
-            Type type = new TypeToken<List<JsonObject>>(){}.getType();
-            jsonArray = gson.fromJson(reader, type);
-            this.reader = reader;
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    ```
-
-   The main purpose of this method is to ensure that the module exist in the NUS curriculum before the user is allowed
-   to add the mod
-    ```java
-    public boolean moduleExist(String moduleCode) {
-        // Now, you can iterate through the array of objects just like before
-        for (JsonObject obj : jsonArray) {
-            // Process the object as needed; assuming there's a 'name' field
-            String name = obj.get("moduleCode").getAsString();  // Replace 'name' with actual field names
-            // If you want to match a specific module code, add an if check here
-            if (name.equals(moduleCode)) {
-                // Print out or process the module info
-                return true;
-            }
-        }
-        return false;
-    }
-    ```
-
-   The getModuleInfo get called in other classes when the relevant details of a particular module are needed. This
-   method then loads the relevant details such as module description and credits into the JsonManager's class attribute.
-   The getters below can then be called from other classes to return a particular detail out of the two or more details
-   retrieved.
-    ```java
-    public void getModuleInfo(String moduleCode) {
-        // Now, you can iterate through the array of objects just like before
-        for (JsonObject obj : jsonArray) {
-            // Process the object as needed; assuming there's a 'name' field
-            String name = obj.get("moduleCode").getAsString();  // Replace 'name' with actual field names
-            // If you want to match a specific module code, add an if check here
-            if (name.equals(moduleCode)) {
-                // Print out or process the module info
-                this.moduleMC = obj.get("moduleCredit").getAsInt();
-                this.moduleDescription = obj.get("description").getAsString();
-                this.moduleTitle = obj.get("title").getAsString();
-            }
-        }
-    }
-
-    public String getModuleDescription() {
-        return moduleDescription;
-    }
-
-    public int getModuleMC() {
-        return moduleMC;
-    }
-
-    public String getModuleTitle() {
-        return moduleTitle;
-    }
-
-    ```
+    
+   #### Overview
+    
+   The `JsonManager` class is designed to manage and interact with module information stored in a JSON format. It provides functionalities for checking the existence of modules, retrieving module information such as Modular Credits (MCs), description, and title from a JSON file.
+    
+   #### Constructor
+    
+   - `JsonManager()`: Initializes a new instance of the `JsonManager` by loading the module information from a JSON file located at `/moduleInfo.json`.
+   
+   #### Methods
+    
+   ##### Module Existence
+    
+   - **`moduleExist(String moduleCode)`**: Checks if a module with the specified code exists in the JSON data.
+     - **Parameters**: `String moduleCode` - The code of the module to check for existence.
+     - **Returns**: `boolean` - `true` if the module exists, `false` otherwise.
+    
+   ##### Module Information Retrieval
+    
+   - **`getModuleInfo(String moduleCode)`**: Retrieves detailed information about a module, including its Modular Credits, description, and title, based on the module code.
+     - **Parameters**: `String moduleCode` - The code of the module for which information is to be retrieved.
+     - **Note**: This method updates the internal state of the `JsonManager` object with the retrieved module information.
+    
+   ##### Information Accessors
+    
+   - **`getModuleDescription()`**: Returns the description of the last module queried.
+     - **Returns**: `String` - The description of the module.
+   
+   - **`getModuleMC()`**: Returns the Modular Credits of the last module queried.
+     - **Returns**: `int` - The Modular Credits of the module.
+    
+   - **`getModuleTitle()`**: Returns the title of the last module queried.
+     - **Returns**: `String` - The title of the module.
+    
+   #### Error Handling
+    
+   - The constructor throws a `RuntimeException` if the JSON file containing module information cannot be found or accessed, ensuring that the application is aware of missing or inaccessible module data.
+    
+   #### Usage
+    
+   ```java
+   JsonManager jsonManager = new JsonManager();
+   if (jsonManager.moduleExist("CS1010")) {
+       jsonManager.getModuleInfo("CS1010");
+       System.out.println("Module Title: " + jsonManager.getModuleTitle());
+       System.out.println("Module Description: " + jsonManager.getModuleDescription());
+       System.out.println("Module MC: " + jsonManager.getModuleMC());
+   }
+   ```
 6. **Viewing modules left to graduate**
 
    The `ViewGraduateCommand` class is responsible for displaying the list of modules that a student needs to
@@ -338,134 +207,162 @@ resources. It embodies key software design principles and showcases thoughtful a
    module codes and Module Credits (MCs).
 7. **Viewing GPA**
 
-    The `ViewGpaCommand` class is responsible for displaying the current GPA attained by the student. It 
-    accesses `ModuleList`, which looks through all `Module` object contained in the list. If the `Module` is marked as
-    taken and has been assigned a valid grade with `GradeCommand` by the user, its grades will be included into the 
-    calculation.
+   The `ViewGpaCommand` class is responsible for displaying the current GPA attained by the student. It
+   accesses `ModuleList`, which looks through all `Module` object contained in the list. If the `Module` is marked as
+   taken and has been assigned a valid grade with `GradeCommand` by the user, its grades will be included into the
+   calculation.
 
-    This is the formula used for tabulation of GPA.
-    `GPA = SUM(Course Grade Point * Course Units) / SUM(Course Units Counted Towards GPA)`
-    
-    Below is the sequence diagram for `ViewGpaCommand`.
-    ![View Gpa Command Sequence Diagram](diagrams/ViewGpaCommand.png)
+   This is the formula used for tabulation of GPA.
+   `GPA = SUM(Course Grade Point * Course Units) / SUM(Course Units Counted Towards GPA)`
+
+   Below is the sequence diagram for `ViewGpaCommand`.
+   ![View Gpa Command Sequence Diagram](diagrams/ViewGpaCommand.png)
 
 8. **Parsing UserInput**
 
-    The `Parser` class, together with the `CommandMetadata` class parses user input to 
-    **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no 
-    matching command is found, it returns an `Invalid` command instance.
-    <br />
-    <br />
-    **High Level Overview:**
-    
-    The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
-    for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords and
-    parsed arguments.**
-    <br />
-    <br />
-    The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
-    identify a given user command.
-    <br />
-    <br />
-    Below is a diagram that shows this relationship
+   The `Parser` class, together with the `CommandMetadata` class parses user input to
+   **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no
+   matching command is found, it returns an `Invalid` command instance.
+   <br />
+   <br />
+   **High Level Overview:**
 
-    ![ParserClassDiagram.png](diagrams/ParserClassDiagram.png)
-    <br />
-    <br />
-    **Use of regular expressions (Regex) in FAP:** 
-    
-    The add command class requires a user input that best 
-    matches this string
+   The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
+   for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
+   and
+   parsed arguments.**
+   <br />
+   <br />
+   The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
+   identify a given user command.
+   <br />
+   <br />
+   Below is a diagram that shows this relationship
+
+   ![ParserClassDiagram.png](diagrams/ParserClassDiagram.png)
+   <br />
+   <br />
+   **Use of regular expressions (Regex) in FAP:**
+
+   The add command class requires a user input that best
+   matches this string
     ```
     add c/COURSECODE w/SEMESTERTAKEN
     ```
-    where `COURSECODE` and `SEMESTERTAKEN` have their defined restrictions: `COURSECODE` should best match an actual
-    course code at NUS, `SEMESTERTAKEN` should be a number value in some range. The `COURSECODE` and `SEMESTERTAKEN` 
-    will thus have their own argument regex pattern.
-    <br />
-    <br />
-    A simple example would be that `SEMESTERTAKEN` would be a number ranging from 1-8 to represent a normal honours 
-    pathway for a CEG student (FAP's target user). A regex pattern for that would look like `w/(?<semester>[1-8])`. 
-    An **argument name capturing group** `semester` is enclosed within the brackets so that the argument group will be 
-    **named** and thus the argument value (anywhere between `1-8`) can be referenced/called by using the 
-    `matcher.group()` method.
-    Meanwhile, the `Pattern` and `Matcher` methods used for regex would handle the checks that the argument value given 
-    is indeed between `1-8`
-    <br />
-    <br />
-    A userInput regex would thus follow this convention:
+   where `COURSECODE` and `SEMESTERTAKEN` have their defined restrictions: `COURSECODE` should best match an actual
+   course code at NUS, `SEMESTERTAKEN` should be a number value in some range. The `COURSECODE` and `SEMESTERTAKEN`
+   will thus have their own argument regex pattern.
+   <br />
+   <br />
+   A simple example would be that `SEMESTERTAKEN` would be a number ranging from 1-8 to represent a normal honours
+   pathway for a CEG student (FAP's target user). A regex pattern for that would look like `w/(?<semester>[1-8])`.
+   An **argument name capturing group** `semester` is enclosed within the brackets so that the argument group will be
+   **named** and thus the argument value (anywhere between `1-8`) can be referenced/called by using the
+   `matcher.group()` method.
+   Meanwhile, the `Pattern` and `Matcher` methods used for regex would handle the checks that the argument value given
+   is indeed between `1-8`
+   <br />
+   <br />
+   A userInput regex would thus follow this convention:
     ```
     keyword argument_1 argument_2 ...
     ```
-    This full regex pattern for a command itself can be generated by having a `keyword`, as well as all the 
-   `argument group names` (a name to use so as to _reference_ the argument) and the `argument regex pattern` 
-    corresponding to that name reference. Typically, these arguments would be spaced out and thus a `\s+` (representing
-    at least one whitespace character) is placed between the gaps of the regex pattern for 
-    `keyword, argument_1, argument_2...`
-    <br />
-    <br />
-    While regex allows the `userInput` checks to be prudent, as well as potentially offering the flexibility for string
-    inputs to allow a different order of arguments, there are limitations where it becomes hard to determine the exact 
-    error of the user's input solely based on the regular expressions, because it solely returns a true/false value 
-    if the string value itself fits the criteria given). Regardless, we think the use of regex in FAP can help provide 
-    us **safety in the arguments** that passes through to the commands via the userInput.
-    <br />
-    <br />
-  **Developer usage FAP: Parser & CommandMetadata class as of v2.0**: **How to create a new command**
-  - First, we need a `Command` type class to return as an object. In the future, this may be expanded to any `T` type.
-  - Second, we need a string that would be used to create this `Command` instance. This string should follow the format `keyword argument_1 argument_2` where arguments are **optional**.
-  - Third, for every argument available, make a **regex pattern with name capturing** that encloses the value within the brackets. (e.g., `n/(?<name>[A-Za-z0-9 ]+)`, `g/(?<grade>[ab][+-]?|[cd][+]?|f|cs|cu)`)
-  
-  - **Using example `add c/COURSECODE w/SEMESTERTAKEN`**
+   This full regex pattern for a command itself can be generated by having a `keyword`, as well as all the
+   `argument group names` (a name to use so as to _reference_ the argument) and the `argument regex pattern`
+   corresponding to that name reference. Typically, these arguments would be spaced out and thus a `\s+` (representing
+   at least one whitespace character) is placed between the gaps of the regex pattern for
+   `keyword, argument_1, argument_2...`
+   <br />
+   <br />
+   While regex allows the `userInput` checks to be prudent, as well as potentially offering the flexibility for string
+   inputs to allow a different order of arguments, there are limitations where it becomes hard to determine the exact
+   error of the user's input solely based on the regular expressions, because it solely returns a true/false value
+   if the string value itself fits the criteria given). Regardless, we think the use of regex in FAP can help provide
+   us **safety in the arguments** that passes through to the commands via the userInput.
+   <br />
+   <br />
+   **Developer usage FAP: Parser & CommandMetadata class as of v2.0**: **How to create a new command**
+
+- First, we need a `Command` type class to return as an object. In the future, this may be expanded to any `T` type.
+- Second, we need a string that would be used to create this `Command` instance. This string should follow the
+  format `keyword argument_1 argument_2` where arguments are **optional**.
+- Third, for every argument available, make a **regex pattern with name capturing** that encloses the value within the
+  brackets. (e.g., `n/(?<name>[A-Za-z0-9 ]+)`, `g/(?<grade>[ab][+-]?|[cd][+]?|f|cs|cu)`)
+
+- **Using example `add c/COURSECODE w/SEMESTERTAKEN`**
     - Create a subclass that extends `CommandMetadata`.
-    - Put in the `keyword` (e.g., `add`) and `groupArgumentNames` (e.g., `{"courseCode", "semester"}`) in the superclass constructor.
-    - Define the argument regex pattern in the static variable `argsRegexMap` Note: Currently, `argsRegexMap` is in the superclass `CommandMetadata`. (e.g., `argRegexMap.put("semester", "w/(?<semester>[1-8])")`). 
-    - Override the method `createCommandInstance(Map<String, String> args)` to implement the method on how to create the `Command` object you want. Return the `Command` instance.
-      - `Map<String, String> args` contains the `groupArgumentName : argumentValue` pairing.
+    - Put in the `keyword` (e.g., `add`) and `groupArgumentNames` (e.g., `{"courseCode", "semester"}`) in the superclass
+      constructor.
+    - Define the argument regex pattern in the static variable `argsRegexMap` Note: Currently, `argsRegexMap` is in the
+      superclass `CommandMetadata`. (e.g., `argRegexMap.put("semester", "w/(?<semester>[1-8])")`).
+    - Override the method `createCommandInstance(Map<String, String> args)` to implement the method on how to create
+      the `Command` object you want. Return the `Command` instance.
+        - `Map<String, String> args` contains the `groupArgumentName : argumentValue` pairing.
     - In the `Parser` class, add the created `CommandMetadata` subclass to `metadataList`.
-    - The `Parser` method `getCommand(String userInput)` will help validate the `userInput`. If the `userInput` matches the string you wanted, then `getCommand(String userInput)` will return the Command instance you require.
-  
-  Sample example code:
+    - The `Parser` method `getCommand(String userInput)` will help validate the `userInput`. If the `userInput` matches
+      the string you wanted, then `getCommand(String userInput)` will return the Command instance you require.
+
+Sample example code:
+
   ```java
   public class AddCommandMetadata extends CommandMetadata {
-      private static final String ADD_KEYWORD = "add";
-      private static final String[] ADD_ARGUMENTS = {"courseCode", "semester"};
-  
-      public AddCommandMetadata() {
-          super(ADD_KEYWORD, ADD_ARGUMENTS);
-      }
-  
-      // Add Command Creator
-      @Override
-      protected Command createCommandInstance(Map<String, String> args) {
-          try {
-              String moduleCode = args.getOrDefault("courseCode", "COURSECODE_ERROR");
-              String semester = args.getOrDefault("semester", "SEMESTER_ERROR");
-              int semesterInt = Integer.parseInt(semester);
-  
-              return new AddCommand(moduleCode, semesterInt);
-          } catch (ModuleNotFoundException e) {
-              LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
-              System.out.println("An error occurred: " + e.getMessage());
-          }
-          return new InvalidCommand();
-      }
-  }
+    private static final String ADD_KEYWORD = "add";
+    private static final String[] ADD_ARGUMENTS = {"courseCode", "semester"};
+
+    public AddCommandMetadata() {
+        super(ADD_KEYWORD, ADD_ARGUMENTS);
+    }
+
+    // Add Command Creator
+    @Override
+    protected Command createCommandInstance(Map<String, String> args) {
+        try {
+            String moduleCode = args.getOrDefault("courseCode", "COURSECODE_ERROR");
+            String semester = args.getOrDefault("semester", "SEMESTER_ERROR");
+            int semesterInt = Integer.parseInt(semester);
+
+            return new AddCommand(moduleCode, semesterInt);
+        } catch (ModuleNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+        return new InvalidCommand();
+    }
+}
   ```
-#### UML Diagram
+Design & Implementation
+Storage Class
 
-![FAP class diagram](diagrams/FAP.png)
+The Storage class is crucial for persisting user data between sessions, ensuring that module information and user preferences are not lost even after the application is closed. It interacts with the file system to load and save data, employing error handling to manage potential IO exceptions gracefully.
+Key Responsibilities
 
-Below is a brief description of the UML diagram that outlines the structure and relationships of the `FAP` class:
+- **File Management:** Ensures necessary directories and files exist at application startup or creates them if they don't.
+- **Data Persistence:** Serializes and deserializes user data, including modules and user information, to and from a designated file.
+- **Error Handling:** Captures and throws custom exceptions to signal file access or data integrity issues, facilitating robust error management in higher-level components.
 
-- **Classes:** `FAP`, `ModuleList`, `Ui`, `Parser`, and `Command`.
-- **Associations:** `FAP` has associations with `ModuleList` for managing modules and `LOGGER` for logging. It uses `Ui`
-  for user interactions, `Parser` for parsing commands, and `Command` for executing actions.
-- **Flow:** The diagram would show `FAP` at the center, indicating its role in orchestrating the application flow and
-  its interactions with other components.
+**Implementation Details**
 
-This section highlights the central role of the `FAP` class in coordinating the application's functionality, emphasizing
-its design as a modular, maintainable, and extensible entry point.
+- **Initialization:** Verifies the presence of required directories/files or creates them. This is crucial for first-time application runs on a user's machine.
+
+- **Saving Data:**
+    The `saveModulesToFile` method serializes the current state of moduleList and user into a human-readable format (or a structured format like JSON/XML, depending on implementation) and writes it to a file. This method is invoked at critical points, such as application shutdown or after any operation that alters user data.
+
+- **Loading Data:**
+    The `loadDataFromFile` method reads the file contents, deserializes them back into the application's data structures (moduleList and user), and ensures that the application state reflects the persisted data. This method is typically called at application startup.
+
+- **Data Integrity and Error Management:**
+    Implements `try-catch` blocks to manage `IOExceptions` and custom exceptions, ensuring the application can handle and recover from unexpected issues during file operations.
+
+   ### UML Diagram
+
+   A simplified UML diagram for the Storage class and its interaction with the Module, User, and exception classes is shown below:
+-    ![View Storage Class](diagrams/Storage.png)
+
+   ### Integration with FAP
+
+   The FAP class incorporates the Storage class to manage application data persistence. At startup, FAP calls Storage.loadDataFromFile to restore the previous session's state. Before termination or at regular intervals, FAP invokes Storage.saveModulesToFile to save the current state.
+
+   This integration ensures that the application's data lifecycle is managed efficiently, providing a seamless user experience across sessions.
 
 ---
 
