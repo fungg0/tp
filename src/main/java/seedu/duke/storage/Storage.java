@@ -1,16 +1,15 @@
 package seedu.duke.storage;
 
 import seedu.duke.exceptions.ModuleException;
+import seedu.duke.exceptions.StorageException;
 import seedu.duke.exceptions.UserException;
 import seedu.duke.modules.Module;
 import seedu.duke.user.User;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 import static seedu.duke.FAP.jsonManager;
@@ -21,55 +20,60 @@ public class Storage {
 
     public static final String INITIALISED_USER = "InitialisedUser";
 
-    public static void saveModulesToFile(String filePath) {
+    public static void saveModulesToFile(String filePath) throws StorageException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(toString(user) + System.lineSeparator());
             for (Module module : moduleList.getTakenModuleList()) {
                 writer.write(toString(module) + System.lineSeparator());
             }
         } catch (IOException e) {
-            System.out.println("An error occurred while saving modules to file: " + e.getMessage());
+            throw new StorageException("An error occurred while saving modules to file: " + filePath);
         }
     }
 
-    public static void ensureDirectoryExists(String filePath) {
+    public static void ensureDirectoryExists(String filePath) throws StorageException {
         File file = new File(filePath);
         File parentDir = file.getParentFile();
-        if (!parentDir.exists()) {
-            parentDir.mkdirs();
+        if (!parentDir.exists() && !parentDir.mkdirs()) {
+            throw new StorageException("Failed to create directories for path: " + filePath);
         }
     }
 
-    public static void createFile(String filePath) {
+    public static void createFile(String filePath) throws StorageException {
         ensureDirectoryExists(filePath);
+        File file = new File(filePath);
         try {
-            FileWriter file = new FileWriter(filePath);
-            file.close();
+            if (!file.createNewFile()) {
+                System.out.println("Note: File already exists and will not be overwritten: " + filePath);
+            }
         } catch (IOException e) {
-            System.out.println("An error occurred while creating file: " + e.getMessage());
+            throw new StorageException("An error occurred while creating file: " + filePath);
         }
     }
 
-    public static void loadDataFromFile(String filePath) {
+    public static void loadDataFromFile(String filePath) throws StorageException {
         File file = new File(filePath);
         if (!file.exists()) {
             createFile(filePath);
             return; // Early return if file does not exist
         }
-
+        if (file.isDirectory()) {
+            throw new StorageException("Specified path points to a directory, not a file: " + filePath);
+        }
+        if (!file.canRead()) {
+            throw new StorageException("File cannot be read, check permissions: " + filePath);
+        }
         try (Scanner input = new Scanner(file)) {
             if (!input.hasNext()) {
                 return; // Early return if file is empty
             }
             processFile(input);
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + e.getMessage());
-        } catch (ModuleException | UserException e) {
-            System.out.println("Error loading data: " + e.getMessage());
+        } catch (IOException e) {
+            throw new StorageException("Error loading data from file: " + filePath);
         }
     }
 
-    private static void processFile(Scanner input) throws ModuleException, UserException {
+    private static void processFile(Scanner input) throws StorageException {
         boolean isUserInitialised = false;
         while (input.hasNext()) {
             String line = input.nextLine();
@@ -81,54 +85,57 @@ public class Storage {
         }
     }
 
-    private static boolean processInitialUserLine(String line) throws UserException, ModuleException {
-        if (line.startsWith(INITIALISED_USER)) {
-            String[] parts = line.split(" ", 4);
-            if (parts.length < 4) {
-                throw new UserException("User data is corrupted.");
-            }
-            int currentSemester = Integer.parseInt(parts[1]);
-            int graduationSemester = Integer.parseInt(parts[2]);
-            String name = parts[3];
+    private static boolean processInitialUserLine(String line) throws StorageException {
+        if (!line.startsWith(INITIALISED_USER)) {
+            return false;
+        }
+        String[] parts = line.split(" ", 4);
+        if (parts.length < 4) {
+            throw new StorageException("User data is corrupted.");
+        }
+        int currentSemester = Integer.parseInt(parts[1]);
+        int graduationSemester = Integer.parseInt(parts[2]);
+        String name = parts[3];
+        try {
             if (!name.isEmpty()) {
                 user.setUserInfo(name, currentSemester, graduationSemester);
             }
-            return true;
         }
-        processModuleLine(line); // Process this line as module data if it does not start with INITIALISED_USER
-        return false;
+        catch (NumberFormatException e) {
+            throw new StorageException("Failed to parse user semester information: " + e.getMessage());
+        }
+        catch (UserException e) {
+            throw new StorageException("Failed to set user info due to: " + e.getMessage());
+        }
+        return true;
     }
 
-    private static void processModuleLine(String line) throws ModuleException {
+
+    private static void processModuleLine(String line) throws StorageException {
         Module module = getModule(line);
         moduleList.add(module);
     }
 
-
-    private static Module getModule(String line) throws ModuleException {
+    private static Module getModule(String line) throws StorageException {
         try {
             String[] parts = line.split(" ", 4);
             String moduleCode = parts[0];
             String moduleGrade = parts[1];
             int moduleDate = Integer.parseInt(parts[2]);
             String moduleStatus = parts[3];
-            if (jsonManager.moduleExist(moduleCode)) {
-                jsonManager.getModuleInfo(moduleCode);
-            } else {
-                throw new ModuleException("Module" + moduleCode + " does not exist in NUS.");
+            if (!jsonManager.moduleExist(moduleCode)) {
+                throw new StorageException("Module " + moduleCode + " does not exist in NUS.");
             }
             int moduleMC = jsonManager.getModuleMC();
             String moduleDescription = jsonManager.getModuleDescription();
             Module module = new Module(moduleCode, moduleMC, moduleDate, moduleDescription);
-            if (moduleStatus.equals("true")) {
-                module.setModuleTaken(true);
-            }
-            if (!moduleGrade.equals("null")) {
+            module.setModuleTaken("true".equals(moduleStatus));
+            if (!"null".equals(moduleGrade)) {
                 module.setModuleGrade(moduleGrade);
             }
             return module;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ModuleException("Module data is corrupted.");
+        } catch (RuntimeException | ModuleException e) {
+            throw new StorageException("Error processing module line: " + line + " due to: " + e.getMessage());
         }
     }
 
@@ -145,5 +152,4 @@ public class Storage {
                 user.getGraduationSemester() + ' ' +
                 user.getName();
     }
-
 }

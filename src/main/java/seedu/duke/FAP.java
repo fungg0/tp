@@ -22,7 +22,7 @@ public class FAP {
     public static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
 
     public static JsonManager jsonManager = new JsonManager();
-    public static String filePath = Paths.get(System.getProperty("user.dir"), "data", "moduleList.txt").toString();
+    public static String filePath = Paths.get(System.getProperty("user.dir"), "data", "CS2113_AY2324S2_FAP_Storage.txt").toString();
 
     public static void main(String[] args) {
         LOGGER.setLevel(Level.OFF);
