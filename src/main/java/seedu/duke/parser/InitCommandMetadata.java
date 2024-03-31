@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class InitCommandMetadata extends CommandMetadata {
     private static final String INIT_KEYWORD = "init";
-    private static final String[] INIT_ARGUMENTS = {"name"};
+    private static final String[] INIT_ARGUMENTS = {"name", "currentSem", "graduationSem"};
 
     public InitCommandMetadata() {
         super(INIT_KEYWORD, INIT_ARGUMENTS);
@@ -17,7 +17,9 @@ public class InitCommandMetadata extends CommandMetadata {
     @Override
     protected Command createCommandInstance(Map<String, String> args) {
         String name = args.getOrDefault("name", "NAME_ERROR");
+        int currSem = Integer.parseInt(args.get("currentSem"));
+        int gradSem = Integer.parseInt(args.get("graduationSem"));
 
-        return new InitCommand(name);
+        return new InitCommand(name, currSem, gradSem);
     }
 }
