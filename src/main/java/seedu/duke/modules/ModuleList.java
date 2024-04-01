@@ -2,6 +2,7 @@ package seedu.duke.modules;
 
 import seedu.duke.enums.CEGModules;
 import seedu.duke.exceptions.GpaNullException;
+import seedu.duke.exceptions.InvalidGpaException;
 import seedu.duke.exceptions.ModuleException;
 import seedu.duke.exceptions.ModuleNotFoundException;
 import seedu.duke.user.User;
@@ -14,8 +15,12 @@ import java.util.logging.Level;
 import static seedu.duke.FAP.LOGGER;
 
 public class ModuleList {
+    private static final int DEFAULT_MC_REQUIRED = 160;
 
     protected ArrayList<Module> moduleList;
+    private int moduleCreditsByGraduation = DEFAULT_MC_REQUIRED;
+    private double currentGPA;
+    private int moduleCreditsCountedToGPA;
 
     public ModuleList() {
         this.moduleList = new ArrayList<Module>();
@@ -86,7 +91,7 @@ public class ModuleList {
         }
     }
 
-    public double tallyGPA() throws GpaNullException {
+    public void tallyGPA() throws GpaNullException {
         int totalMC = 0;
         double sumOfGPA = 0;
 
@@ -98,12 +103,16 @@ public class ModuleList {
             totalMC += module.getModuleMC();
             sumOfGPA += module.getGradeNumber() * module.getModuleMC();
         }
+        this.moduleCreditsCountedToGPA = totalMC;
         if (totalMC == 0) {
             LOGGER.log(Level.INFO, "No modules with grades available to tabulate GPA.");
+            this.currentGPA = 0;
             throw new GpaNullException("No countable grades present to tally.");
         }
-        return sumOfGPA / (double) totalMC;
+        this.currentGPA = sumOfGPA / (double) totalMC;
     }
+
+    public double getCurrentGPA() {return this.currentGPA;}
 
     public Map<Integer, ArrayList<Module>> groupModulesBySemester() {
         Map<Integer, ArrayList<Module>> moduleBySemMap = new HashMap<>();
@@ -139,6 +148,33 @@ public class ModuleList {
 
     public void clearModules() {
         moduleList.clear();
+    }
+
+    public void calcGradesExpectations(double desiredGPA) throws InvalidGpaException {
+        int moduleCreditsTaken = getModuleCreditsTaken();
+        int moduleCreditsNotTaken = moduleCreditsByGraduation - moduleCreditsTaken;
+        int totalModuleCreditsCountedToGPA = moduleCreditsNotTaken + moduleCreditsCountedToGPA;
+        double requiredFutureAverageGrade = (desiredGPA * totalModuleCreditsCountedToGPA -
+                currentGPA * moduleCreditsCountedToGPA)/
+                moduleCreditsNotTaken;
+        if(requiredFutureAverageGrade>5) {
+            throw new InvalidGpaException("Your current GPA is too low to achieve desired GPA :(");
+        }
+        if(requiredFutureAverageGrade<0) {
+            throw new InvalidGpaException("Your current GPA is too high to achieve desired GPA");
+        }
+    }
+
+
+
+    private int getModuleCreditsTaken() {
+        int moduleCreditsTaken = 0;
+        for (Module module : moduleList) {
+            if(module.getModuleStatus()) {
+                moduleCreditsTaken += module.getModuleMC();
+            }
+        }
+        return moduleCreditsTaken;
     }
 }
 
