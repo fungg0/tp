@@ -1,5 +1,6 @@
 package seedu.duke.command;
 
+import seedu.duke.exceptions.ModuleAlreadyExistException;
 import seedu.duke.exceptions.ModuleException;
 import seedu.duke.exceptions.ModuleNotFoundException;
 import seedu.duke.modules.Module;
@@ -12,11 +13,13 @@ public class AddCommand extends Command{
 
     private int moduleMC;
 
-    public AddCommand(String moduleCode, int moduleDate) throws ModuleNotFoundException {
+    public AddCommand(String moduleCode, int moduleDate) throws ModuleNotFoundException, ModuleAlreadyExistException {
         assert moduleCode != null && !moduleCode.trim().isEmpty() : "Module code cannot be null or empty";
         assert moduleDate > 0 : "Module date must be a positive number";
 
-        if (jsonManager.moduleExist(moduleCode)) {
+        if (moduleList.containsModule(moduleCode)) {
+            throw new ModuleAlreadyExistException("You have already added the module!");
+        } else if (jsonManager.moduleExist(moduleCode)) {
             jsonManager.getModuleInfo(moduleCode);
             this.moduleMC = jsonManager.getModuleMC();
             this.moduleCode = moduleCode;

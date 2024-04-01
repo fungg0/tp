@@ -9,6 +9,18 @@ import java.util.Scanner;
 
 public class Ui {
     private static final String COMMENT_LINE_FORMAT_REGEX = "#.*";
+    private static final String COMMANDS_HELP_MESSAGE =
+            "Available Commands:\n" +
+            "NOTE: \"<WORD>\" represents a user-typed argument that is required for the command\n" +
+            "1. init n/<NAME> curr/<CURR_SEM> grad/<GRAD_SEM> - Set name, current & expected grad semester\n" +
+            "2. add c/<COURSE_CODE> w/<WHEN> - Add a module to your schedule\n" +
+            "3. remove c/<COURSE_CODE> - Remove a module from your schedule\n" +
+            "4. grade c/<COURSE_CODE> g/<GRADE> - Add or change a module grade\n" +
+            "5. gpa - View your GPA\n" +
+            "6. desiredgpa <GPA> - Calculates grades needed to achieve a desired GPA\n" +
+            "7. view - View modules on your schedule\n" +
+            "8. graduate - View remaining core modules and MCs left to graduate\n" +
+            "9. help - View command syntax and list of commands available for FAP";
     private final Scanner in;
 
     public Ui() {
@@ -39,26 +51,53 @@ public class Ui {
     }
 
     public static void printGreeting() {
-        printHyphens();
-        System.out.println("Hello! This is your CEG Future Academic Planner!");
-        System.out.println("What can I do for you?");
+        printGreeting("");
     }
 
-    // Prints if name is present
-    public static void printUserGreeting(String name, int startSem, int gradSem) {
+    public static void printGreeting(String name) {
+        String greeting = name.equals("") ? "Hello!" : "Hello " + name + "!";
+
         printHyphens();
-        System.out.println("Hello " + name + "! This is your CEG Future Academic Planner!");
+        System.out.println(greeting + " This is your CEG Future Academic Planner!");
         System.out.println("What would you like to do today?");
+        printHyphens();
+    }
+
+    public static void printHelpInfoCommand() {
+        System.out.println("Type \"help\" to view the list & syntax of available commands");
+    }
+
+    public static void printCommandGuide() {
+        System.out.println(COMMANDS_HELP_MESSAGE);
     }
 
     public static void printUserInfo(String name, int startSem, int gradSem) {
-        String greeting = name.equals("") ? "Hello!" : "Hello " + name + "!";
-        String currentSemesterInfo = String.format("You are currently in Semester %d", startSem);
-        String graduationSemesterInfo = String.format("and expected to graduate in Semester %d", gradSem);
+        String greeting = String.format("Greetings %s! Your details are updated:", name);
+        String updatedCurrentSemesterInfo = String.format("You are currently in Semester %d", startSem);
+        String updatedGraduationSemesterInfo = String.format("You are expected to graduate in Semester %d", gradSem);
 
         System.out.println(greeting);
+        System.out.println(updatedCurrentSemesterInfo);
+        System.out.println(updatedGraduationSemesterInfo);
+    }
+
+    public static void printScheduleHeader(String name) {
+        String user = (name.isEmpty() || name == null) ? "Anonymous" : name;
+        String title = String.format("CEG study plan for: %s", user);
+
+        System.out.println(title);
+    }
+
+    public static void printScheduleDetails(int startSem, int gradSem, int MCsTaken, int MCsListed) {
+        String currentSemesterInfo = String.format("• Current Study: Semester %d", startSem);
+        String graduationSemesterInfo = String.format("• Expected Graduation: Semester %d", gradSem);
+        String mcsTakenInfo = String.format("• Total MCs taken: %d / 160", MCsTaken);
+        String mcsListedInfo = String.format("• Total MCs listed: %d / 160", MCsListed);
+
         System.out.println(currentSemesterInfo);
         System.out.println(graduationSemesterInfo);
+        System.out.println(mcsTakenInfo);
+        System.out.println(mcsListedInfo);
     }
 
     // Helper function for printModulePlan()
@@ -123,6 +162,7 @@ public class Ui {
             System.out.println(paddedModuleCode + paddedModuleMC);
         }
         System.out.println("+---------------------------+------------+");
+        System.out.println("Be sure to also complete your GESS, GEC, and GEN modules.");
     }
 
     public static void printHyphens() {
