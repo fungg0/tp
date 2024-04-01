@@ -18,6 +18,7 @@ public class InvalidCommand extends Command {
     public void execute(String userInput) {
         if (!errorMessage.isEmpty()) {
             Ui.printMessage(errorMessage);
+            Ui.printHelpInfoCommand();
         }
     }
 }

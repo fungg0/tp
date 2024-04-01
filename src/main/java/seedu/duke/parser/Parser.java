@@ -20,6 +20,7 @@ public class Parser {
         metadataList.add(new RemoveCommandMetadata());
         metadataList.add(new GradeCommandMetadata());
         metadataList.add(new ByeCommandMetadata());
+        metadataList.add(new HelpCommandMetadata());
     }
 
     public static Command getCommand(String userInput) {
