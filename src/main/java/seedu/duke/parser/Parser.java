@@ -1,6 +1,5 @@
 package seedu.duke.parser;
 
-import seedu.duke.exceptions.InvalidGpaException;
 import seedu.duke.exceptions.ParserException;
 import seedu.duke.command.Command;
 import seedu.duke.command.InvalidCommand;
@@ -50,9 +49,4 @@ public class Parser {
         return new InvalidCommand();
     }
 
-    public static void validateGPA(double GPA) throws InvalidGpaException {
-        if (GPA > 5 || GPA <0) {
-            throw new InvalidGpaException("GPA must be within 0 to 5.");
-        }
-    }
 }

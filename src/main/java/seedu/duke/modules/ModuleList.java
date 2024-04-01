@@ -151,18 +151,139 @@ public class ModuleList {
     }
 
     public void calcGradesExpectations(double desiredGPA) throws InvalidGpaException {
+        tallyGPAForCalcGradesExpectations();
         int moduleCreditsTaken = getModuleCreditsTaken();
         int moduleCreditsNotTaken = moduleCreditsByGraduation - moduleCreditsTaken;
         int totalModuleCreditsCountedToGPA = moduleCreditsNotTaken + moduleCreditsCountedToGPA;
         double requiredFutureAverageGrade = (desiredGPA * totalModuleCreditsCountedToGPA -
                 currentGPA * moduleCreditsCountedToGPA)/
                 moduleCreditsNotTaken;
-        if(requiredFutureAverageGrade>5) {
+        validateFutureAverageGrade(requiredFutureAverageGrade);
+        double upperBound = getFutureAverageGradeUpperBound(requiredFutureAverageGrade);
+        double lowerBound = getFutureAverageGradeLowerBound(requiredFutureAverageGrade);
+        int upperBoundGradeNeeded = 0;
+        int lowerBoundGradeNeeded = 0;
+        double mockGPA = lowerBound;
+        while (moduleCreditsNotTaken>0) {
+            if (mockGPA < requiredFutureAverageGrade) {
+                upperBoundGradeNeeded += 1;
+            } else {
+                lowerBoundGradeNeeded += 1;
+            }
+            mockGPA = calculateMockGPA(upperBound, upperBoundGradeNeeded, lowerBound, lowerBoundGradeNeeded);
+            moduleCreditsNotTaken -= 4;
+        }
+        if (mockGPA < requiredFutureAverageGrade) {
+            lowerBoundGradeNeeded -= 1 ;
+            upperBoundGradeNeeded += 1 ;
+            mockGPA = calculateMockGPA(upperBound, upperBoundGradeNeeded, lowerBound, lowerBoundGradeNeeded);
+        }
+        double acquiredGPA = (currentGPA*moduleCreditsTaken + mockGPA*(4*(upperBoundGradeNeeded+lowerBoundGradeNeeded)))
+                / totalModuleCreditsCountedToGPA;
+        printGradeExpectations(desiredGPA, acquiredGPA, upperBoundGradeNeeded, upperBound, lowerBoundGradeNeeded, lowerBound);
+    }
+
+    private void tallyGPAForCalcGradesExpectations() {
+        try {
+            tallyGPA();
+        } catch (GpaNullException e) {
+            this.currentGPA = 0;
+            this.moduleCreditsCountedToGPA = 0;
+        }
+    }
+
+    private static double calculateMockGPA(double upperBound, int upperBoundGradeNeeded, double lowerBound, int lowerBoundGradeNeeded) {
+        return (upperBound * upperBoundGradeNeeded + lowerBound * lowerBoundGradeNeeded) /
+                (upperBoundGradeNeeded + lowerBoundGradeNeeded);
+    }
+
+    private static void validateFutureAverageGrade(double requiredFutureAverageGrade) throws InvalidGpaException {
+        if(requiredFutureAverageGrade >5) {
             throw new InvalidGpaException("Your current GPA is too low to achieve desired GPA :(");
         }
-        if(requiredFutureAverageGrade<0) {
+        if(requiredFutureAverageGrade <0) {
             throw new InvalidGpaException("Your current GPA is too high to achieve desired GPA");
         }
+    }
+
+    private void printGradeExpectations(double desiredGPA, double acquiredGPA, int upperBoundGradeNeeded, double upperBound, int lowerBoundGradeNeeded, double lowerBound) {
+        String formattedDesiredGPA = String.format("%.02f", desiredGPA);
+        String formattedAcquiredGPA = String.format("%.02f", acquiredGPA);
+        System.out.println("To obtain desired GPA of: " + formattedDesiredGPA);
+        System.out.println("You will need: " + upperBoundGradeNeeded + " " + numberToGrade(upperBound) +
+                " and " + lowerBoundGradeNeeded + " " + numberToGrade(lowerBound));
+        System.out.println("With the above grades, your end GPA will be: " + formattedAcquiredGPA);
+    }
+
+    public double getFutureAverageGradeUpperBound(double requiredFutureAverageGrade) {
+        if (requiredFutureAverageGrade > 4.5) {
+            return 5.0;
+        } else if (requiredFutureAverageGrade > 4.0) {
+            return 4.5;
+        } else if (requiredFutureAverageGrade > 3.5) {
+            return 4.0;
+        } else if (requiredFutureAverageGrade > 3.0) {
+            return 3.5;
+        } else if (requiredFutureAverageGrade > 2.5) {
+            return 3.0;
+        } else if (requiredFutureAverageGrade > 2.0) {
+            return 2.5;
+        } else if (requiredFutureAverageGrade > 1.5) {
+            return 2.0;
+        } else if (requiredFutureAverageGrade > 1.0) {
+            return 1.5;
+        } else if (requiredFutureAverageGrade > 0) {
+            return 1.0;
+        }
+        return 0;
+    }
+
+    public double getFutureAverageGradeLowerBound(double requiredFutureAverageGrade) {
+        if (requiredFutureAverageGrade < 1.0) {
+            return 0;
+        } else if (requiredFutureAverageGrade < 1.5) {
+            return 1.0;
+        } else if (requiredFutureAverageGrade < 2.0) {
+            return 1.5;
+        } else if (requiredFutureAverageGrade < 2.5) {
+            return 2.0;
+        } else if (requiredFutureAverageGrade < 3.0) {
+            return 2.5;
+        } else if (requiredFutureAverageGrade < 3.5) {
+            return 3.0;
+        } else if (requiredFutureAverageGrade < 4.0) {
+            return 3.5;
+        } else if (requiredFutureAverageGrade < 4.5) {
+            return 4.0;
+        } else if (requiredFutureAverageGrade < 5) {
+            return 4.5;
+        }
+        return 5;
+    }
+
+    public String numberToGrade(double grade) {
+        if (grade == 5.0) {
+            return "A";
+        } else if (grade == 4.5) {
+            return "A-";
+        } else if (grade == 4.0) {
+            return "B+";
+        } else if (grade == 3.5) {
+            return "B";
+        } else if (grade == 3.0) {
+            return "B-";
+        } else if (grade == 2.5) {
+            return "C+";
+        } else if (grade == 2.0) {
+            return "C";
+        } else if (grade == 1.5) {
+            return "D+";
+        } else if (grade == 1.0) {
+            return "D";
+        } else if (grade == 0) {
+            return "F";
+        }
+        return "non-vaLid number";
     }
 
 
