@@ -68,6 +68,18 @@ Format: `remove c/COURSE_CODE`
 
 - `COURSE_CODE` must be a valid course code from NUS mods from AY23-24
 
+Example usage:
+
+`remove c/CS2113` (assuming CS2113 is in the list)
+
+Expected output:
+
+```
+__________________________________________________
+Module CS2113 Removed!
+__________________________________________________
+```
+
 ### View remaining modules to graduate: `graduate`
 
 `graduate`: Allows users to view the remaining core CEG modules left to take along with their respective MCs
@@ -76,6 +88,49 @@ Format: `graduate`
 
 - EG3611A (Industrial Attachment) and CP3880 (Advanced Technology Attachment Programme) will both show on the list if
   neither is completed. Both will be removed from the list when either one is completed.
+
+Example usage:
+
+`graduate` (assuming `add` was never called on any valid modules).
+
+Expected output:
+
+```
++---------------------------+------------+
+| Course Code               | MCs        |
++---------------------------+------------+
+| ES2631                    | 4          |
+| CS1010                    | 4          |
+| GEA1000                   | 4          |
+| DTK1234                   | 4          |
+| EG1311                    | 4          |
+| IE2141                    | 4          |
+| EE2211                    | 4          |
+| CDE2501                   | 4          |
+| CDE2000                   | 4          |
+| PF1101                    | 4          |
+| CG4002                    | 8          |
+| MA1511                    | 2          |
+| MA1512                    | 2          |
+| MA1508E                   | 4          |
+| EG2401A                   | 2          |
+| EG3611A                   | 10         |
+| CP3880                    | 12         |
+| CG1111A                   | 4          |
+| CG2111A                   | 4          |
+| CS1231                    | 4          |
+| CG2023                    | 4          |
+| CG2027                    | 2          |
+| CG2028                    | 2          |
+| CG2271                    | 4          |
+| CS2113                    | 4          |
+| EE2026                    | 4          |
+| EE4204                    | 4          |
++---------------------------+------------+
+Be sure to also complete 40MCs of Unrest
+ricted Electives, GESS, GEC, and GEN mod
+ules.
+```
 
 ## FAQ
 
