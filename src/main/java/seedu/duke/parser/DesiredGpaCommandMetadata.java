@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class DesiredGpaCommandMetadata extends CommandMetadata{
     private static final String DESIREDGPA_KEYWORD = "desiredgpa";
-    private static final String[] DESIREDGPA_ARGUMENTS = {"gpa"};
+    private static final String[] DESIREDGPA_ARGUMENTS = {"dgpa"};
 
     public DesiredGpaCommandMetadata() {
         super(DESIREDGPA_KEYWORD, DESIREDGPA_ARGUMENTS);
@@ -15,8 +15,8 @@ public class DesiredGpaCommandMetadata extends CommandMetadata{
 
     @Override
     protected Command createCommandInstance(Map<String, String> args) {
-        float gpa = Float.parseFloat(args.get("gpa"));
+        float dgpa = Float.parseFloat(args.get("dgpa"));
 
-        return new DesiredGpaCommand(gpa);
+        return new DesiredGpaCommand(dgpa);
     }
 }

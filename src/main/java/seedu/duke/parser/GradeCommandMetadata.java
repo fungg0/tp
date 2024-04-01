@@ -14,8 +14,8 @@ public class GradeCommandMetadata extends CommandMetadata {
         super(GRADE_KEYWORD, GRADE_ARGUMENTS);
     }
 
-    public static void validateGPA(double GPA) throws InvalidGpaException {
-        if (GPA > 5 || GPA <0) {
+    public static void validateGPA(double gpa) throws InvalidGpaException {
+        if (gpa > 5 || gpa <0) {
             throw new InvalidGpaException("GPA must be within 0 to 5.");
         }
     }
