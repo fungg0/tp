@@ -21,6 +21,7 @@ public class Parser {
         metadataList.add(new GradeCommandMetadata());
         metadataList.add(new ByeCommandMetadata());
         metadataList.add(new DesiredGpaCommandMetadata());
+        metadataList.add(new HelpCommandMetadata());
     }
 
     public static Command getCommand(String userInput) {

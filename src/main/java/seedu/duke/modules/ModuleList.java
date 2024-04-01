@@ -10,6 +10,7 @@ import seedu.duke.user.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import static seedu.duke.FAP.LOGGER;
@@ -131,7 +132,11 @@ public class ModuleList {
 
     public boolean containsModule(String moduleCode) {
         for (Module takenModule : moduleList) {
-            if (moduleCode.equals(takenModule.getModuleCode())) {
+            ArrayList<String> equivalentList = CEGModules
+                    .mapStringToEnum(takenModule.getModuleCode())
+                    .getEquivalent();
+            boolean hasEquivalent = equivalentList != null && equivalentList.contains(moduleCode);
+            if (hasEquivalent || moduleCode.equals(takenModule.getModuleCode())) {
                 return true;
             }
         }
@@ -146,6 +151,24 @@ public class ModuleList {
             }
         }
         return modulesToComplete;
+    }
+
+    public int calculateTotalMCs() {
+        return calculateMCs(module -> true);
+    }
+
+    public int calculateTakenMCs() {
+        return calculateMCs(Module::getModuleStatus);
+    }
+
+    private int calculateMCs(Predicate<Module> predicate) {
+        int totalMCs = 0;
+        for (Module module : moduleList) {
+            if (predicate.test(module)) {
+                totalMCs += module.getModuleMC();
+            }
+        }
+        return totalMCs;
     }
 
     public void clearModules() {

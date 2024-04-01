@@ -66,9 +66,9 @@ public class FAPTest {
 
         String expectedOutput = buildExpectedOutput(
                 "__________________________________________________",
-                "Hello bob!",
+                "Greetings bob! Your details are updated:",
                 "You are currently in Semester 4",
-                "and expected to graduate in Semester 8",
+                "You are expected to graduate in Semester 8",
                 "__________________________________________________",
                 "__________________________________________________",
                 "Bye. Enjoy your studies!"
@@ -87,7 +87,8 @@ public class FAPTest {
 
         String expectedOutput = buildExpectedOutput(
                 "__________________________________________________",
-                "init command: Invalid argument format/delimiters used",
+                "Invalid init command: Invalid argument format/delimiters used",
+                "Type \"help\" to view the list & syntax of available commands",
                 "__________________________________________________",
                 "__________________________________________________",
                 "Bye. Enjoy your studies!"
