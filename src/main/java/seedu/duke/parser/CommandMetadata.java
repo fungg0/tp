@@ -26,6 +26,7 @@ public abstract class CommandMetadata {
         argRegexMap.put("semester", "w/(?<semester>[1-8])");
         argRegexMap.put("mc", "m/(?<mc>[1-9]|1[0-2])");
         argRegexMap.put("grade", "g/(?<grade>[ab][+-]?|[cd][+]?|f|cs|cu)");
+        argRegexMap.put("dgpa", "(?<dgpa>[0-9]+([.][0-9]*)?|[.][0-9]+)");
     }
 
     private String keyword;

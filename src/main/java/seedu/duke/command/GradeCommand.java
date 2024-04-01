@@ -1,8 +1,8 @@
 package seedu.duke.command;
 
 public class GradeCommand extends Command {
-    private String moduleCode;
-    private String moduleGrade;
+    private final String moduleCode;
+    private final String moduleGrade;
     public GradeCommand(String moduleCode, String moduleGrade) {
         this.moduleCode = moduleCode;
         this.moduleGrade = moduleGrade;
