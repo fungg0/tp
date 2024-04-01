@@ -11,27 +11,28 @@
 1. Ensure that you have Java 11 or above installed.
 1. Down the latest version of `Duke` from [here](http://link.to/duke).
 
-## Features 
+## Features
 
-{Give detailed description of each feature}
+### Remove module: `remove`
 
-### Adding a todo: `todo`
-Adds a new item to the list of todo items.
+`remove`: Removes modules from the user's course plan
 
-Format: `todo n/TODO_NAME d/DEADLINE`
+Format: `remove c/COURSE_CODE`
 
-* The `DEADLINE` can be in a natural language format.
-* The `TODO_NAME` cannot contain punctuation.  
+- `COURSE_CODE` must be a valid course code from NUS mods from AY23-24
 
-Example of usage: 
+### View remaining modules to graduate: `graduate`
 
-`todo n/Write the rest of the User Guide d/next week`
+`graduate`: Allows users to view the remaining core CEG modules left to take along with their respective MCs
 
-`todo n/Refactor the User Guide to remove passive voice d/13/04/2020`
+Format: `graduate`
+
+- EG3611A (Industrial Attachment) and CP3880 (Advanced Technology Attachment Programme) will both show on the list if
+  neither is completed. Both will be removed from the list when either one is completed.
 
 ## FAQ
 
-**Q**: How do I transfer my data to another computer? 
+**Q**: How do I transfer my data to another computer?
 
 **A**: {your answer here}
 
