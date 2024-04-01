@@ -1,7 +1,6 @@
 package seedu.duke.enums;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public enum CEGModules {

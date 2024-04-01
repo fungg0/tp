@@ -6,7 +6,6 @@ import seedu.duke.exceptions.ModuleException;
 import seedu.duke.exceptions.ModuleNotFoundException;
 import seedu.duke.user.User;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
