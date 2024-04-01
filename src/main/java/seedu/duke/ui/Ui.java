@@ -19,7 +19,8 @@ public class Ui {
             "5. gpa - View your GPA\n" +
             "6. desiredgpa <GPA> - Calculates grades needed to achieve a desired GPA\n" +
             "7. view - View modules on your schedule\n" +
-            "8. graduate - View remaining core modules and MCs left to graduate";
+            "8. graduate - View remaining core modules and MCs left to graduate\n" +
+            "9. help - View command syntax and list of commands available for FAP";
     private final Scanner in;
 
     public Ui() {
