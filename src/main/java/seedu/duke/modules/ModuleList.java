@@ -6,6 +6,7 @@ import seedu.duke.exceptions.ModuleException;
 import seedu.duke.exceptions.ModuleNotFoundException;
 import seedu.duke.user.User;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -120,7 +121,11 @@ public class ModuleList {
 
     public boolean containsModule(String moduleCode) {
         for (Module takenModule : moduleList) {
-            if (moduleCode.equals(takenModule.getModuleCode())) {
+            ArrayList<String> equivalentList = CEGModules
+                    .mapStringToEnum(takenModule.getModuleCode())
+                    .getEquivalent();
+            boolean hasEquivalent = equivalentList != null && equivalentList.contains(moduleCode);
+            if (hasEquivalent || moduleCode.equals(takenModule.getModuleCode())) {
                 return true;
             }
         }
