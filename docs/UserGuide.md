@@ -60,6 +60,33 @@ You are expected to graduate in Semester 8
 __________________________________________________
 ```
 
+### Add module: `add`
+
+`add`: Adds modules to the user's course plan
+
+Format: `add c/COURSE_CODE w/WHEN`
+
+- `COURSE_CODE` must be a valid course code from NUS mods from AY23-24
+- `WHEN` must be a valid semester from 1-8
+- The module must not already be in the list
+- The module must be a valid module from NUS mods from AY23-24
+- The module must not be a duplicate of another module in the list
+- The module must not be a core module that has already been completed
+- The module must not be a core module that has already been added to the list
+
+Example usage:
+
+`add c/CS2113 w/4`
+
+Expected output:
+
+```
+__________________________________________________
+Added the new module: CS2113
+Software Engineering & Object-Oriented Programming
+__________________________________________________
+```
+
 ### Remove module: `remove`
 
 `remove`: Removes modules from the user's course plan
