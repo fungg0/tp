@@ -151,6 +151,7 @@ public class Ui {
     public static void printModulesToComplete(ArrayList<String> modulesToComplete) {
         int courseCodeTableWidth = 25;
         int mcTableWidth = 10;
+        int borderWidth = 5;
 
         System.out.println("+---------------------------+------------+");
         System.out.println("| Course Code               | MCs        |");
@@ -162,7 +163,20 @@ public class Ui {
             System.out.println(paddedModuleCode + paddedModuleMC);
         }
         System.out.println("+---------------------------+------------+");
-        System.out.println("Be sure to also complete your GESS, GEC, and GEN modules.");
+        printWrappedText("Be sure to also complete 40MCs of Unrestricted Electives, GESS, GEC, and GEN modules.",
+                courseCodeTableWidth + mcTableWidth + borderWidth);
+    }
+
+    public static void printWrappedText(String text, int lineWidth) {
+        int length = text.length();
+        int start = 0;
+        int end = Math.min(lineWidth, length);
+
+        while (start < length) {
+            System.out.println(text.substring(start, end));
+            start = end;
+            end = Math.min(start + lineWidth, length);
+        }
     }
 
     public static void printHyphens() {
