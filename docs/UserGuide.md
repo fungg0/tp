@@ -315,7 +315,7 @@ __________________________________________________
 
 **Q**: What if I S\U the mod, and the mod in the list originally has a grade?
 
-**A**: Remove the grade then add the course again into the list with the same details without any grade.
+**A**: You can use the command `grade c/COURSE_CODE g/GRADE, then in the GRADE section put CS.
 
 ## Command Summary
 
