@@ -8,7 +8,6 @@ public class ByeCommand extends Command {
         try {
             printExit();
         } catch (Exception e) {
-            // In case there is an unexpected issue within printExit().
             System.err.println("An error occurred while attempting to exit: " + e.getMessage());
         }
     }

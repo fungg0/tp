@@ -203,7 +203,7 @@ public class ModuleList {
             upperBoundGradeNeeded += 1;
             mockGPA = calculateMockGPA(upperBound, upperBoundGradeNeeded, lowerBound, lowerBoundGradeNeeded);
         }
-        double acquiredGPA = (currentGPA * moduleCreditsTaken + mockGPA *
+        double acquiredGPA = (currentGPA * moduleCreditsCountedToGPA + mockGPA *
                 (4 * (upperBoundGradeNeeded + lowerBoundGradeNeeded))) / totalModuleCreditsCountedToGPA;
         printGradeExpectations(desiredGPA, acquiredGPA, upperBoundGradeNeeded,
                 upperBound, lowerBoundGradeNeeded, lowerBound);
@@ -325,6 +325,3 @@ public class ModuleList {
         return moduleCreditsTaken;
     }
 }
-
-//code mc date grade description
-//code date grade

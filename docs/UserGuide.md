@@ -14,7 +14,7 @@ faster than your traditional GUI app.
     - [Course Management](#course-management)
         - [`add`: Adds a module.](#add-module-add)
         - [`remove`: Removes a module.](#remove-module-remove)
-        - `view`: View modules in schedule.
+        - [`view`: View modules in schedule.](#view-modules-in-schedule-view)
         - [`graduate`: View remaining modules required to graduate.](#view-remaining-modules-to-graduate-graduate)
     - [Grade Management](#grade-management)
         - `grade`: Add or edit grades to a module.
@@ -138,6 +138,41 @@ Module CS2113 Removed!
 __________________________________________________
 ```
 
+### View modules in schedule: `view`
+
+`view`: Allows users to view their academic plan.
+
+Format: `view`
+
+- This will show various details, including the user’s
+  - `name` (`Anonymous` if not inputted by the user),
+  - `current studying` semester (`1` if not inputted by the user),
+  - `expected graduating` semester (`8` if not inputted by the user),
+  - `module course code` and `grade`, along with the semester associated with it (`empty` if not inputted by the user),
+  - `total modular credits taken` (modular credits of all modules taken up till and including current semester)
+  - `total modular credits listed` (modular credits of all modules listed in the schedule)
+ 
+Example usage:
+
+`view`
+
+Example output:
+```
+__________________________________________________
+CEG Study Plan for: James Gosling
+__________________________________________________
+|Y1S1       |Y1S2       |Y2S1       |Y2S2       |
+ CS1010                              CS2113      
+ CG1111A  A+                                     
+__________________________________________________
+|Y3S1       |Y3S2       |Y4S1       |Y4S2       |
+__________________________________________________
+- Current Study: Semester 4
+- Expected Graduation: Semester 8
+- Total MCs taken: 12 / 160
+- Total MCs listed: 12 / 160
+__________________________________________________
+```
 ### View remaining modules to graduate: `graduate`
 
 `graduate`: Allows users to view the remaining core CEG modules left to take along with their respective MCs
@@ -192,14 +227,92 @@ ules.
 
 ## Grade Management
 
+### Change grade : `grade`
+
+`grade`: Input or adjust the grade obtained for a module.
+
+Format: `grade c/COURSE_CODE g/GRADE`
+
+`COURSE_CODE` represents the module that you want to input a grade for.
+
+`GRADE` represents the grade you attained for that module
+
+- The module should be added into the list first with the add module function
+- `GRADE` only accepts alphabetical grade. Following are the allowed inputs for `GRADE`
+  - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, CU`
+- You can only change the grade of modules that are before or during your current semester
+  - If current semester 5, you can only change grades of modules from semester 1 to 5.
+
+Example usage: 
+
+`grade c/cs1231 g/B`
+
+Expected output:
+
+```
+__________________________________________________
+Grade for CS1231 updated to B
+__________________________________________________
+```
+
+### View GPA: `gpa`
+
+`gpa`: Shows user their current GPA
+
+Format: `gpa`
+
+Example usage:
+
+`gpa`
+
+Expected output:
+
+```
+__________________________________________________
+Your current GPA is: 4.25
+__________________________________________________
+```
+
+### Feasibility of desired GPA: `desiredgpa`
+
+`desiredgpa`: Checks if user's desired final GPA is possible with regard to current GPA, and show a combination of
+required grades to obtain to achieve the desired GPA.
+
+Format: `desiredgpa DESIRED_GPA`
+
+- `DESIRED_GPA` must be a number from 0 to 5
+- Assumes remaining mods to be taken are all graded 4MC mods
+- Assumes user take 160MC by graduation
+
+Example usage: 
+
+`desiredgpa 4.75` (assuming 2 mods already inputted, 1 A and 1 B)
+
+Expected output:
+
+```
+__________________________________________________
+To obtain desired GPA of: 4.75
+You will need: 21 A and 17 A-
+With the above grades, your end GPA will be: 4.75
+__________________________________________________
+```
+
+
 ## FAQ
 
-**Q**: How do I transfer my data to another computer?
+**Q**: How do I edit a module if I accidentally added it to a wrong semester?
 
-**A**: {your answer here}
+**A**: Currently you will need to remove the module then add it again to the correct semester.
 
 ## Command Summary
 
-{Give a 'cheat sheet' of commands here}
-
-* Add todo `todo n/TODO_NAME d/DEADLINE`
+* Initialise user `init n/NAME curr/CURR_SEM grad/GRAD_SEM`
+* Add modules `add c/COURSE_CODE w/WHEN`
+* Remove modules `remove c/COURSE_CODE`
+* Input grade `grade c/COURSE_CODE g/GRADE`
+* View GPA `gpa`
+* Check for desired GPA `desiredgpa DESIRED_GPA`
+* View modules added `view`
+* View modules still required for graduation `graduation`
+* Exit the program `bye`
