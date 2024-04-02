@@ -113,6 +113,10 @@ public class Module {
         }
     }
 
+    public boolean gradeIsNull() {
+        return moduleGrade == null;
+    }
+
     @Override
     public String toString() {
         return "Module{" +
