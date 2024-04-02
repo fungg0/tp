@@ -7,7 +7,7 @@ import seedu.duke.modules.Module;
 
 import static seedu.duke.FAP.jsonManager;
 
-public class AddCommand extends Command{
+public class AddCommand extends Command {
     private String moduleCode;
     private int moduleDate;
 
@@ -17,15 +17,18 @@ public class AddCommand extends Command{
         assert moduleCode != null && !moduleCode.trim().isEmpty() : "Module code cannot be null or empty";
         assert moduleDate > 0 : "Module date must be a positive number";
 
-        if (moduleList.containsModule(moduleCode)) {
+        try {
+            Module moduleToAdd = moduleList.getModule(moduleCode);
             throw new ModuleAlreadyExistException("You have already added the module!");
-        } else if (jsonManager.moduleExist(moduleCode)) {
-            jsonManager.getModuleInfo(moduleCode);
-            this.moduleMC = jsonManager.getModuleMC();
-            this.moduleCode = moduleCode;
-            this.moduleDate = moduleDate;
-        } else {
-            throw new ModuleNotFoundException("Module do not exist in NUS!");
+        } catch (ModuleNotFoundException e) {
+            if (jsonManager.moduleExist(moduleCode)) {
+                jsonManager.getModuleInfo(moduleCode);
+                this.moduleMC = jsonManager.getModuleMC();
+                this.moduleCode = moduleCode;
+                this.moduleDate = moduleDate;
+            } else {
+                throw new ModuleNotFoundException("Module do not exist in NUS!");
+            }
         }
     }
 
