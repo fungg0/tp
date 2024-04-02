@@ -32,7 +32,7 @@ faster than your traditional GUI app.
    
 3. Copy the file `FAP.jar` to a new empty folder
  
-4. Open a command terminal in the directory of the folder, and use `java -jar carrot.jar` to run the application
+4. Open a command terminal in the directory of the folder, and use `java -jar FAP.jar` to run the application
    
 5. Type commands in the terminal and press enter to execute them. 
    - Some example commands are:
