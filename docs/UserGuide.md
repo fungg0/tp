@@ -1,4 +1,4 @@
-# User Guide
+# User Guide for Future Academic Planner (FAP)
 
 ## Introduction
 
@@ -6,38 +6,69 @@ Future Academic Planner (FAP) is a **robust academic management software** desig
 Engineering (CEG) student’s academic journey at NUS**. If you can type fast, FAP can get your module planning done
 faster than your traditional GUI app.
 
+##  Content Navigation:
+- [Quick Start](#quick-start)
+- [Features](#features)
+    - [User Management](#user-management)
+        - [`init`: Personalizes the bot for the user.](#personalization-init)
+    - [Course Management](#course-management)
+        - [`add`: Adds a module.](#add-module-add)
+        - [`remove`: Removes a module.](#remove-module-remove)
+        - `view`: View modules in schedule.
+        - [`graduate`: View remaining modules required to graduate.](#view-remaining-modules-to-graduate-graduate)
+    - [Grade Management](#grade-management)
+        - `grade`: Add or edit grades to a module.
+        - `gpa`: View current GPA.
+        - `desiredgpa`: Calculate grades required for a gpa goal.
+- [Saving Data](#saving-data)
+- [FAQ](#faq)
+- [Command Summary](#command-summary)
+
 ## Quick Start
 
-{Give steps to get started quickly} {To be modified}
+1. Ensure you have `java 11` or above installed on your computer
+   
+2. Download the latest `FAP.jar` from [here](https://github.com/AY2324S2-CS2113-W14-3/tp/releases)
+   
+3. Copy the file `FAP.jar` to a new empty folder
+ 
+4. Open a command terminal in the directory of the folder, and use `java -jar FAP.jar` to run the application
+   
+5. Type commands in the terminal and press enter to execute them. 
+   - Some example commands are:
+        - `add c/COURSE_CODE w/WHEN`: Add a module (`COURSE_CODE`) to your module plan on Semester (`WHEN`)
+        - `view`: Shows your module plan so far
+        - `bye`: Exits the FAP application
+          
+6. Head to [**Features**](#features) right below for more details on each command.
+ 
+7. Alternatively, Refer to [**Command Summary**](#command-summary) for the list of commands available. 
 
-1. Ensure that you have Java 11 or above installed.
-1. Down the latest version of `Duke` from [here](http://link.to/duke).
-
-## Features
+## Features 
 
 > [!IMPORTANT]  
 > All arguments **must be provided** and **must follow the specified order** in Format.
 >
-> Arguments required from the user are specified in **CAPITAL LETTERS**
-> - Eg. The argument `n/NAME` would require the user to type `n/` followed by the user's required argument, their `NAME`
+> Words in `UPPER_CASE` are the parameters to be **supplied by the user**.
+>
+> - Eg. For the command `remove c/COURSE_CODE`, `COURSE_CODE` is a parameter which can be used as `remove c/CS2113`
 
-### Personalization : init
+## User Management
 
-Personalises the bot for the user.
+### Personalization: `init` 
+
+`init`: Personalises the bot for the user.
 
 - Sets the **name of the user, current studying semester, and expected graduation semester** for FAP.
-
 - **By default**, Name is set to `Anonymous`, Current Semester is set to `1`, Graduation Semester is set to `8`.
 
 Format: `init n/NAME curr/CURR_SEM grad/GRAD_SEM`
 
-**Arguments:**
-
 `NAME` represents the name of the user
 
-`CURR_SEM` represents the current semester the user is currently in
+`CURR_SEM` represents the current semester (From 1-8) the user is currently in.
 
-`GRAD_SEM` represents the expected graduation semester the user will graduate from NUS.
+`GRAD_SEM` represents the expected graduation semester (From 1-8) the user will graduate from NUS
 
 * `NAME` must only have alphabetic characters (either uppercase or lowercase) and optionally spaces in between.
 * `CURR_SEM` must be a positive integer from 1-8, to represent the semester the user is currently in
@@ -48,8 +79,6 @@ Example usage:
 
 `init n/James Gosling curr/1 grad/8`
 
-`init n/Tommy curr/4 grad/8`
-
 Expected output:
 
 ```
@@ -57,6 +86,35 @@ __________________________________________________
 Greetings James Gosling! Your details are updated:
 You are currently in Semester 1
 You are expected to graduate in Semester 8
+__________________________________________________
+```
+
+## Course Management
+
+### Add module: `add`
+
+`add`: Adds modules to the user's course plan
+
+Format: `add c/COURSE_CODE w/WHEN`
+
+- `COURSE_CODE` must be a valid course code from NUS mods from AY23-24
+- `WHEN` must be a valid semester from 1-8
+- The module must not already be in the list
+- The module must be a valid module from NUS mods from AY23-24
+- The module must not be a duplicate of another module in the list
+- The module must not be a core module that has already been completed
+- The module must not be a core module that has already been added to the list
+
+Example usage:
+
+`add c/CS2113 w/4`
+
+Expected output:
+
+```
+__________________________________________________
+Added the new module: CS2113
+Software Engineering & Object-Oriented Programming
 __________________________________________________
 ```
 
@@ -131,6 +189,8 @@ Be sure to also complete 40MCs of Unrest
 ricted Electives, GESS, GEC, and GEN mod
 ules.
 ```
+
+## Grade Management
 
 ## FAQ
 
