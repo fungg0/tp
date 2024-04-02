@@ -150,9 +150,8 @@ public abstract class CommandMetadata {
         // Build the regex pattern to split the userInput
         StringBuilder regexPatternBuilder = new StringBuilder("\\s+(?=");
         for (String str : groupArguments) {
-            // Get the delimiter for the current argument
+            // Get the delimiter by regex replacement and append to the regex pattern
             String delimiter = getArgRegex(str).replaceFirst("\\(\\?<[^>]+>.*\\)", "");
-            // Append the delimiter to the regex pattern
             regexPatternBuilder.append(delimiter).append("|");
         }
         // Remove the trailing "|" character and close the lookahead assertion
