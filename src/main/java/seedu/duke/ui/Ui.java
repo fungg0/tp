@@ -88,11 +88,11 @@ public class Ui {
         System.out.println(title);
     }
 
-    public static void printScheduleDetails(int startSem, int gradSem, int MCsTaken, int MCsListed) {
+    public static void printScheduleDetails(int startSem, int gradSem, int mcsTaken, int mcslisted) {
         String currentSemesterInfo = String.format("- Current Study: Semester %d", startSem);
         String graduationSemesterInfo = String.format("- Expected Graduation: Semester %d", gradSem);
-        String mcsTakenInfo = String.format("- Total MCs taken: %d / 160", MCsTaken);
-        String mcsListedInfo = String.format("- Total MCs listed: %d / 160", MCsListed);
+        String mcsTakenInfo = String.format("- Total MCs taken: %d / 160", mcsTaken);
+        String mcsListedInfo = String.format("- Total MCs listed: %d / 160", mcslisted);
 
         System.out.println(currentSemesterInfo);
         System.out.println(graduationSemesterInfo);

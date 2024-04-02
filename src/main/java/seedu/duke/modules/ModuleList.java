@@ -10,7 +10,6 @@ import seedu.duke.user.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
