@@ -17,10 +17,9 @@ faster than your traditional GUI app.
         - [`view`: View modules in schedule.](#view-modules-in-schedule-view)
         - [`graduate`: View remaining modules required to graduate.](#view-remaining-modules-to-graduate-graduate)
     - [Grade Management](#grade-management)
-        - `grade`: Add or edit grades to a module.
-        - `gpa`: View current GPA.
-        - `desiredgpa`: Calculate grades required for a gpa goal.
-- [Saving Data](#saving-data)
+        - [`grade`: Add or edit grades to a module.](#change-grade-grade)
+        - [`gpa`: View current GPA.](#view-gpa-gpa)
+        - [`desiredgpa`: Calculate grades required for a gpa goal.](#feasibility-of-desired-gpa-desiredgpa)
 - [FAQ](#faq)
 - [Command Summary](#command-summary)
 
@@ -44,7 +43,7 @@ faster than your traditional GUI app.
  
 7. Alternatively, Refer to [**Command Summary**](#command-summary) for the list of commands available. 
 
-## Features 
+## Features
 
 > [!IMPORTANT]  
 > All arguments **must be provided** and **must follow the specified order** in Format.
@@ -55,7 +54,7 @@ faster than your traditional GUI app.
 
 ## User Management
 
-### Personalization: `init` 
+### Personalization: `init`
 
 `init`: Personalises the bot for the user.
 
@@ -227,7 +226,7 @@ ules.
 
 ## Grade Management
 
-### Change grade : `grade`
+### Change grade: `grade`
 
 `grade`: Input or adjust the grade obtained for a module.
 
@@ -239,7 +238,8 @@ Format: `grade c/COURSE_CODE g/GRADE`
 
 - The module should be added into the list first with the add module function
 - `GRADE` only accepts alphabetical grade. Following are the allowed inputs for `GRADE`
-  - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, CU`
+  - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS`
+  - For CU grade, user can just remove the module from the list
 - You can only change the grade of modules that are before or during your current semester
   - If current semester 5, you can only change grades of modules from semester 1 to 5.
 
@@ -283,6 +283,7 @@ Format: `desiredgpa DESIRED_GPA`
 - `DESIRED_GPA` must be a number from 0 to 5
 - Assumes remaining mods to be taken are all graded 4MC mods
 - Assumes user take 160MC by graduation
+- Modules that have not been graded will be treated as invisible
 
 Example usage: 
 
@@ -304,6 +305,14 @@ __________________________________________________
 **Q**: How do I edit a module if I accidentally added it to a wrong semester?
 
 **A**: Currently you will need to remove the module then add it again to the correct semester.
+
+**Q**: How do I edit a module if I accidentally added it with a wrong gpa?
+
+**A**: You can use the command `grade c/COURSE_CODE g/GRADE`.
+
+**Q**: What if I S\U the mod, and the mod in the list originally has a grade?
+
+**A**: You can use the command `grade c/COURSE_CODE g/GRADE, then in the GRADE section put CS.
 
 ## Command Summary
 
