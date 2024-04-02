@@ -17,7 +17,7 @@ faster than your traditional GUI app.
         - [`view`: View modules in schedule.](#view-modules-in-schedule-view)
         - [`graduate`: View remaining modules required to graduate.](#view-remaining-modules-to-graduate-graduate)
     - [Grade Management](#grade-management)
-        - [`grade`: Add or edit grades to a module.](#change-grade--grade)
+        - [`grade`: Add or edit grades to a module.](#change-grade-grade)
         - [`gpa`: View current GPA.](#view-gpa-gpa)
         - [`desiredgpa`: Calculate grades required for a gpa goal.](#feasibility-of-desired-gpa-desiredgpa)
 - [FAQ](#faq)
@@ -43,7 +43,7 @@ faster than your traditional GUI app.
  
 7. Alternatively, Refer to [**Command Summary**](#command-summary) for the list of commands available. 
 
-## Features 
+## Features
 
 > [!IMPORTANT]  
 > All arguments **must be provided** and **must follow the specified order** in Format.
@@ -54,7 +54,7 @@ faster than your traditional GUI app.
 
 ## User Management
 
-### Personalization: `init` 
+### Personalization: `init`
 
 `init`: Personalises the bot for the user.
 
@@ -226,7 +226,7 @@ ules.
 
 ## Grade Management
 
-### Change grade : `grade`
+### Change grade: `grade`
 
 `grade`: Input or adjust the grade obtained for a module.
 
