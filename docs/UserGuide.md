@@ -238,7 +238,8 @@ Format: `grade c/COURSE_CODE g/GRADE`
 
 - The module should be added into the list first with the add module function
 - `GRADE` only accepts alphabetical grade. Following are the allowed inputs for `GRADE`
-  - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, CU`
+  - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS`
+  - For CU grade, user can just remove the module from the list
 - You can only change the grade of modules that are before or during your current semester
   - If current semester 5, you can only change grades of modules from semester 1 to 5.
 
@@ -282,6 +283,7 @@ Format: `desiredgpa DESIRED_GPA`
 - `DESIRED_GPA` must be a number from 0 to 5
 - Assumes remaining mods to be taken are all graded 4MC mods
 - Assumes user take 160MC by graduation
+- Modules that have not been graded will be treated as invisible
 
 Example usage: 
 

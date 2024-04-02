@@ -188,14 +188,13 @@ public class ModuleList {
         int upperBoundGradeNeeded = 0;
         int lowerBoundGradeNeeded = 0;
         double mockGPA = lowerBound;
-        while (moduleCreditsNotTaken > 0) {
+        for(int i = moduleCreditsNotTaken; i>0; i-=4) {
             if (mockGPA < requiredFutureAverageGrade) {
                 upperBoundGradeNeeded += 1;
             } else {
                 lowerBoundGradeNeeded += 1;
             }
             mockGPA = calculateMockGPA(upperBound, upperBoundGradeNeeded, lowerBound, lowerBoundGradeNeeded);
-            moduleCreditsNotTaken -= 4;
         }
         if (mockGPA < requiredFutureAverageGrade) {
             lowerBoundGradeNeeded -= 1;
@@ -205,7 +204,7 @@ public class ModuleList {
         double acquiredGPA = (currentGPA * moduleCreditsCountedToGPA + mockGPA *
                 (4 * (upperBoundGradeNeeded + lowerBoundGradeNeeded))) / totalModuleCreditsCountedToGPA;
         printGradeExpectations(desiredGPA, acquiredGPA, upperBoundGradeNeeded,
-                upperBound, lowerBoundGradeNeeded, lowerBound);
+                upperBound, lowerBoundGradeNeeded, lowerBound, moduleCreditsNotTaken);
     }
 
     private void tallyGPAForCalcGradesExpectations() {
@@ -233,12 +232,18 @@ public class ModuleList {
     }
 
     private void printGradeExpectations(double desiredGPA, double acquiredGPA, int upperBoundGradeNeeded,
-                                        double upperBound, int lowerBoundGradeNeeded, double lowerBound) {
+                                        double upperBound, int lowerBoundGradeNeeded, double lowerBound,
+                                        int moduleCreditsNotTaken) {
         String formattedDesiredGPA = String.format("%.02f", desiredGPA);
         String formattedAcquiredGPA = String.format("%.02f", acquiredGPA);
+        System.out.println("MCs left to take: " + moduleCreditsNotTaken);
         System.out.println("To obtain desired GPA of: " + formattedDesiredGPA);
-        System.out.println("You will need: " + upperBoundGradeNeeded + " " + numberToGrade(upperBound) +
-                " and " + lowerBoundGradeNeeded + " " + numberToGrade(lowerBound));
+        if(upperBoundGradeNeeded == 0) {
+            System.out.println("You will need: " + lowerBoundGradeNeeded + " " + numberToGrade(lowerBound));
+        } else{
+            System.out.println("You will need: " + upperBoundGradeNeeded + " " + numberToGrade(upperBound) +
+                    " and " + lowerBoundGradeNeeded + " " + numberToGrade(lowerBound));
+        }
         System.out.println("With the above grades, your end GPA will be: " + formattedAcquiredGPA);
     }
 
