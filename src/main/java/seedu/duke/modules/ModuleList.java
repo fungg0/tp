@@ -130,7 +130,7 @@ public class ModuleList {
         return moduleBySemMap;
     }
 
-    public boolean containsModule(String moduleCode) {
+    public boolean containsCEGModule(String moduleCode) {
         for (Module takenModule : moduleList) {
             ArrayList<String> equivalentList = CEGModules
                     .mapStringToEnum(takenModule.getModuleCode())
@@ -146,7 +146,7 @@ public class ModuleList {
     public ArrayList<String> getModulesToComplete() {
         ArrayList<String> modulesToComplete = new ArrayList<>();
         for (CEGModules cegModule : CEGModules.values()) {
-            if (!containsModule(cegModule.name())) {
+            if (!containsCEGModule(cegModule.name())) {
                 modulesToComplete.add(cegModule.name());
             }
         }
