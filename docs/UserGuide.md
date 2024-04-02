@@ -305,11 +305,7 @@ __________________________________________________
 
 **A**: Currently you will need to remove the module then add it again to the correct semester.
 
-**Q**: How do I edit a module if I accidentally added it to a wrong gpa?
-
-**A**: You can use the command `grade c/COURSE_CODE g/GRADE`.
-
-**Q**: How do I edit a module if I accidentally added it to a wrong gpa?
+**Q**: How do I edit a module if I accidentally added it with a wrong gpa?
 
 **A**: You can use the command `grade c/COURSE_CODE g/GRADE`.
 
