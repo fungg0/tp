@@ -14,7 +14,7 @@ faster than your traditional GUI app.
     - [Course Management](#course-management)
         - [`add`: Adds a module.](#add-module-add)
         - [`remove`: Removes a module.](#remove-module-remove)
-        - `view`: View modules in schedule.
+        - [`view`: View modules in schedule.](#view-modules-in-schedule-view)
         - [`graduate`: View remaining modules required to graduate.](#view-remaining-modules-to-graduate-graduate)
     - [Grade Management](#grade-management)
         - [`grade`: Add or edit grades to a module.](#change-grade--grade)
@@ -137,6 +137,41 @@ Module CS2113 Removed!
 __________________________________________________
 ```
 
+### View modules in schedule: `view`
+
+`view`: Allows users to view their academic plan.
+
+Format: `view`
+
+- This will show various details, including the user’s
+  - `name` (`Anonymous` if not inputted by the user),
+  - `current studying` semester (`1` if not inputted by the user),
+  - `expected graduating` semester (`8` if not inputted by the user),
+  - `module course code` and `grade`, along with the semester associated with it (`empty` if not inputted by the user),
+  - `total modular credits taken` (modular credits of all modules taken up till and including current semester)
+  - `total modular credits listed` (modular credits of all modules listed in the schedule)
+ 
+Example usage:
+
+`view`
+
+Example output:
+```
+__________________________________________________
+CEG Study Plan for: James Gosling
+__________________________________________________
+|Y1S1       |Y1S2       |Y2S1       |Y2S2       |
+ CS1010                              CS2113      
+ CG1111A  A+                                     
+__________________________________________________
+|Y3S1       |Y3S2       |Y4S1       |Y4S2       |
+__________________________________________________
+- Current Study: Semester 4
+- Expected Graduation: Semester 8
+- Total MCs taken: 12 / 160
+- Total MCs listed: 12 / 160
+__________________________________________________
+```
 ### View remaining modules to graduate: `graduate`
 
 `graduate`: Allows users to view the remaining core CEG modules left to take along with their respective MCs
