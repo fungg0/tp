@@ -305,6 +305,18 @@ __________________________________________________
 
 **A**: Currently you will need to remove the module then add it again to the correct semester.
 
+**Q**: How do I edit a module if I accidentally added it to a wrong gpa?
+
+**A**: You can use the command `grade c/COURSE_CODE g/GRADE`.
+
+**Q**: How do I edit a module if I accidentally added it to a wrong gpa?
+
+**A**: You can use the command `grade c/COURSE_CODE g/GRADE`.
+
+**Q**: What if I S\U the mod, and the mod in the list originally has a grade?
+
+**A**: Remove the grade then add the course again into the list with the same details without any grade.
+
 ## Command Summary
 
 * Initialise user `init n/NAME curr/CURR_SEM grad/GRAD_SEM`
