@@ -325,6 +325,3 @@ public class ModuleList {
         return moduleCreditsTaken;
     }
 }
-
-//code mc date grade description
-//code date grade
