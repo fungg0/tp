@@ -26,7 +26,7 @@ public abstract class CommandMetadata {
         argRegexMap.put("semester", "w/(?<semester>[1-8])");
         argRegexMap.put("mc", "m/(?<mc>[1-9]|1[0-2])");
         argRegexMap.put("grade", "g/(?<grade>[ab][+-]?|[cd][+]?|f|cs|cu)");
-        argRegexMap.put("gpa", "(?<gpa>[0-9]+([.][0-9]*)?|[.][0-9]+)");
+        argRegexMap.put("dgpa", "(?<dgpa>[0-9]+([.][0-9]*)?|[.][0-9]+)");
     }
 
     private String keyword;
@@ -134,7 +134,7 @@ public abstract class CommandMetadata {
         if (!matcher.matches()) {
             logger.log(Level.INFO, "Regex pattern: " + argRegex);
             logger.log(Level.INFO, "UserInput Argument: " + argument);
-            throw new ParserException(keyword + " command: Invalid " + argumentName + " format/order");
+            throw new ParserException("Invalid " + keyword + " command: Invalid " + argumentName + " format/order");
         }
     }
 
@@ -175,7 +175,7 @@ public abstract class CommandMetadata {
         assert userInputParts[0].equalsIgnoreCase(keyword) : "userInput should match keyword at this point";
 
         if (userInputParts.length != regexLength) {
-            throw new ParserException(keyword + " command: Invalid argument format/delimiters used");
+            throw new ParserException("Invalid " + keyword + " command: Invalid argument format/delimiters used");
         }
 
         // Check user arguments

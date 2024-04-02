@@ -7,7 +7,8 @@ public class ViewGpaCommand extends Command{
     @Override
     public void execute(String userInput) {
         try {
-            System.out.println("Your current GPA is: " + moduleList.tallyGPA());
+            moduleList.tallyGPA();
+            System.out.println("Your current GPA is: " + moduleList.getCurrentGPA());
         } catch (GpaNullException e) {
             System.out.println(e.getMessage());
         }

@@ -80,7 +80,8 @@ class ModuleListTest {
             moduleList.getModule("CS1231").setModuleTaken(true);
             moduleList.changeModuleGrade("CS1010", "A-");
             moduleList.changeModuleGrade("CS1231", "A");
-            assertEquals(4.75,moduleList.tallyGPA());
+            moduleList.tallyGPA();
+            assertEquals(4.75,moduleList.getCurrentGPA());
         } catch (ModuleNotFoundException e) {
             throw new RuntimeException(e);
         } catch (GpaNullException e) {

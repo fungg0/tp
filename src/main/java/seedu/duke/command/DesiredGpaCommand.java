@@ -1,4 +1,7 @@
 package seedu.duke.command;
+import seedu.duke.exceptions.InvalidGpaException;
+import seedu.duke.parser.GradeCommandMetadata;
+
 
 public class DesiredGpaCommand extends Command{
     public final float desiredGPA;
@@ -9,6 +12,11 @@ public class DesiredGpaCommand extends Command{
 
     @Override
     public void execute(String userInput) {
-        System.out.println(desiredGPA);
+        try {
+            GradeCommandMetadata.validateGPA(desiredGPA);
+            moduleList.calcGradesExpectations(desiredGPA);
+        } catch (InvalidGpaException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
