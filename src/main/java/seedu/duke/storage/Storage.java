@@ -145,7 +145,7 @@ public class Storage {
             if (!moduleStatus.equals("true") && !moduleStatus.equals("false")) {
                 throw new StorageException("Invalid module status for module " + moduleCode + ": " + moduleStatus);
             }
-            if (!moduleGrade.equals("null") && !moduleGrade.matches("[AB][+-]?|[CD][+]?|F|CS|CU")) {
+            if (!moduleGrade.equals("null") && !moduleGrade.matches("[AB][+-]?|[CD][+]?|F|CS")) {
                 throw new StorageException("Invalid module grade for module " + moduleCode + ": " + moduleGrade);
             }
             jsonManager.getModuleInfo(moduleCode);
