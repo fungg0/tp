@@ -83,16 +83,16 @@ public class Ui {
 
     public static void printScheduleHeader(String name) {
         String user = (name.isEmpty() || name == null) ? "Anonymous" : name;
-        String title = String.format("CEG study plan for: %s", user);
+        String title = String.format("CEG Study Plan for: %s", user);
 
         System.out.println(title);
     }
 
     public static void printScheduleDetails(int startSem, int gradSem, int MCsTaken, int MCsListed) {
-        String currentSemesterInfo = String.format("• Current Study: Semester %d", startSem);
-        String graduationSemesterInfo = String.format("• Expected Graduation: Semester %d", gradSem);
-        String mcsTakenInfo = String.format("• Total MCs taken: %d / 160", MCsTaken);
-        String mcsListedInfo = String.format("• Total MCs listed: %d / 160", MCsListed);
+        String currentSemesterInfo = String.format("- Current Study: Semester %d", startSem);
+        String graduationSemesterInfo = String.format("- Expected Graduation: Semester %d", gradSem);
+        String mcsTakenInfo = String.format("- Total MCs taken: %d / 160", MCsTaken);
+        String mcsListedInfo = String.format("- Total MCs listed: %d / 160", MCsListed);
 
         System.out.println(currentSemesterInfo);
         System.out.println(graduationSemesterInfo);
