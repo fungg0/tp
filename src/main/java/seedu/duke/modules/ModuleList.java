@@ -97,8 +97,7 @@ public class ModuleList {
         double sumOfGPA = 0;
 
         for (Module module : moduleList) {
-            if (module.getModuleGrade() == null || module.getModuleGrade().equals("CS") ||
-                    module.getModuleGrade().equals("CU")) {
+            if (module.getModuleGrade() == null || module.getModuleGrade().equals("CS")) {
                 continue;
             }
             totalMC += module.getModuleMC();

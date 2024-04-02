@@ -239,7 +239,7 @@ Format: `grade c/COURSE_CODE g/GRADE`
 
 - The module should be added into the list first with the add module function
 - `GRADE` only accepts alphabetical grade. Following are the allowed inputs for `GRADE`
-  - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, CU`
+  - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS`
 - You can only change the grade of modules that are before or during your current semester
   - If current semester 5, you can only change grades of modules from semester 1 to 5.
 
