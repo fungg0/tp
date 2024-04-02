@@ -10,6 +10,7 @@ import seedu.duke.user.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
@@ -97,8 +98,7 @@ public class ModuleList {
         double sumOfGPA = 0;
 
         for (Module module : moduleList) {
-            if (module.getModuleGrade() == null || module.getModuleGrade().equals("CS") ||
-                    module.getModuleGrade().equals("CU")) {
+            if (module.getModuleGrade() == null || module.getModuleGrade().equals("CS")) {
                 continue;
             }
             totalMC += module.getModuleMC();
@@ -318,7 +318,7 @@ public class ModuleList {
     private int getModuleCreditsTaken() {
         int moduleCreditsTaken = 0;
         for (Module module : moduleList) {
-            if (module.getModuleStatus()) {
+            if (module.getModuleStatus() && !module.gradeIsNull()) {
                 moduleCreditsTaken += module.getModuleMC();
             }
         }
