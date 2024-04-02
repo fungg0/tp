@@ -17,10 +17,9 @@ faster than your traditional GUI app.
         - `view`: View modules in schedule.
         - [`graduate`: View remaining modules required to graduate.](#view-remaining-modules-to-graduate-graduate)
     - [Grade Management](#grade-management)
-        - `grade`: Add or edit grades to a module.
-        - `gpa`: View current GPA.
-        - `desiredgpa`: Calculate grades required for a gpa goal.
-- [Saving Data](#saving-data)
+        - [`grade`: Add or edit grades to a module.](#change-grade--grade)
+        - [`gpa`: View current GPA.](#view-gpa-gpa)
+        - [`desiredgpa`: Calculate grades required for a gpa goal.](#feasibility-of-desired-gpa-desiredgpa)
 - [FAQ](#faq)
 - [Command Summary](#command-summary)
 
