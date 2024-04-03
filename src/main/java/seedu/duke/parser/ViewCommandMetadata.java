@@ -17,6 +17,6 @@ public class ViewCommandMetadata extends CommandMetadata {
     // View Command Creator
     @Override
     protected Command createCommandInstance(Map<String, String> args) {
-        return new ViewCommand();
+        return new ViewCommand(args);
     }
 }
