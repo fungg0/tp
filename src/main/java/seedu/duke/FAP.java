@@ -20,13 +20,14 @@ public class FAP {
 
     public static User user = new User();
     public static ModuleList moduleList = new ModuleList();
-    public static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
-
     public static JsonManager jsonManager = new JsonManager();
     public static String filePath = Paths.get(System.getProperty("user.dir"),
             "data", "CS2113_AY2324S2_FAP_Storage.txt").toString();
+    public static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
+    private static final String BYE = "bye";
 
     public static void main(String[] args) {
+
         LOGGER.setLevel(Level.OFF);
         try {
             loadDataFromFile(filePath);
@@ -44,6 +45,7 @@ public class FAP {
     }
 
     private static void runApplication() {
+
         Ui ui = new Ui();
         boolean continueRunning = true;
 
@@ -55,7 +57,7 @@ public class FAP {
                 command.execute(userInput);
                 user.resetModuleStatuses();
                 saveModulesToFile(filePath);
-                if (userInput.equals("bye")) {
+                if (userInput.equals(BYE)) {
                     continueRunning = false;
                     ui.close();
                 }
