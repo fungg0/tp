@@ -18,11 +18,11 @@ import static seedu.duke.FAP.user;
 
 public class Storage {
 
+    public static final String INITIALISED_USER = "InitialisedUser";
     public static final String EMPTY_STR = "";
     private static final int MINIMUM_SEMESTER = 1;
     private static final int MAXIMUM_SEMESTER = 8;
 
-    public static final String INITIALISED_USER = "InitialisedUser";
 
     public static void saveModulesToFile(String filePath) throws StorageException {
 

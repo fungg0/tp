@@ -18,14 +18,13 @@ import seedu.duke.ui.Ui;
 
 public class FAP {
 
-    private static final String BYE = "bye";
-    public static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
-
     public static User user = new User();
     public static ModuleList moduleList = new ModuleList();
     public static JsonManager jsonManager = new JsonManager();
     public static String filePath = Paths.get(System.getProperty("user.dir"),
             "data", "CS2113_AY2324S2_FAP_Storage.txt").toString();
+    public static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
+    private static final String BYE = "bye";
 
     public static void main(String[] args) {
 
