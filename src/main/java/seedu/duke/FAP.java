@@ -19,7 +19,7 @@ import seedu.duke.ui.Ui;
 public class FAP {
 
     private static final String BYE = "bye";
-    private static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
+    public static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
 
     public static User user = new User();
     public static ModuleList moduleList = new ModuleList();
