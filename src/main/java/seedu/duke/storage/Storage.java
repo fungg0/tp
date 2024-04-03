@@ -19,8 +19,13 @@ import static seedu.duke.FAP.user;
 public class Storage {
 
     public static final String INITIALISED_USER = "InitialisedUser";
+    public static final String EMPTY_STR = "";
+    private static final int MINIMUM_SEMESTER = 1;
+    private static final int MAXIMUM_SEMESTER = 8;
+
 
     public static void saveModulesToFile(String filePath) throws StorageException {
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(toString(user) + System.lineSeparator());
             for (Module module : moduleList.getTakenModuleList()) {
@@ -32,6 +37,7 @@ public class Storage {
     }
 
     public static void ensureDirectoryExists(String filePath) throws StorageException {
+
         File file = new File(filePath);
         File parentDir = file.getParentFile();
         if (!parentDir.exists() && !parentDir.mkdirs()) {
@@ -41,6 +47,7 @@ public class Storage {
     }
 
     public static void createFile(String filePath) throws StorageException {
+
         ensureDirectoryExists(filePath);
         File file = new File(filePath);
         try {
@@ -53,17 +60,13 @@ public class Storage {
     }
 
     public static void loadDataFromFile(String filePath) throws StorageException {
+
         File file = new File(filePath);
         if (!file.exists()) {
             createFile(filePath);
             return; // Early return if file does not exist
         }
-        if (file.isDirectory()) {
-            throw new StorageException("Specified path points to a directory, not a file: " + filePath);
-        }
-        if (!file.canRead()) {
-            throw new StorageException("File cannot be read, check permissions: " + filePath);
-        }
+        handleLoadFileException(filePath, file);
         try (Scanner input = new Scanner(file)) {
             if (!input.hasNextLine()) {
                 return; // Early return if file is empty
@@ -76,15 +79,27 @@ public class Storage {
         }
     }
 
+    private static void handleLoadFileException(String filePath, File file) throws StorageException {
+
+        if (file.isDirectory()) {
+            throw new StorageException("Specified path points to a directory, not a file: " + filePath);
+        }
+        if (!file.canRead()) {
+            throw new StorageException("File cannot be read, check permissions: " + filePath);
+        }
+    }
+
     private static void wipeFileClean(String filePath) throws StorageException {
+
         try (FileWriter writer = new FileWriter(filePath, false)) {
-            writer.write(""); // Writing an empty string to overwrite the file content.
+            writer.write(EMPTY_STR); // Writing an empty string to overwrite the file content.
         } catch (IOException e) {
             throw new StorageException("Failed to wipe file clean: " + filePath);
         }
     }
 
     private static void processFile(Scanner input) throws StorageException {
+
         boolean isUserInitialised = false;
         try {
             while (input.hasNextLine()) {
@@ -101,6 +116,7 @@ public class Storage {
     }
 
     private static boolean processInitialUserLine(String line) throws StorageException {
+
         if (!line.startsWith(INITIALISED_USER)) {
             return false;
         }
@@ -125,32 +141,26 @@ public class Storage {
 
 
     private static void processModuleLine(String line) throws StorageException {
+
         Module module = getModule(line);
         moduleList.add(module);
     }
 
     private static Module getModule(String line) throws StorageException {
+
         try {
             String[] parts = line.split(" ", 4);
+
             String moduleCode = parts[0];
             String moduleGrade = parts[1];
             int moduleDate = Integer.parseInt(parts[2]);
             String moduleStatus = parts[3];
-            if (!jsonManager.moduleExist(moduleCode)) {
-                throw new StorageException("Module " + moduleCode + " does not exist in NUS.");
-            }
-            if (moduleDate < 1 || moduleDate > 8) {
-                throw new StorageException("Invalid semester date for module " + moduleCode + ": " + moduleDate);
-            }
-            if (!moduleStatus.equals("true") && !moduleStatus.equals("false")) {
-                throw new StorageException("Invalid module status for module " + moduleCode + ": " + moduleStatus);
-            }
-            if (!moduleGrade.equals("null") && !moduleGrade.matches("[AB][+-]?|[CD][+]?|F|CS")) {
-                throw new StorageException("Invalid module grade for module " + moduleCode + ": " + moduleGrade);
-            }
+
+            handleModuleException(moduleCode, moduleDate, moduleStatus, moduleGrade);
             jsonManager.getModuleInfo(moduleCode);
             int moduleMC = jsonManager.getModuleMC();
             String moduleDescription = jsonManager.getModuleDescription();
+
             Module module = new Module(moduleCode, moduleMC, moduleDate, moduleDescription);
             module.setModuleTaken("true".equals(moduleStatus));
             if (!moduleGrade.equals("null")) {
@@ -163,7 +173,25 @@ public class Storage {
         }
     }
 
+    private static void handleModuleException(String moduleCode, int moduleDate,
+                                              String moduleStatus, String moduleGrade) throws StorageException {
+
+        if (!jsonManager.moduleExist(moduleCode)) {
+            throw new StorageException("Module " + moduleCode + " does not exist in NUS.");
+        }
+        if (moduleDate < MINIMUM_SEMESTER || moduleDate > MAXIMUM_SEMESTER) {
+            throw new StorageException("Invalid semester date for module " + moduleCode + ": " + moduleDate);
+        }
+        if (!moduleStatus.equals("true") && !moduleStatus.equals("false")) {
+            throw new StorageException("Invalid module status for module " + moduleCode + ": " + moduleStatus);
+        }
+        if (!moduleGrade.equals("null") && !moduleGrade.matches("[AB][+-]?|[CD][+]?|F|CS")) {
+            throw new StorageException("Invalid module grade for module " + moduleCode + ": " + moduleGrade);
+        }
+    }
+
     public static String toString(Module module) {
+
         return module.getModuleCode() + ' ' +
                 module.getModuleGrade() + ' ' +
                 module.getModuleDate() + ' ' +
@@ -171,6 +199,7 @@ public class Storage {
     }
 
     public static String toString(User user) {
+
         return INITIALISED_USER + ' ' +
                 user.getCurrentSemester() + ' ' +
                 user.getGraduationSemester() + ' ' +
