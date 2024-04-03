@@ -16,6 +16,7 @@ public abstract class CommandMetadata {
 
     private static Logger logger = Logger.getLogger("CommandMetadata");
     private static Map<String, String> argRegexMap = new HashMap<>();
+
     static {
         logger.setLevel(Level.OFF);
 
@@ -31,6 +32,7 @@ public abstract class CommandMetadata {
 
     private String keyword;
     private String[] groupArguments;
+    private String[] groupArgumentFlags;
     private String regex;
     private int regexLength;
     private Pattern pattern;
@@ -43,6 +45,20 @@ public abstract class CommandMetadata {
         this.groupArguments = groupArguments;
 
         this.regex = generateRegex(keyword, groupArguments);
+        this.regexLength = groupArguments.length + 1; // Keyword + number of Arguments
+        this.pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+    }
+
+    protected CommandMetadata(String keyword, String[] groupArguments, String[] groupArgumentFlags)
+            throws IllegalArgumentException {
+        if (keyword == null || groupArguments == null) {
+            throw new IllegalArgumentException("Keyword, regex, and group arguments cannot be null");
+        }
+        this.keyword = keyword;
+        this.groupArguments = groupArguments;
+        this.groupArgumentFlags = groupArgumentFlags;
+
+        this.regex = generateRegex(keyword, groupArguments, groupArgumentFlags);
         this.regexLength = groupArguments.length + 1; // Keyword + number of Arguments
         this.pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }
@@ -83,6 +99,23 @@ public abstract class CommandMetadata {
         return regexPattern.toString();
     }
 
+    private static String generateRegex(String keyword, String[] groupArguments, String[] groupArgumentFlags) {
+        if (keyword == null || groupArguments == null || groupArgumentFlags == null) {
+            throw new IllegalArgumentException("Keyword, groupArguments and flags must not be null");
+        }
+        assert groupArgumentFlags.length == groupArguments.length : "Arguments and Flags must be of the same size!";
+
+        StringBuilder regexPattern = new StringBuilder(keyword);
+        for (int i = 0; i < groupArguments.length; i++) {
+            if (groupArgumentFlags[i].equals("optional")) {
+                appendOptionalRegex(regexPattern, groupArguments[i]);
+            } else {
+                appendRegex(regexPattern, groupArguments[i]);
+            }
+        }
+        return regexPattern.toString();
+    }
+
     // Helper function for generateRegex
     private static void appendRegex(StringBuilder regexPattern, String groupArgName) {
         String argRegex = argRegexMap.get(groupArgName);
@@ -90,6 +123,15 @@ public abstract class CommandMetadata {
             throw new IllegalArgumentException("No regex pattern found for argument: " + groupArgName);
         }
         regexPattern.append("\\s+").append(argRegex);
+    }
+
+    private static void appendOptionalRegex(StringBuilder regexPattern, String groupArgName) {
+        String argRegex = argRegexMap.get(groupArgName);
+        if (argRegex == null) {
+            throw new IllegalArgumentException("No regex pattern found for argument: " + groupArgName);
+        }
+        String optionalGroup = "(\\s+" + argRegex + ")?";
+        regexPattern.append(optionalGroup);
     }
 
     protected boolean matchesKeyword(String userInput) {
@@ -182,7 +224,7 @@ public abstract class CommandMetadata {
             throw new IllegalArgumentException("Regex length should be keyword + number of arguments");
         }
         for (int i = 0; i < groupArguments.length; i++) {
-            validateUserArguments(userInputParts[i+1], groupArguments[i]);
+            validateUserArguments(userInputParts[i + 1], groupArguments[i]);
         }
     }
 
