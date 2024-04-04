@@ -129,11 +129,15 @@ public class ModuleList {
         return moduleBySemMap;
     }
 
-    public boolean containsCEGModule(String moduleCode) {
+    public boolean containsCEGModuleInList(String moduleCode) {
         for (Module takenModule : moduleList) {
-            ArrayList<String> equivalentList = CEGModules
-                    .mapStringToEnum(takenModule.getModuleCode())
-                    .getEquivalent();
+            ArrayList<String> equivalentList;
+            try {
+                equivalentList = CEGModules.mapStringToEnum(takenModule.getModuleCode()).getEquivalent();
+            } catch (IllegalArgumentException e) {
+                // Not a CEG specific module
+                continue;
+            }
             boolean hasEquivalent = equivalentList != null && equivalentList.contains(moduleCode);
             if (hasEquivalent || moduleCode.equals(takenModule.getModuleCode())) {
                 return true;
@@ -145,7 +149,7 @@ public class ModuleList {
     public ArrayList<String> getModulesToComplete() {
         ArrayList<String> modulesToComplete = new ArrayList<>();
         for (CEGModules cegModule : CEGModules.values()) {
-            if (!containsCEGModule(cegModule.name())) {
+            if (!containsCEGModuleInList(cegModule.name())) {
                 modulesToComplete.add(cegModule.name());
             }
         }
@@ -188,7 +192,7 @@ public class ModuleList {
         int upperBoundGradeNeeded = 0;
         int lowerBoundGradeNeeded = 0;
         double mockGPA = lowerBound;
-        for(int i = moduleCreditsNotTaken; i>0; i-=4) {
+        for (int i = moduleCreditsNotTaken; i > 0; i -= 4) {
             if (mockGPA < requiredFutureAverageGrade) {
                 upperBoundGradeNeeded += 1;
             } else {
@@ -238,9 +242,9 @@ public class ModuleList {
         String formattedAcquiredGPA = String.format("%.02f", acquiredGPA);
         System.out.println("MCs left to take: " + moduleCreditsNotTaken);
         System.out.println("To obtain desired GPA of: " + formattedDesiredGPA);
-        if(upperBoundGradeNeeded == 0) {
+        if (upperBoundGradeNeeded == 0) {
             System.out.println("You will need: " + lowerBoundGradeNeeded + " " + numberToGrade(lowerBound));
-        } else{
+        } else {
             System.out.println("You will need: " + upperBoundGradeNeeded + " " + numberToGrade(upperBound) +
                     " and " + lowerBoundGradeNeeded + " " + numberToGrade(lowerBound));
         }
