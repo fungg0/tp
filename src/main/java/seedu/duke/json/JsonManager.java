@@ -3,10 +3,13 @@ package seedu.duke.json;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.JsonObject;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JsonManager {
 
@@ -32,10 +35,11 @@ public class JsonManager {
         this.gson = new Gson();
 
         try (InputStreamReader reader = new InputStreamReader(inputStream)) {
-            Type type = new TypeToken<List<JsonObject>>(){}.getType();
+            Type type = new TypeToken<List<JsonObject>>() {
+            }.getType();
             jsonArray = gson.fromJson(reader, type);
             this.reader = reader;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -67,6 +71,19 @@ public class JsonManager {
                 this.moduleTitle = obj.get("title").getAsString();
             }
         }
+    }
+
+    public Map<String, String> queryModuleInfo(String moduleCode) {
+        Map<String, String> moduleInfo = new HashMap<>();
+        for (JsonObject obj : jsonArray) {
+            String name = obj.get("moduleCode").getAsString();
+            if (name.equals(moduleCode)) {
+                moduleInfo.put("moduleTitle", obj.get("title").getAsString());
+                moduleInfo.put("moduleMC", obj.get("moduleCredit").getAsString());
+                moduleInfo.put("moduleDescription", obj.get("description").getAsString());
+            }
+        }
+        return moduleInfo;
     }
 
     public String getModuleDescription() {

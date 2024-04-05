@@ -11,8 +11,9 @@ NOTE: "<WORD>" represents a user-typed argument that is required for the command
 5. gpa - View your GPA
 6. desiredgpa <GPA> - Calculates grades needed to achieve a desired GPA
 7. view - View modules on your schedule
-8. graduate - View remaining core modules and MCs left to graduate
-9. help - View command syntax and list of commands available for FAP
+8. view c/<COURSE_CODE> - View selected module information
+9. graduate - View remaining core modules and MCs left to graduate
+10. help - View command syntax and list of commands available for FAP
 __________________________________________________
 __________________________________________________
 Greetings James Gosling! Your details are updated:
