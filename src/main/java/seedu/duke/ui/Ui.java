@@ -105,7 +105,7 @@ public class Ui {
     private static void printSemesterTableHeader(String... semesters) {
         System.out.print("|");
         for (String semester : semesters) {
-            System.out.printf("%-11s|", semester);
+            System.out.printf("%-14s|", semester);
         }
         System.out.println();
     }
@@ -133,7 +133,7 @@ public class Ui {
                 String moduleCode = (module != null) ? module.getModuleCode() : "";
                 String moduleGrade = (module != null && module.getModuleGrade() != null) ? module.getModuleGrade() : "";
 
-                System.out.printf(" %-8s %-2s", moduleCode, moduleGrade);
+                System.out.printf(" %-11s %-2s", moduleCode, moduleGrade);
             }
             System.out.println(" ");
         }
@@ -221,8 +221,9 @@ public class Ui {
         }
     }
 
+    //@@author dextboy
     public static void printHyphens() {
-        System.out.println("__________________________________________________");
+        System.out.println("_____________________________________________________________");
     }
 
     public static void printExit() {

@@ -23,7 +23,7 @@ public abstract class CommandMetadata {
         argRegexMap.put("name", "n/(?<name>[A-Za-z]+(?: [A-Za-z]+)*)");
         argRegexMap.put("currentSem", "curr/(?<currentSem>[1-8])");
         argRegexMap.put("graduationSem", "grad/(?<graduationSem>[1-8])");
-        argRegexMap.put("courseCode", "c/(?<courseCode>[A-Za-z]{2,3}\\d{4}[A-Za-z]?)");
+        argRegexMap.put("courseCode", "c/(?<courseCode>[a-zA-Z0-9]+)");
         argRegexMap.put("semester", "w/(?<semester>[1-8])");
         argRegexMap.put("mc", "m/(?<mc>[1-9]|1[0-2])");
         argRegexMap.put("grade", "g/(?<grade>[ab][+-]?|[cd][+]?|f|cs)");
