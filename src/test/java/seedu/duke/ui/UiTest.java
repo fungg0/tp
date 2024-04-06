@@ -28,10 +28,10 @@ public class UiTest {
     void printGreeting() {
         Ui.printGreeting();
         String expectedOutput = buildExpectedOutput(
-                "__________________________________________________",
+                "_____________________________________________________________",
                 "Hello! This is your CEG Future Academic Planner!",
                 "What would you like to do today?",
-                "__________________________________________________"
+                "_____________________________________________________________"
         );
         assertEquals(expectedOutput , outContent.toString());
     }
@@ -39,7 +39,7 @@ public class UiTest {
     @Test
     void printHyphens() {
         Ui.printHyphens();
-        assertEquals("__________________________________________________", outContent.toString().trim());
+        assertEquals("_____________________________________________________________", outContent.toString().trim());
     }
 
     @Test
