@@ -176,6 +176,37 @@ __________________________________________________
 __________________________________________________
 ```
 
+`view c/COURSE_CODE`: Allows users to view specific course information
+
+Format: `view c/COURSE_CODE`
+
+- The command will show the course title, modular credits, and its description.
+- The command is only limited to courses offered in NUS AY23/24.
+
+Example usage:
+
+`view c/GEX1007`
+
+Example output:
+
+```
+======================================================================
+| Title: Geopolitics: Geographies of War & Peace          Credits: 4 |
+======================================================================
+| Description: This is cross-Faculty course aimed at introducing     |
+| Geopolitics to a broad range of students. The course is designed   |
+| to be as engaging and interactive as possible: utilising various   |
+| multi-media tools, including documentary clips, news media, filmic |
+| resources, popular journals and magazines. Not surprisingly, the   |
+| course has a very lively section on Popular Geopolitics. In        |
+| addition, we introduce students to the interactions of geopolitics |
+| and political space through detailed examination of different      |
+| geopolitical eras and codes, specifically: Cold War Geopolitics    |
+| and the Human Landscapes of Southeast Asia: and the so-called      |
+| "Global War on Terror".                                            |
+======================================================================
+```
+
 ### View remaining modules to graduate: `graduate`
 
 `graduate`: Allows users to view the remaining core CEG modules left to take along with their respective MCs
