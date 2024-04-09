@@ -105,7 +105,7 @@ public class Ui {
     private static void printSemesterTableHeader(String... semesters) {
         System.out.print("|");
         for (String semester : semesters) {
-            System.out.printf("%-14s|", semester);
+            System.out.printf(" %-13s|", semester);
         }
         System.out.println();
     }
@@ -133,18 +133,18 @@ public class Ui {
                 String moduleCode = (module != null) ? module.getModuleCode() : "";
                 String moduleGrade = (module != null && module.getModuleGrade() != null) ? module.getModuleGrade() : "";
 
-                System.out.printf(" %-11s %-2s", moduleCode, moduleGrade);
+                System.out.printf("|%-11s %-2s", moduleCode, moduleGrade);
             }
-            System.out.println(" ");
+            System.out.println("|");
         }
     }
 
     public static void printModulePlan(Map<Integer, ArrayList<Module>> moduleBySemMap) {
         printHyphens();
-        printSemesterTableHeader("Y1S1", "Y1S2", "Y2S1", "Y2S2");
+        printSemesterTableHeader("Y1S1 [Sem 1]", "Y1S2 [Sem 2]", "Y2S1 [Sem 3]", "Y2S2 [Sem 4]");
         printModulesForSemesters(moduleBySemMap, 1, 4);
         printHyphens();
-        printSemesterTableHeader("Y3S1", "Y3S2", "Y4S1", "Y4S2");
+        printSemesterTableHeader("Y3S1 [Sem 5]", "Y3S2 [Sem 6]", "Y4S1 [Sem 7]", "Y4S2 [Sem 8]");
         printModulesForSemesters(moduleBySemMap, 5, 8);
         printHyphens();
     }
