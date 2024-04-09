@@ -3,13 +3,8 @@ package seedu.duke.parser;
 import seedu.duke.command.Command;
 import seedu.duke.command.AddCommand;
 import seedu.duke.command.InvalidCommand;
-import seedu.duke.exceptions.ModuleAlreadyExistException;
-import seedu.duke.exceptions.ModuleNotFoundException;
 
 import java.util.Map;
-import java.util.logging.Level;
-
-import static seedu.duke.FAP.LOGGER;
 
 public class AddCommandMetadata extends CommandMetadata {
     private static final String ADD_KEYWORD = "add";
@@ -26,7 +21,6 @@ public class AddCommandMetadata extends CommandMetadata {
             String moduleCode = args.getOrDefault("courseCode", "COURSECODE_ERROR");
             String semester = args.getOrDefault("semester", "SEMESTER_ERROR");
             int semesterInt = Integer.parseInt(semester);
-
             return new AddCommand(moduleCode, semesterInt);
         } catch (Exception e) {
             return new InvalidCommand();

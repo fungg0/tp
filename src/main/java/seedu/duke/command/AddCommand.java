@@ -3,6 +3,7 @@ package seedu.duke.command;
 import seedu.duke.exceptions.ModuleAlreadyExistException;
 import seedu.duke.exceptions.ModuleException;
 import seedu.duke.exceptions.ModuleNotFoundException;
+import seedu.duke.exceptions.WrongSemesterException;
 import seedu.duke.modules.Module;
 
 import java.util.logging.Level;
@@ -16,42 +17,59 @@ public class AddCommand extends Command {
 
     private int moduleMC;
 
-    public AddCommand(String moduleCode, int moduleDate) {
+    public AddCommand(String moduleCode, int moduleDate) throws Exception {
         assert moduleCode != null && !moduleCode.trim().isEmpty() : "Module code cannot be null or empty";
         assert moduleDate > 0 : "Module date must be a positive number";
 
         try {
-            TryAddingModule(moduleCode, moduleDate);
+            tryAddingModule(moduleCode, moduleDate);
         } catch (ModuleNotFoundException e) {
             LOGGER.log(Level.WARNING, "An error occurred: " + e.getMessage());
             System.out.println("An error occurred: " + e.getMessage());
-        }
-    }
-
-    private void TryAddingModule(String moduleCode, int moduleDate) throws ModuleNotFoundException {
-        // try getting a module to see if it already exists, if i   t does then throw the exception
-        // will go to the catch block if there are no duplicate modules
-        try {
-            Module moduleToAdd = moduleList.getModule(moduleCode);
-            throw new ModuleAlreadyExistException("You have already added the module!");
-        } catch (ModuleNotFoundException e) {
-            if (jsonManager.moduleExist(moduleCode)) {
-                jsonManager.getModuleInfo(moduleCode);
-                this.moduleMC = jsonManager.getModuleMC();
-                this.moduleCode = moduleCode;
-                this.moduleDate = moduleDate;
-            } else {
-                throw new ModuleNotFoundException("Module does not exist in NUS!");
-            }
-        } catch (ModuleAlreadyExistException e) {
-            LOGGER.log(Level.WARNING, "An error occurred: " + e.getMessage());
-            System.out.println("An error occurred: " + e.getMessage());
+            throw new Exception("");
+        } catch (WrongSemesterException e) {
+            LOGGER.log(Level.WARNING, "An error occured: " + e.getMessage());
+            System.out.println("An error occured: " + e.getMessage());
+            throw new Exception("");
         }
     }
 
     //to not throw error
     public AddCommand() {
 
+    }
+
+    private void tryAddingModule(String moduleCode, int moduleDate) throws ModuleNotFoundException,
+            WrongSemesterException {
+        // try getting a module to see if it already exists, if i   t does then throw the exception
+        // will go to the catch block if there are no duplicate modules
+        try {
+            Module moduleToAdd = moduleList.getModule(moduleCode);      // intended unused variable
+            throw new ModuleAlreadyExistException("You have already added the module!");
+        } catch (ModuleNotFoundException e) {
+            boolean moduleInNUS = jsonManager.moduleExist(moduleCode);
+            int plannedSem = moduleDate % 2;
+
+            if (plannedSem == 0) {
+                plannedSem = 2;
+            }
+
+            jsonManager.getModuleInfo(moduleCode);
+            boolean correctSemester = jsonManager.correctSemester(plannedSem);
+
+            if (moduleInNUS && correctSemester) {
+                this.moduleMC = jsonManager.getModuleMC();
+                this.moduleCode = moduleCode;
+                this.moduleDate = moduleDate;
+            } else if (!moduleInNUS) {
+                throw new ModuleNotFoundException("Module does not exist in NUS!");
+            } else if (!correctSemester){
+                throw new WrongSemesterException("You can't take in this semester! Try another one instead!");
+            }
+        } catch (ModuleAlreadyExistException e) {
+            LOGGER.log(Level.WARNING, "An error occurred: " + e.getMessage());
+            System.out.println("An error occurred: " + e.getMessage());
+        }
     }
 
     @Override

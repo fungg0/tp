@@ -1,20 +1,22 @@
 package seedu.duke.json;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.JsonObject;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 
 public class JsonManager {
 
     InputStream inputStream;
-    // Creating a new Gson instance
     Gson gson;
     InputStreamReader reader;
     List<JsonObject> jsonArray;
@@ -24,6 +26,8 @@ public class JsonManager {
     int moduleMC;
 
     String moduleTitle;
+
+    ArrayList<Integer> moduleSemester;
 
     public JsonManager() {
 
@@ -44,14 +48,14 @@ public class JsonManager {
         }
     }
 
+    public boolean correctSemester(int intendedSem) {
+        return moduleSemester.contains(intendedSem);
+    }
+
     public boolean moduleExist(String moduleCode) {
-        // Now, you can iterate through the array of objects just like before
         for (JsonObject obj : jsonArray) {
-            // Process the object as needed; assuming there's a 'name' field
-            String name = obj.get("moduleCode").getAsString();  // Replace 'name' with actual field names
-            // If you want to match a specific module code, add an if check here
+            String name = obj.get("moduleCode").getAsString();
             if (name.equals(moduleCode)) {
-                // Print out or process the module info
                 return true;
             }
         }
@@ -59,16 +63,22 @@ public class JsonManager {
     }
 
     public void getModuleInfo(String moduleCode) {
-        // Now, you can iterate through the array of objects just like before
         for (JsonObject obj : jsonArray) {
-            // Process the object as needed; assuming there's a 'name' field
-            String name = obj.get("moduleCode").getAsString();  // Replace 'name' with actual field names
-            // If you want to match a specific module code, add an if check here
+            String name = obj.get("moduleCode").getAsString();
             if (name.equals(moduleCode)) {
-                // Print out or process the module info
+                moduleSemester = new ArrayList<>();
                 this.moduleMC = obj.get("moduleCredit").getAsInt();
                 this.moduleDescription = obj.get("description").getAsString();
                 this.moduleTitle = obj.get("title").getAsString();
+                JsonElement semesterData = obj.get("semesterData");
+
+                JsonArray semesterArray = semesterData.getAsJsonArray();
+                for (JsonElement itemElement : semesterArray) {
+                    JsonObject item = itemElement.getAsJsonObject();
+                    int semester = item.get("semester").getAsInt();
+                    moduleSemester.add(semester);
+                }
+                return;
             }
         }
     }
