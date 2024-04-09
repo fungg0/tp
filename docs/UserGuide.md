@@ -11,7 +11,7 @@ faster than your traditional GUI app.
 - [Quick Start](#quick-start)
 - [Features](#features)
     - [User Management](#user-management)
-        - [`init`: Personalizes the bot for the user.](#personalization-init)
+        - [`set`: Personalizes the bot for the user.](#personalization-set)
     - [Course Management](#course-management)
         - [`add`: Adds a module.](#add-module-add)
         - [`remove`: Removes a module.](#remove-module-remove)
@@ -55,29 +55,25 @@ faster than your traditional GUI app.
 
 ## User Management
 
-### Personalization: `init`
+### Personalization: `set`
 
-`init`: Personalises the bot for the user.
+`set`: Personalises the bot for the user.
 
-- Sets the **name of the user, current studying semester, and expected graduation semester** for FAP.
-- **By default**, Name is set to `Anonymous`, Current Semester is set to `1`, Graduation Semester is set to `8`.
+- Sets the **name of the user and their current studying semester** for FAP.
+- **By default**, Name is set to `Anonymous`, Current Semester is set to `1`
 
-Format: `init n/NAME curr/CURR_SEM grad/GRAD_SEM`
+Format: `set n/NAME curr/CURR_SEM`
 
 `NAME` represents the name of the user
 
 `CURR_SEM` represents the current semester (From 1-8) the user is currently in.
 
-`GRAD_SEM` represents the expected graduation semester (From 1-8) the user will graduate from NUS
-
 * `NAME` must only have alphabetic characters (either uppercase or lowercase) and optionally spaces in between.
 * `CURR_SEM` must be a positive integer from 1-8, to represent the semester the user is currently in
-* `GRAD_SEM` must be a positive integer from 1-8, to represent the semester the user will be expected to
-  graduate. `GRAD_SEM` value cannot be lower than the value for `CURR_SEM`
 
 Example usage:
 
-`init n/James Gosling curr/1 grad/8`
+`set n/James Gosling curr/1`
 
 Expected output:
 
@@ -85,7 +81,6 @@ Expected output:
 __________________________________________________
 Greetings James Gosling! Your details are updated:
 You are currently in Semester 1
-You are expected to graduate in Semester 8
 __________________________________________________
 ```
 
