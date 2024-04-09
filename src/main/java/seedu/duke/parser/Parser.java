@@ -12,7 +12,7 @@ public class Parser {
 
     private static ArrayList<CommandMetadata> metadataList = new ArrayList<>();
     static {
-        metadataList.add(new InitCommandMetadata());
+        metadataList.add(new SetCommandMetadata());
         metadataList.add(new GpaCommandMetadata());
         metadataList.add(new ViewCommandMetadata());
         metadataList.add(new ViewGraduateCommandMetadata());

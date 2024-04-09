@@ -56,8 +56,8 @@ public class FAPTest {
 
     //@@ author dextboy
     @Test
-    public void testInit() {
-        String simulatedUserInput = "init n/bob curr/4 grad/8" + System.lineSeparator() +
+    public void testSet() {
+        String simulatedUserInput = "set n/bob curr/4" + System.lineSeparator() +
                 "bye" + System.lineSeparator();
         provideInput(simulatedUserInput);
 
@@ -69,7 +69,6 @@ public class FAPTest {
                 "_____________________________________________________________",
                 "Greetings bob! Your details are updated:",
                 "You are currently in Semester 4",
-                "You are expected to graduate in Semester 8",
                 "_____________________________________________________________",
                 "_____________________________________________________________",
                 "Bye. Enjoy your studies!"
@@ -79,8 +78,8 @@ public class FAPTest {
     }
 
     @Test
-    public void invalidInitTest() {
-        String simulatedUserInput = "init n/" + System.lineSeparator() +
+    public void invalidSetTest() {
+        String simulatedUserInput = "set n/" + System.lineSeparator() +
                 "bye" + System.lineSeparator();
         provideInput(simulatedUserInput);
         FAP.main(new String[]{});
@@ -88,7 +87,7 @@ public class FAPTest {
 
         String expectedOutput = buildExpectedOutput(
                 "_____________________________________________________________",
-                "Invalid init command: Invalid argument format/delimiters used",
+                "Invalid set command: Invalid argument format/delimiters used",
                 "Type \"help\" to view the list & syntax of available commands",
                 "_____________________________________________________________",
                 "_____________________________________________________________",
