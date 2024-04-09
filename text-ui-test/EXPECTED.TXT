@@ -1,7 +1,7 @@
-__________________________________________________
+_____________________________________________________________
 Hello! This is your CEG Future Academic Planner!
 What would you like to do today?
-__________________________________________________
+_____________________________________________________________
 Available Commands:
 NOTE: "<WORD>" represents a user-typed argument that is required for the command
 1. init n/<NAME> curr/<CURR_SEM> grad/<GRAD_SEM> - Set name, current & expected grad semester
@@ -11,13 +11,14 @@ NOTE: "<WORD>" represents a user-typed argument that is required for the command
 5. gpa - View your GPA
 6. desiredgpa <GPA> - Calculates grades needed to achieve a desired GPA
 7. view - View modules on your schedule
-8. graduate - View remaining core modules and MCs left to graduate
-9. help - View command syntax and list of commands available for FAP
-__________________________________________________
-__________________________________________________
+8. view c/<COURSE_CODE> - View selected module information
+9. graduate - View remaining core modules and MCs left to graduate
+10. help - View command syntax and list of commands available for FAP
+_____________________________________________________________
+_____________________________________________________________
 Greetings James Gosling! Your details are updated:
 You are currently in Semester 1
 You are expected to graduate in Semester 8
-__________________________________________________
-__________________________________________________
+_____________________________________________________________
+_____________________________________________________________
 Bye. Enjoy your studies!

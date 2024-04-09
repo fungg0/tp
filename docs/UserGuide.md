@@ -6,7 +6,8 @@ Future Academic Planner (FAP) is a **robust academic management software** desig
 Engineering (CEG) student’s academic journey at NUS**. If you can type fast, FAP can get your module planning done
 faster than your traditional GUI app.
 
-##  Content Navigation:
+## Content Navigation:
+
 - [Quick Start](#quick-start)
 - [Features](#features)
     - [User Management](#user-management)
@@ -26,22 +27,22 @@ faster than your traditional GUI app.
 ## Quick Start
 
 1. Ensure you have `java 11` or above installed on your computer
-   
+
 2. Download the latest `FAP.jar` from [here](https://github.com/AY2324S2-CS2113-W14-3/tp/releases)
-   
+
 3. Copy the file `FAP.jar` to a new empty folder
- 
+
 4. Open a command terminal in the directory of the folder, and use `java -jar FAP.jar` to run the application
-   
-5. Type commands in the terminal and press enter to execute them. 
-   - Some example commands are:
+
+5. Type commands in the terminal and press enter to execute them.
+    - Some example commands are:
         - `add c/COURSE_CODE w/WHEN`: Add a module (`COURSE_CODE`) to your module plan on Semester (`WHEN`)
         - `view`: Shows your module plan so far
         - `bye`: Exits the FAP application
-          
+
 6. Head to [**Features**](#features) right below for more details on each command.
- 
-7. Alternatively, Refer to [**Command Summary**](#command-summary) for the list of commands available. 
+
+7. Alternatively, Refer to [**Command Summary**](#command-summary) for the list of commands available.
 
 ## Features
 
@@ -133,7 +134,7 @@ Expected output:
 
 ```
 __________________________________________________
-Module CS2113 Removed!
+Module CS2113 removed!
 __________________________________________________
 ```
 
@@ -144,18 +145,20 @@ __________________________________________________
 Format: `view`
 
 - This will show various details, including the user’s
-  - `name` (`Anonymous` if not inputted by the user),
-  - `current studying` semester (`1` if not inputted by the user),
-  - `expected graduating` semester (`8` if not inputted by the user),
-  - `module course code` and `grade`, along with the semester associated with it (`empty` if not inputted by the user),
-  - `total modular credits taken` (modular credits of all modules taken up till and including current semester)
-  - `total modular credits listed` (modular credits of all modules listed in the schedule)
- 
+    - `name` (`Anonymous` if not inputted by the user),
+    - `current studying` semester (`1` if not inputted by the user),
+    - `expected graduating` semester (`8` if not inputted by the user),
+    - `module course code` and `grade`, along with the semester associated with it (`empty` if not inputted by the
+      user),
+    - `total modular credits taken` (modular credits of all modules taken up till and including current semester)
+    - `total modular credits listed` (modular credits of all modules listed in the schedule)
+
 Example usage:
 
 `view`
 
 Example output:
+
 ```
 __________________________________________________
 CEG Study Plan for: James Gosling
@@ -172,6 +175,38 @@ __________________________________________________
 - Total MCs listed: 12 / 160
 __________________________________________________
 ```
+
+`view c/COURSE_CODE`: Allows users to view specific course information
+
+Format: `view c/COURSE_CODE`
+
+- The command will show the course title, modular credits, and its description.
+- The command is only limited to courses offered in NUS AY23/24.
+
+Example usage:
+
+`view c/GEX1007`
+
+Example output:
+
+```
+======================================================================
+| Title: Geopolitics: Geographies of War & Peace          Credits: 4 |
+======================================================================
+| Description: This is cross-Faculty course aimed at introducing     |
+| Geopolitics to a broad range of students. The course is designed   |
+| to be as engaging and interactive as possible: utilising various   |
+| multi-media tools, including documentary clips, news media, filmic |
+| resources, popular journals and magazines. Not surprisingly, the   |
+| course has a very lively section on Popular Geopolitics. In        |
+| addition, we introduce students to the interactions of geopolitics |
+| and political space through detailed examination of different      |
+| geopolitical eras and codes, specifically: Cold War Geopolitics    |
+| and the Human Landscapes of Southeast Asia: and the so-called      |
+| "Global War on Terror".                                            |
+======================================================================
+```
+
 ### View remaining modules to graduate: `graduate`
 
 `graduate`: Allows users to view the remaining core CEG modules left to take along with their respective MCs
@@ -238,12 +273,12 @@ Format: `grade c/COURSE_CODE g/GRADE`
 
 - The module should be added into the list first with the add module function
 - `GRADE` only accepts alphabetical grade. Following are the allowed inputs for `GRADE`
-  - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS`
-  - For CU grade, user can just remove the module from the list
+    - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS`
+    - For CU grade, user can just remove the module from the list
 - You can only change the grade of modules that are before or during your current semester
-  - If current semester 5, you can only change grades of modules from semester 1 to 5.
+    - If current semester 5, you can only change grades of modules from semester 1 to 5.
 
-Example usage: 
+Example usage:
 
 `grade c/cs1231 g/B`
 
@@ -285,7 +320,7 @@ Format: `desiredgpa DESIRED_GPA`
 - Assumes user take 160MC by graduation
 - Modules that have not been graded will be treated as invisible
 
-Example usage: 
+Example usage:
 
 `desiredgpa 4.75` (assuming 2 mods already inputted, 1 A and 1 B)
 
@@ -298,7 +333,6 @@ You will need: 21 A and 17 A-
 With the above grades, your end GPA will be: 4.75
 __________________________________________________
 ```
-
 
 ## FAQ
 
