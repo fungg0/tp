@@ -28,13 +28,8 @@ public class AddCommandMetadata extends CommandMetadata {
             int semesterInt = Integer.parseInt(semester);
 
             return new AddCommand(moduleCode, semesterInt);
-        } catch (ModuleNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
-            System.out.println("An error occurred: " + e.getMessage());
-        } catch (ModuleAlreadyExistException e) {
-            LOGGER.log(Level.WARNING, "An error occurred: " + e.getMessage());
-            System.out.println("An error occurred: " + e.getMessage());
+        } catch (Exception e) {
+            return new InvalidCommand();
         }
-        return new InvalidCommand();
     }
 }
