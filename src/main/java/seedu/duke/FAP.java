@@ -16,6 +16,12 @@ import seedu.duke.modules.ModuleList;
 import seedu.duke.parser.Parser;
 import seedu.duke.ui.Ui;
 
+/**
+ * The main class for the FAP (Future Academic Planner) application.
+ * It initializes the application, loads existing user and module data from file,
+ * displays a greeting and command guide, and then enters the command processing loop.
+ * The application continues to run until the user inputs the "bye" command.
+ */
 public class FAP {
 
     public static User user = new User();
@@ -26,6 +32,13 @@ public class FAP {
     public static final Logger LOGGER = Logger.getLogger(FAP.class.getName());
     private static final String BYE = "bye";
 
+    /**
+     * The main method that serves as the entry point for the application.
+     * It sets the logging level, attempts to load data from file, and then
+     * enters the main application loop until the user decides to exit.
+     *
+     * @param args The command line arguments passed to the application (not used).
+     */
     public static void main(String[] args) {
 
         LOGGER.setLevel(Level.OFF);
@@ -44,6 +57,11 @@ public class FAP {
         }
     }
 
+    /**
+     * The main application loop that continuously prompts the user for input,
+     * processes the input as commands, and performs the corresponding actions.
+     * The loop terminates when the user inputs the "bye" command or when an error occurs.
+     */
     private static void runApplication() {
 
         Ui ui = new Ui();
