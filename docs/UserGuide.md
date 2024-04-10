@@ -11,7 +11,7 @@ faster than your traditional GUI app.
 - [Quick Start](#quick-start)
 - [Features](#features)
     - [User Management](#user-management)
-        - [`init`: Personalizes the bot for the user.](#personalization-init)
+        - [`set`: Personalizes the bot for the user.](#personalization-set)
     - [Course Management](#course-management)
         - [`add`: Adds a module.](#add-module-add)
         - [`remove`: Removes a module.](#remove-module-remove)
@@ -55,29 +55,25 @@ faster than your traditional GUI app.
 
 ## User Management
 
-### Personalization: `init`
+### Personalization: `set`
 
-`init`: Personalises the bot for the user.
+`set`: Personalises the bot for the user.
 
-- Sets the **name of the user, current studying semester, and expected graduation semester** for FAP.
-- **By default**, Name is set to `Anonymous`, Current Semester is set to `1`, Graduation Semester is set to `8`.
+- Sets the **name of the user and their current studying semester** for FAP.
+- **By default**, Name is set to `Anonymous`, Current Semester is set to `1`
 
-Format: `init n/NAME curr/CURR_SEM grad/GRAD_SEM`
+Format: `set n/NAME curr/CURR_SEM`
 
 `NAME` represents the name of the user
 
 `CURR_SEM` represents the current semester (From 1-8) the user is currently in.
 
-`GRAD_SEM` represents the expected graduation semester (From 1-8) the user will graduate from NUS
-
 * `NAME` must only have alphabetic characters (either uppercase or lowercase) and optionally spaces in between.
 * `CURR_SEM` must be a positive integer from 1-8, to represent the semester the user is currently in
-* `GRAD_SEM` must be a positive integer from 1-8, to represent the semester the user will be expected to
-  graduate. `GRAD_SEM` value cannot be lower than the value for `CURR_SEM`
 
 Example usage:
 
-`init n/James Gosling curr/1 grad/8`
+`set n/James Gosling curr/1`
 
 Expected output:
 
@@ -85,7 +81,6 @@ Expected output:
 __________________________________________________
 Greetings James Gosling! Your details are updated:
 You are currently in Semester 1
-You are expected to graduate in Semester 8
 __________________________________________________
 ```
 
@@ -160,20 +155,20 @@ Example usage:
 Example output:
 
 ```
-__________________________________________________
 CEG Study Plan for: James Gosling
-__________________________________________________
-|Y1S1       |Y1S2       |Y2S1       |Y2S2       |
- CS1010                              CS2113      
- CG1111A  A+                                     
-__________________________________________________
-|Y3S1       |Y3S2       |Y4S1       |Y4S2       |
-__________________________________________________
+_____________________________________________________________
+| Y1S1 [Sem 1] | Y1S2 [Sem 2] | Y2S1 [Sem 3] | Y2S2 [Sem 4] |
+|CS1010        |CG2111A       |CS2040C       |CS2113      A+|
+|CG1111A       |PF1101      A-|EE2026        |CG2271        |
+|              |DTK1234       |              |              |
+_____________________________________________________________
+| Y3S1 [Sem 5] | Y3S2 [Sem 6] | Y4S1 [Sem 7] | Y4S2 [Sem 8] |
+|CP3880        |              |CG4002        |              |
+_____________________________________________________________
 - Current Study: Semester 4
-- Expected Graduation: Semester 8
-- Total MCs taken: 12 / 160
-- Total MCs listed: 12 / 160
-__________________________________________________
+- Total MCs taken: 36 / 160
+- Total MCs listed: 56 / 160
+_____________________________________________________________
 ```
 
 `view c/COURSE_CODE`: Allows users to view specific course information
