@@ -12,12 +12,13 @@ import static seedu.duke.FAP.LOGGER;
 import static seedu.duke.FAP.jsonManager;
 
 public class AddCommand extends Command {
+
     private String moduleCode;
     private int moduleDate;
 
     private int moduleMC;
 
-    public AddCommand(String moduleCode, int moduleDate) throws Exception {
+    public AddCommand(String moduleCode, int moduleDate) {
         assert moduleCode != null && !moduleCode.trim().isEmpty() : "Module code cannot be null or empty";
         assert moduleDate > 0 : "Module date must be a positive number";
 
@@ -26,22 +27,15 @@ public class AddCommand extends Command {
         } catch (ModuleNotFoundException e) {
             LOGGER.log(Level.WARNING, "An error occurred: " + e.getMessage());
             System.out.println("An error occurred: " + e.getMessage());
-            throw new Exception("");
         } catch (WrongSemesterException e) {
             LOGGER.log(Level.WARNING, "An error occured: " + e.getMessage());
             System.out.println("An error occured: " + e.getMessage());
-            throw new Exception("");
         }
-    }
-
-    //to not throw error
-    public AddCommand() {
-
     }
 
     private void tryAddingModule(String moduleCode, int moduleDate) throws ModuleNotFoundException,
             WrongSemesterException {
-        // try getting a module to see if it already exists, if i   t does then throw the exception
+        // try getting a module to see if it already exists, if it does then throw the exception
         // will go to the catch block if there are no duplicate modules
         try {
             Module moduleToAdd = moduleList.getModule(moduleCode);      // intended unused variable
@@ -67,13 +61,17 @@ public class AddCommand extends Command {
                 throw new WrongSemesterException("You can't take in this semester! Try another one instead!");
             }
         } catch (ModuleAlreadyExistException e) {
+
             LOGGER.log(Level.WARNING, "An error occurred: " + e.getMessage());
-            System.out.println("An error occurred: " + e.getMessage());
+            System.err.println("An error occurred: " + e.getMessage());
         }
     }
 
     @Override
     public void execute(String userInput) {
+        if (this.moduleCode == null) {
+            return;
+        }
         try {
             // Assuming moduleList is a class attribute of Command
             if (moduleList == null) {

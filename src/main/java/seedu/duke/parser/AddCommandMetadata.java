@@ -17,13 +17,9 @@ public class AddCommandMetadata extends CommandMetadata {
     // Add Command Creator
     @Override
     protected Command createCommandInstance(Map<String, String> args) {
-        try {
-            String moduleCode = args.getOrDefault("courseCode", "COURSECODE_ERROR");
-            String semester = args.getOrDefault("semester", "SEMESTER_ERROR");
-            int semesterInt = Integer.parseInt(semester);
-            return new AddCommand(moduleCode, semesterInt);
-        } catch (Exception e) {
-            return new InvalidCommand();
-        }
+        String moduleCode = args.getOrDefault("courseCode", "COURSECODE_ERROR");
+        String semester = args.getOrDefault("semester", "SEMESTER_ERROR");
+        int semesterInt = Integer.parseInt(semester);
+        return new AddCommand(moduleCode, semesterInt);
     }
 }
