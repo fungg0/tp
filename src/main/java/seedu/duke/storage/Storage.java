@@ -74,7 +74,7 @@ public class Storage {
             processFile(input);
         } catch (IOException | StorageException e) {
             wipeFileClean(filePath);
-            throw new StorageException("Error loading data from file: " + filePath +
+            throw new StorageException(" Error loading data from file: " + filePath +
                     e.getMessage() + " File has been wiped clean.");
         }
     }
@@ -118,7 +118,12 @@ public class Storage {
     private static boolean processInitialUserLine(String line) throws StorageException {
 
         if (!line.startsWith(INITIALISED_USER)) {
-            return false;
+            if (line.endsWith("true") || line.endsWith("false")) {
+                return false;
+            }
+            else {
+                throw new StorageException("User data is corrupted.");
+            }
         }
         String[] parts = line.split(" ", 3);
         if (parts.length < 3) {
