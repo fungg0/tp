@@ -21,6 +21,7 @@ faster than your traditional GUI app.
         - [`grade`: Add or edit grades to a module.](#change-grade-grade)
         - [`gpa`: View current GPA.](#view-gpa-gpa)
         - [`desiredgpa`: Calculate grades required for a gpa goal.](#feasibility-of-desired-gpa-desiredgpa)
+    - [Exit Program](#exit-program-bye)
 - [FAQ](#faq)
 - [Command Summary](#command-summary)
 
@@ -34,22 +35,22 @@ faster than your traditional GUI app.
 
 4. Open a command terminal in the directory of the folder, and use `java -jar FAP.jar` to run the application
 
-5. Type commands in the terminal and press enter to execute them.
+5. Type commands in the terminal and press enter to execute them
     - Some example commands are:
         - `add c/COURSE_CODE w/WHEN`: Add a module (`COURSE_CODE`) to your module plan on Semester (`WHEN`)
         - `view`: Shows your module plan so far
         - `bye`: Exits the FAP application
 
-6. Head to [**Features**](#features) right below for more details on each command.
+6. Head to [**Features**](#features) right below for more details on each command
 
-7. Alternatively, Refer to [**Command Summary**](#command-summary) for the list of commands available.
+7. Alternatively, Refer to [**Command Summary**](#command-summary) for the list of commands available
 
 ## Features
 
 > [!IMPORTANT]  
-> All arguments **must be provided** and **must follow the specified order** in Format.
+> All arguments **must be provided** and **must follow the specified order** in Format
 >
-> Words in `UPPER_CASE` are the parameters to be **supplied by the user**.
+> Words in `UPPER_CASE` are the parameters to be **supplied by the user**
 >
 > - Eg. For the command `remove c/COURSE_CODE`, `COURSE_CODE` is a parameter which can be used as `remove c/CS2113`
 
@@ -57,18 +58,18 @@ faster than your traditional GUI app.
 
 ### Personalization: `set`
 
-`set`: Personalises the bot for the user.
+`set`: Personalises the bot for the user
 
-- Sets the **name of the user and their current studying semester** for FAP.
+- Sets the **name of the user and their current studying semester** for FAP
 - **By default**, Name is set to `Anonymous`, Current Semester is set to `1`
 
 Format: `set n/NAME curr/CURR_SEM`
 
 `NAME` represents the name of the user
 
-`CURR_SEM` represents the current semester (From 1-8) the user is currently in.
+`CURR_SEM` represents the current semester (From 1-8) the user is currently in
 
-* `NAME` must only have alphabetic characters (either uppercase or lowercase) and optionally spaces in between.
+* `NAME` must only have alphabetic characters (either uppercase or lowercase) and optionally spaces in between
 * `CURR_SEM` must be a positive integer from 1-8, to represent the semester the user is currently in
 
 Example usage:
@@ -140,11 +141,11 @@ __________________________________________________
 Format: `view`
 
 - This will show various details, including the user’s
-    - `name` (`Anonymous` if not inputted by the user),
-    - `current studying` semester (`1` if not inputted by the user),
-    - `expected graduating` semester (`8` if not inputted by the user),
+    - `name` (`Anonymous` if not inputted by the user)
+    - `current studying` semester (`1` if not inputted by the user)
+    - `expected graduating` semester (`8` if not inputted by the user)
     - `module course code` and `grade`, along with the semester associated with it (`empty` if not inputted by the
-      user),
+      user)
     - `total modular credits taken` (modular credits of all modules taken up till and including current semester)
     - `total modular credits listed` (modular credits of all modules listed in the schedule)
 
@@ -175,8 +176,8 @@ _____________________________________________________________
 
 Format: `view c/COURSE_CODE`
 
-- The command will show the course title, modular credits, and its description.
-- The command is only limited to courses offered in NUS AY23/24.
+- The command will show the course title, modular credits, and its description
+- The command is only limited to courses offered in NUS AY23/24
 
 Example usage:
 
@@ -213,7 +214,7 @@ Format: `graduate`
 
 Example usage:
 
-`graduate` (assuming `add` was never called on any valid modules).
+`graduate` (assuming `add` was never called on any valid modules)
 
 Expected output:
 
@@ -258,20 +259,21 @@ ules.
 
 ### Change grade: `grade`
 
-`grade`: Input or adjust the grade obtained for a module.
+`grade`: Input or adjust the grade obtained for a module
 
 Format: `grade c/COURSE_CODE g/GRADE`
 
-`COURSE_CODE` represents the module that you want to input a grade for.
+`COURSE_CODE` represents the module that you want to input a grade for
 
 `GRADE` represents the grade you attained for that module
 
 - The module should be added into the list first with the add module function
 - `GRADE` only accepts alphabetical grade. Following are the allowed inputs for `GRADE`
-    - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS`
-    - For CU grade, user can just remove the module from the list
+    - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, S`
+    - For U, CU, W, IP grade, user can simply remove the module from the list 
+    - EXE grade is not implemented in this version
 - You can only change the grade of modules that are before or during your current semester
-    - If current semester 5, you can only change grades of modules from semester 1 to 5.
+    - If current semester 5, you can only change grades of modules from semester 1 to 5
 
 Example usage:
 
@@ -306,7 +308,7 @@ __________________________________________________
 ### Feasibility of desired GPA: `desiredgpa`
 
 `desiredgpa`: Checks if user's desired final GPA is possible with regard to current GPA, and show a combination of
-required grades to obtain to achieve the desired GPA.
+required grades to obtain to achieve the desired GPA
 
 Format: `desiredgpa DESIRED_GPA`
 
@@ -327,6 +329,20 @@ To obtain desired GPA of: 4.75
 You will need: 21 A and 17 A-
 With the above grades, your end GPA will be: 4.75
 __________________________________________________
+```
+
+## Exit Program: `bye`
+
+`bye`: Close and exits the program safely
+
+Example usage:
+
+`bye`
+
+Expected output:
+```
+_____________________________________________________________
+Bye. Enjoy your studies!
 ```
 
 ## FAQ

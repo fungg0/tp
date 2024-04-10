@@ -97,7 +97,8 @@ public class ModuleList {
         double sumOfGPA = 0;
 
         for (Module module : moduleList) {
-            if (module.getModuleGrade() == null || module.getModuleGrade().equals("CS")) {
+            if (module.getModuleGrade() == null || module.getModuleGrade().equals("CS") ||
+                    module.getModuleGrade().equals("S")) {
                 continue;
             }
             totalMC += module.getModuleMC();
@@ -180,7 +181,7 @@ public class ModuleList {
 
     public void calcGradesExpectations(double desiredGPA) throws InvalidGpaException {
         tallyGPAForCalcGradesExpectations();
-        int moduleCreditsTaken = getModuleCreditsTaken();
+        int moduleCreditsTaken = getValidCreditsTaken();
         int moduleCreditsNotTaken = moduleCreditsByGraduation - moduleCreditsTaken;
         int totalModuleCreditsCountedToGPA = moduleCreditsNotTaken + moduleCreditsCountedToGPA;
         double requiredFutureAverageGrade = (desiredGPA * totalModuleCreditsCountedToGPA -
@@ -209,6 +210,13 @@ public class ModuleList {
                 (4 * (upperBoundGradeNeeded + lowerBoundGradeNeeded))) / totalModuleCreditsCountedToGPA;
         printGradeExpectations(desiredGPA, acquiredGPA, upperBoundGradeNeeded,
                 upperBound, lowerBoundGradeNeeded, lowerBound, moduleCreditsNotTaken);
+    }
+
+    private int getValidCreditsTaken() throws InvalidGpaException {
+        if (getModuleCreditsTaken() >= 160) {
+            throw new InvalidGpaException("You have already taken 160 MCs or more");
+        }
+        return getModuleCreditsTaken();
     }
 
     private void tallyGPAForCalcGradesExpectations() {

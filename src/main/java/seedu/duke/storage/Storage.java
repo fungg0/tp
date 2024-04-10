@@ -150,8 +150,7 @@ public class Storage {
         if (!line.startsWith(INITIALISED_USER)) {
             if (line.endsWith("true") || line.endsWith("false")) {
                 return false;
-            }
-            else {
+            } else {
                 throw new StorageException("User data is corrupted.");
             }
         }
