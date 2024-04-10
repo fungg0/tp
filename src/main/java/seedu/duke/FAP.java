@@ -9,7 +9,6 @@ import static seedu.duke.storage.Storage.saveModulesToFile;
 import static seedu.duke.ui.Ui.printGreeting;
 import static seedu.duke.ui.Ui.printCommandGuide;
 
-import seedu.duke.exceptions.ModuleAlreadyExistException;
 import seedu.duke.user.User;
 import seedu.duke.command.Command;
 import seedu.duke.json.JsonManager;
@@ -51,28 +50,24 @@ public class FAP {
         boolean continueRunning = true;
 
         while (continueRunning) {
-            //try {
+            try {
                 String userInput = ui.getUserCommand();
                 LOGGER.log(Level.INFO, "User input: " + userInput);
                 Command command = Parser.getCommand(userInput);
                 command.execute(userInput);
                 user.resetModuleStatuses();
-               // saveModulesToFile(filePath);
+                saveModulesToFile(filePath);
                 if (userInput.equals(BYE)) {
                     continueRunning = false;
                     ui.close();
                 }
-              //  }
-                /*
-            } catch (ModuleAlreadyExistException e) {
+
+            } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
                 System.err.println("An error occurred: " + e.getMessage());
                 ui.close();
                 continueRunning = false; // Exit loop on error
             }
-            */
-
-
         }
     }
 }

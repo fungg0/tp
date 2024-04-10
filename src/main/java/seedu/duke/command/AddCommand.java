@@ -58,7 +58,8 @@ public class AddCommand extends Command {
             } else if (!moduleInNUS) {
                 throw new ModuleNotFoundException("Module does not exist in NUS!");
             } else if (!correctSemester){
-                throw new WrongSemesterException("You can't take in this semester! Try another one instead!");
+                throw new WrongSemesterException("You can't take this module in this semester! " +
+                        "Try another one instead!");
             }
         } catch (ModuleAlreadyExistException e) {
 
