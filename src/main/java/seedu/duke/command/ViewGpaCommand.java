@@ -8,7 +8,8 @@ public class ViewGpaCommand extends Command{
     public void execute(String userInput) {
         try {
             moduleList.tallyGPA();
-            System.out.println("Your current GPA is: " + moduleList.getCurrentGPA());
+            String formattedGPA = String.format("%.02f", moduleList.getCurrentGPA());
+            System.out.println("Your current GPA is: " + formattedGPA);
         } catch (GpaNullException e) {
             System.out.println(e.getMessage());
         }
