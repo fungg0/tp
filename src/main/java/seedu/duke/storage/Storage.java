@@ -16,6 +16,11 @@ import static seedu.duke.FAP.jsonManager;
 import static seedu.duke.FAP.moduleList;
 import static seedu.duke.FAP.user;
 
+/**
+ * Handles the storage of user and module data to and from files.
+ * This includes saving the current user's information and their module list
+ * to a file and loading this information back from the file.
+ */
 public class Storage {
 
     public static final String INITIALISED_USER = "InitialisedUser";
@@ -23,7 +28,12 @@ public class Storage {
     private static final int MINIMUM_SEMESTER = 1;
     private static final int MAXIMUM_SEMESTER = 8;
 
-
+    /**
+     * Saves the current user and their taken modules to the specified file path.
+     *
+     * @param filePath The path of the file to save the data to.
+     * @throws StorageException If an error occurs while writing to the file.
+     */
     public static void saveModulesToFile(String filePath) throws StorageException {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
@@ -36,6 +46,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Ensures that the directory for the specified file path exists. If it does not,
+     * attempts to create the directory.
+     *
+     * @param filePath The file path for which to ensure the directory exists.
+     * @throws StorageException If the directory does not exist and cannot be created.
+     */
     public static void ensureDirectoryExists(String filePath) throws StorageException {
 
         File file = new File(filePath);
@@ -46,6 +63,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Creates a new file at the specified file path. If the file already exists,
+     * it will not be overwritten.
+     *
+     * @param filePath The path of the file to create.
+     * @throws StorageException If an error occurs while creating the file.
+     */
     public static void createFile(String filePath) throws StorageException {
 
         ensureDirectoryExists(filePath);
@@ -59,6 +83,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads user and module data from the specified file path.
+     *
+     * @param filePath The path of the file from which to load the data.
+     * @throws StorageException If an error occurs during file loading.
+     */
     public static void loadDataFromFile(String filePath) throws StorageException {
 
         File file = new File(filePath);
@@ -194,6 +224,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Converts a module to its string representation for storage.
+     *
+     * @param module The module to convert.
+     * @return The string representation of the module.
+     */
     public static String toString(Module module) {
 
         return module.getModuleCode() + ' ' +
@@ -202,6 +238,12 @@ public class Storage {
                 module.getModuleStatus();
     }
 
+    /**
+     * Converts a user to its string representation for storage.
+     *
+     * @param user The user to convert.
+     * @return The string representation of the user.
+     */
     public static String toString(User user) {
 
         return INITIALISED_USER + ' ' +
