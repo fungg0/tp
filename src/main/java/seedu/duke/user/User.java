@@ -10,15 +10,13 @@ public class User {
     public static final int MIN_NUM_SEMESTERS = 1;
     public static final int MAX_NUM_SEMESTERS = 8;
 
-    // Default parameters: name is empty string, currentSemester = 1, graduationSemester = 8
+    // Default parameters: name is empty string, currentSemester = 1
     private String name;
     private int currentSemester;
-    private int graduationSemester;
 
     public User() {
         name = "";
         currentSemester = 1;
-        graduationSemester = 8;
     }
 
     public String getName() {
@@ -29,19 +27,14 @@ public class User {
         return currentSemester;
     }
 
-    public int getGraduationSemester() {
-        return graduationSemester;
-    }
-
-    public void setUserInfo(String name, int currSem, int gradSem) throws UserException {
+    public void setUserInfo(String name, int currSem) throws UserException {
         validateName(name);
-        validateSemesters(currSem, gradSem);
+        validateSemesters(currSem);
 
         resetModuleStatuses(currSem);
 
         this.name = name;
         this.currentSemester = currSem;
-        this.graduationSemester = gradSem;
     }
 
     private void validateName(String name) throws UserException {
@@ -49,17 +42,13 @@ public class User {
             throw new UserException("Name cannot be null.");
         }
         if (!name.matches("[A-Za-z0-9 ]+")) {
-            throw new UserException("Invalid name format. Name should only contain letters, digits, or spaces.");
+            throw new UserException("Invalid name format. Name should only contain letters and spaces in between.");
         }
     }
 
-    private void validateSemesters(int currSem, int gradSem) throws UserException {
-        if (currSem < MIN_NUM_SEMESTERS || currSem > MAX_NUM_SEMESTERS ||
-                gradSem < MIN_NUM_SEMESTERS || gradSem > MAX_NUM_SEMESTERS) {
+    private void validateSemesters(int currSem) throws UserException {
+        if (currSem < MIN_NUM_SEMESTERS || currSem > MAX_NUM_SEMESTERS) {
             throw new UserException("Semester values should be between 1 and 8.");
-        }
-        if (gradSem < currSem) {
-            throw new UserException("Invalid semesters: graduation semester should not precede the current semester.");
         }
     }
 

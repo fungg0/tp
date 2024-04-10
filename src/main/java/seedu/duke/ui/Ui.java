@@ -12,7 +12,7 @@ public class Ui {
     private static final String COMMANDS_HELP_MESSAGE =
             "Available Commands:\n" +
                     "NOTE: \"<WORD>\" represents a user-typed argument that is required for the command\n" +
-                    "1. init n/<NAME> curr/<CURR_SEM> grad/<GRAD_SEM> - Set name, current & expected grad semester\n" +
+                    "1. set n/<NAME> curr/<CURR_SEM> - Set name & current semester\n" +
                     "2. add c/<COURSE_CODE> w/<WHEN> - Add a module to your schedule\n" +
                     "3. remove c/<COURSE_CODE> - Remove a module from your schedule\n" +
                     "4. grade c/<COURSE_CODE> g/<GRADE> - Add or change a module grade\n" +
@@ -21,7 +21,8 @@ public class Ui {
                     "7. view - View modules on your schedule\n" +
                     "8. view c/<COURSE_CODE> - View selected module information\n" +
                     "9. graduate - View remaining core modules and MCs left to graduate\n" +
-                    "10. help - View command syntax and list of commands available for FAP";
+                    "10. help - View command syntax and list of commands available for FAP\n" +
+                    "11. bye - Exit the program";
     private final Scanner in;
 
     public Ui() {
@@ -72,14 +73,12 @@ public class Ui {
         System.out.println(COMMANDS_HELP_MESSAGE);
     }
 
-    public static void printUserInfo(String name, int startSem, int gradSem) {
+    public static void printUserInfo(String name, int startSem) {
         String greeting = String.format("Greetings %s! Your details are updated:", name);
         String updatedCurrentSemesterInfo = String.format("You are currently in Semester %d", startSem);
-        String updatedGraduationSemesterInfo = String.format("You are expected to graduate in Semester %d", gradSem);
 
         System.out.println(greeting);
         System.out.println(updatedCurrentSemesterInfo);
-        System.out.println(updatedGraduationSemesterInfo);
     }
 
     public static void printScheduleHeader(String name) {
@@ -89,14 +88,12 @@ public class Ui {
         System.out.println(title);
     }
 
-    public static void printScheduleDetails(int startSem, int gradSem, int mcsTaken, int mcslisted) {
+    public static void printScheduleDetails(int startSem, int mcsTaken, int mcslisted) {
         String currentSemesterInfo = String.format("- Current Study: Semester %d", startSem);
-        String graduationSemesterInfo = String.format("- Expected Graduation: Semester %d", gradSem);
         String mcsTakenInfo = String.format("- Total MCs taken: %d / 160", mcsTaken);
         String mcsListedInfo = String.format("- Total MCs listed: %d / 160", mcslisted);
 
         System.out.println(currentSemesterInfo);
-        System.out.println(graduationSemesterInfo);
         System.out.println(mcsTakenInfo);
         System.out.println(mcsListedInfo);
     }

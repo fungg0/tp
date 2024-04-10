@@ -120,16 +120,15 @@ public class Storage {
         if (!line.startsWith(INITIALISED_USER)) {
             return false;
         }
-        String[] parts = line.split(" ", 4);
-        if (parts.length < 4) {
+        String[] parts = line.split(" ", 3);
+        if (parts.length < 3) {
             throw new StorageException("User data is corrupted.");
         }
         int currentSemester = Integer.parseInt(parts[1]);
-        int graduationSemester = Integer.parseInt(parts[2]);
-        String name = parts[3];
+        String name = parts[2];
         try {
             if (!name.isEmpty()) {
-                user.setUserInfo(name, currentSemester, graduationSemester);
+                user.setUserInfo(name, currentSemester);
             }
         } catch (NumberFormatException e) {
             throw new StorageException("Failed to parse user semester information: " + e.getMessage());
@@ -202,7 +201,6 @@ public class Storage {
 
         return INITIALISED_USER + ' ' +
                 user.getCurrentSemester() + ' ' +
-                user.getGraduationSemester() + ' ' +
                 user.getName();
     }
 }
