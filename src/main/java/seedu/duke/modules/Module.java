@@ -41,7 +41,7 @@ public class Module {
 
     public void setModuleGrade(String moduleGrade) throws ModuleException {
 
-        if (moduleGrade != null && !moduleGrade.matches("A\\+|A|A-|B\\+|B|B-|C\\+|C|D\\+|D|F|CS|CU")) {
+        if (moduleGrade == null || !moduleGrade.matches("[AB][+-]?|[CD][+]?|F|CS")) {
             throw new IllegalArgumentException("Invalid module grade.");
         }
         if (!moduleTaken) {
@@ -111,6 +111,10 @@ public class Module {
         default:
             throw new IllegalStateException("Invalid or unassigned module grade.");
         }
+    }
+
+    public boolean gradeIsNull() {
+        return moduleGrade == null;
     }
 
     @Override

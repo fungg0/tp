@@ -54,9 +54,10 @@ public class FAPTest {
         return String.join(System.lineSeparator(), lines) + System.lineSeparator();
     }
 
+    //@@ author dextboy
     @Test
-    public void testInit() {
-        String simulatedUserInput = "init n/bob curr/4 grad/8" + System.lineSeparator() +
+    public void testSet() {
+        String simulatedUserInput = "set n/bob curr/4" + System.lineSeparator() +
                 "bye" + System.lineSeparator();
         provideInput(simulatedUserInput);
 
@@ -65,12 +66,11 @@ public class FAPTest {
         String output = testOut.toString().replace(System.lineSeparator(), "\n");
 
         String expectedOutput = buildExpectedOutput(
-                "__________________________________________________",
+                "_____________________________________________________________",
                 "Greetings bob! Your details are updated:",
                 "You are currently in Semester 4",
-                "You are expected to graduate in Semester 8",
-                "__________________________________________________",
-                "__________________________________________________",
+                "_____________________________________________________________",
+                "_____________________________________________________________",
                 "Bye. Enjoy your studies!"
         ).replace(System.lineSeparator(), "\n");
 
@@ -78,19 +78,19 @@ public class FAPTest {
     }
 
     @Test
-    public void invalidInitTest() {
-        String simulatedUserInput = "init n/" + System.lineSeparator() +
+    public void invalidSetTest() {
+        String simulatedUserInput = "set n/" + System.lineSeparator() +
                 "bye" + System.lineSeparator();
         provideInput(simulatedUserInput);
         FAP.main(new String[]{});
         String output = testOut.toString().replace(System.lineSeparator(), "\n");
 
         String expectedOutput = buildExpectedOutput(
-                "__________________________________________________",
-                "Invalid init command: Invalid argument format/delimiters used",
+                "_____________________________________________________________",
+                "Invalid set command: Invalid argument format/delimiters used",
                 "Type \"help\" to view the list & syntax of available commands",
-                "__________________________________________________",
-                "__________________________________________________",
+                "_____________________________________________________________",
+                "_____________________________________________________________",
                 "Bye. Enjoy your studies!"
         ).replace(System.lineSeparator(), "\n");
 

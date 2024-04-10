@@ -8,7 +8,7 @@ import seedu.duke.command.ByeCommand;
 import seedu.duke.command.Command;
 import seedu.duke.command.GradeCommand;
 import seedu.duke.command.InvalidCommand;
-import seedu.duke.command.InitCommand;
+import seedu.duke.command.SetCommand;
 import seedu.duke.command.RemoveCommand;
 import seedu.duke.command.ViewCommand;
 import seedu.duke.command.ViewGpaCommand;
@@ -16,10 +16,10 @@ import seedu.duke.command.ViewGpaCommand;
 public class ParserTest {
 
     @Test
-    public void testInitCommand() {
-        String userInput = "init n/John Doe curr/1 grad/8";
+    public void testSetCommand() {
+        String userInput = "set n/John Doe curr/1";
         Command command = Parser.getCommand(userInput);
-        assertTrue(command instanceof InitCommand);
+        assertTrue(command instanceof SetCommand);
     }
 
     @Test
