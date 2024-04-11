@@ -5,7 +5,7 @@
 {list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the
 original source as well}
 
-## Design & implementation
+## Architecture
 
 ### Main Class: `FAP`
 
@@ -28,7 +28,77 @@ resources. It embodies key software design principles and showcases thoughtful a
 - **Error Handling:** Demonstrates robust error handling strategies by catching and logging different exceptions, which
   ensures graceful handling of unexpected situations.
 
-#### Implementation Details
+## Design
+
+### UI
+
+### User
+
+### Parser
+
+### Storage
+
+### Module, Module List, JSON
+
+### Command
+
+Here's how the `Command` class interact with the other classes:
+
+![Command diagram](diagrams/Command-0.png)
+
+How the `Command` component works (together with other classes):
+
+1. When the user's input is received in `FAP.java`, it is passed into the `Parser` class which then creates an instance
+   of the `Command` object.
+2. The object would be a specific implementation of the `Command` class (i.e. `AddCommand`, `ViewCommand`, etc.)
+3. The specific `Command` subclass would then be present in `FAP.java` as a new `Command` object
+4. `execute()` is then called on the object to perform its task.
+
+## Implementation
+
+### Classes
+
+### Commands
+
+#### View Commands
+
+User input is passed to `Parser.getCommand()`, which determines that the input contains the keyword `view`, which
+branches out depending on whether it is followed by a `c/COURSE_CODE` (refer to the `Parser` implementation
+on how it detects optional inputs).
+
+- #### View Schedule (without `c/COURSE_CODE`)
+
+1. Calls `ModuleList.getModuleMySemester()`.
+2. Subsequently, calls `Ui.java`'s `printScheduleHeader()`, `printModulePlan()`, and `printScheduleDetails()`.
+
+- #### View Specific Course Information (with `c/COURSE_CODE`)
+
+1. Checks if the course exists in NUS AY23/24 by calling `JsonManager.moduleExist()`.
+2. In the event the method returns `false`, else it
+   calls `JsonManager.queryModuleInfo()` to get the module's relevant details (i.e. course title, MCs and description).
+3. It prints out a statement stating the module does not exist if point 1. returns false, else it prints out the
+   module information.
+
+The following diagram illustrates how the `ViewCommand` operates when `execute()` is called:
+
+![ViewCommand Sequence Diagram](diagrams/ViewCommand-0.png)
+
+- #### View Courses Needed to Graduate
+  This feature is implemented under the `ViewGraduateCommand` instead of the previous `ViewCommand` as it is invoked
+  under a different keyword (i.e. `graduate`).
+
+1. User input is passed into `Parser.getCommand()`, it returns an instance of `ViewGraduateCommand` and `FAP.java` will
+   call its `execute()` method.
+2. It gets the modules left to complete by `ModuleList.getModulesToComplete()` which loops over all the modules in the
+   user's `ModuleList` and checks it against `CEGModules` to see if it is a valid CEG Module, or if its equivalent
+   exists (e.g. CP3880 and EG3611A).
+3. If the exact module is found in `CEGModules`, the module and its equivalent will not be added to
+   the `modulesToComplete`.
+4. `printModulesToComplete()` is called and prints out the required modules based on the `modulesToComplete`.
+
+The following diagram illustrates how `ViewGraduateCommand` operates when its `execute()` method is called:
+
+![ViewGraduateCommand Sequence Diagram](diagrams/ViewGraduateCommand-0.png)
 
 1. **Application Initialization and Entry Point:**
 
@@ -96,93 +166,102 @@ resources. It embodies key software design principles and showcases thoughtful a
    }
    ```
 3. **Module Class:**
-  
+
    #### Purpose
-  
+
    Represents an academic module, holding information such as the module code, credits (MCs), grade, and description.
-  
+
    #### Key Methods
-  
-   - **`setModuleGrade(String moduleGrade)`**  
-    Sets the grade for the module. Validates the grade format and throws `ModuleException` if the module hasn't been taken yet.
-  
-   - **`getGradeNumber()`**  
-     Returns a numerical value associated with the module's grade, used for GPA calculation.
+
+    - **`setModuleGrade(String moduleGrade)`**  
+      Sets the grade for the module. Validates the grade format and throws `ModuleException` if the module hasn't been
+      taken yet.
+
+    - **`getGradeNumber()`**  
+      Returns a numerical value associated with the module's grade, used for GPA calculation.
 
 4. **ModuleList Class:**
-    
+
    #### Purpose
-    
-   Manages a collection of `Module` objects. It facilitates operations such as adding, removing, retrieving modules, calculating GPA, and grouping modules by semester.
-    
+
+   Manages a collection of `Module` objects. It facilitates operations such as adding, removing, retrieving modules,
+   calculating GPA, and grouping modules by semester.
+
    #### Key Methods
-    
-   - **`addModule(Module module)`**  
-     Adds a new module to the list.  
-     Throws `IllegalArgumentException` if the module is `null`.
-   
-   - **`getModule(String courseCode)`**  
-     Retrieves a module by its course code.  
-     Throws `ModuleNotFoundException` if the module is not found.
-    
-   - **`removeModule(Module module)`**  
-     Removes a specified module from the list.
-    
-   - **`changeModuleGrade(String moduleCode, String grade)`**  
-     Changes the grade of a module identified by its course code.
-    
-   - **`tallyGPA()`**  
-     Calculates and returns the GPA based on the modules in the list.  
-     Throws `GpaNullException` if there are no modules with countable grades.
-    
-   - **`groupModulesBySemester()`**  
-     Groups modules by their semester and returns a map where each key is a semester, and each value is a list of modules in that semester.
-    
+
+    - **`addModule(Module module)`**  
+      Adds a new module to the list.  
+      Throws `IllegalArgumentException` if the module is `null`.
+
+    - **`getModule(String courseCode)`**  
+      Retrieves a module by its course code.  
+      Throws `ModuleNotFoundException` if the module is not found.
+
+    - **`removeModule(Module module)`**  
+      Removes a specified module from the list.
+
+    - **`changeModuleGrade(String moduleCode, String grade)`**  
+      Changes the grade of a module identified by its course code.
+
+    - **`tallyGPA()`**  
+      Calculates and returns the GPA based on the modules in the list.  
+      Throws `GpaNullException` if there are no modules with countable grades.
+
+    - **`groupModulesBySemester()`**  
+      Groups modules by their semester and returns a map where each key is a semester, and each value is a list of
+      modules in that semester.
+
    #### Error Handling
-    
+
    Uses exceptions to handle errors, such as when trying to access or modify modules that don't exist.
-    
+
 5. **Getting module details from Json File (JsonManager Class):**
-    
+
    #### Overview
-    
-   The `JsonManager` class is designed to manage and interact with module information stored in a JSON format. It provides functionalities for checking the existence of modules, retrieving module information such as Modular Credits (MCs), description, and title from a JSON file.
-    
+
+   The `JsonManager` class is designed to manage and interact with module information stored in a JSON format. It
+   provides functionalities for checking the existence of modules, retrieving module information such as Modular
+   Credits (MCs), description, and title from a JSON file.
+
    #### Constructor
-    
-   - `JsonManager()`: Initializes a new instance of the `JsonManager` by loading the module information from a JSON file located at `/moduleInfo.json`.
-   
+
+    - `JsonManager()`: Initializes a new instance of the `JsonManager` by loading the module information from a JSON
+      file located at `/moduleInfo.json`.
+
    #### Methods
-    
+
    ##### Module Existence
-    
-   - **`moduleExist(String moduleCode)`**: Checks if a module with the specified code exists in the JSON data.
-     - **Parameters**: `String moduleCode` - The code of the module to check for existence.
-     - **Returns**: `boolean` - `true` if the module exists, `false` otherwise.
-    
+
+    - **`moduleExist(String moduleCode)`**: Checks if a module with the specified code exists in the JSON data.
+        - **Parameters**: `String moduleCode` - The code of the module to check for existence.
+        - **Returns**: `boolean` - `true` if the module exists, `false` otherwise.
+
    ##### Module Information Retrieval
-    
-   - **`getModuleInfo(String moduleCode)`**: Retrieves detailed information about a module, including its Modular Credits, description, and title, based on the module code.
-     - **Parameters**: `String moduleCode` - The code of the module for which information is to be retrieved.
-     - **Note**: This method updates the internal state of the `JsonManager` object with the retrieved module information.
-    
+
+    - **`getModuleInfo(String moduleCode)`**: Retrieves detailed information about a module, including its Modular
+      Credits, description, and title, based on the module code.
+        - **Parameters**: `String moduleCode` - The code of the module for which information is to be retrieved.
+        - **Note**: This method updates the internal state of the `JsonManager` object with the retrieved module
+          information.
+
    ##### Information Accessors
-    
-   - **`getModuleDescription()`**: Returns the description of the last module queried.
-     - **Returns**: `String` - The description of the module.
-   
-   - **`getModuleMC()`**: Returns the Modular Credits of the last module queried.
-     - **Returns**: `int` - The Modular Credits of the module.
-    
-   - **`getModuleTitle()`**: Returns the title of the last module queried.
-     - **Returns**: `String` - The title of the module.
-    
+
+    - **`getModuleDescription()`**: Returns the description of the last module queried.
+        - **Returns**: `String` - The description of the module.
+
+    - **`getModuleMC()`**: Returns the Modular Credits of the last module queried.
+        - **Returns**: `int` - The Modular Credits of the module.
+
+    - **`getModuleTitle()`**: Returns the title of the last module queried.
+        - **Returns**: `String` - The title of the module.
+
    #### Error Handling
-    
-   - The constructor throws a `RuntimeException` if the JSON file containing module information cannot be found or accessed, ensuring that the application is aware of missing or inaccessible module data.
-    
+
+    - The constructor throws a `RuntimeException` if the JSON file containing module information cannot be found or
+      accessed, ensuring that the application is aware of missing or inaccessible module data.
+
    #### Usage
-    
+
    ```java
    JsonManager jsonManager = new JsonManager();
    if (jsonManager.moduleExist("CS1010")) {
@@ -192,20 +271,8 @@ resources. It embodies key software design principles and showcases thoughtful a
        System.out.println("Module MC: " + jsonManager.getModuleMC());
    }
    ```
-6. **Viewing modules left to graduate**
 
-   The `ViewGraduateCommand` class is responsible for displaying the list of modules that a student needs to
-   complete
-   for graduation with respect to the modules the user has previously completed. The diagram below provides an overview
-   of how this class interacts with other components in the
-   system.
-
-   ![View Graduate Module Class](diagrams/ViewGraduateModuleClass.png)
-
-   It utilizes the `Ui` class to print out the list of modules in a
-   formatted manner. Additionally, it interacts with the `CEGModules` enum to retrieve module information such as
-   module codes and Module Credits (MCs).
-7. **Viewing GPA**
+6. **Viewing GPA**
 
    The `ViewGpaCommand` class is responsible for displaying the current GPA attained by the student. It
    accesses `ModuleList`, which looks through all `Module` object contained in the list. If the `Module` is marked as
@@ -218,7 +285,7 @@ resources. It embodies key software design principles and showcases thoughtful a
    Below is the sequence diagram for `ViewGpaCommand`.
    ![View Gpa Command Sequence Diagram](diagrams/ViewGpaCommand.png)
 
-8. **Parsing UserInput**
+7. **Parsing UserInput**
 
    The `Parser` class, together with the `CommandMetadata` class parses user input to
    **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no
@@ -330,39 +397,55 @@ Sample example code:
     }
 }
   ```
+
 Design & Implementation
 Storage Class
 
-The Storage class is crucial for persisting user data between sessions, ensuring that module information and user preferences are not lost even after the application is closed. It interacts with the file system to load and save data, employing error handling to manage potential IO exceptions gracefully.
+The Storage class is crucial for persisting user data between sessions, ensuring that module information and user
+preferences are not lost even after the application is closed. It interacts with the file system to load and save data,
+employing error handling to manage potential IO exceptions gracefully.
 Key Responsibilities
 
-- **File Management:** Ensures necessary directories and files exist at application startup or creates them if they don't.
-- **Data Persistence:** Serializes and deserializes user data, including modules and user information, to and from a designated file.
-- **Error Handling:** Captures and throws custom exceptions to signal file access or data integrity issues, facilitating robust error management in higher-level components.
+- **File Management:** Ensures necessary directories and files exist at application startup or creates them if they
+  don't.
+- **Data Persistence:** Serializes and deserializes user data, including modules and user information, to and from a
+  designated file.
+- **Error Handling:** Captures and throws custom exceptions to signal file access or data integrity issues, facilitating
+  robust error management in higher-level components.
 
 **Implementation Details**
 
-- **Initialization:** Verifies the presence of required directories/files or creates them. This is crucial for first-time application runs on a user's machine.
+- **Initialization:** Verifies the presence of required directories/files or creates them. This is crucial for
+  first-time application runs on a user's machine.
 
 - **Saving Data:**
-    The `saveModulesToFile` method serializes the current state of moduleList and user into a human-readable format (or a structured format like JSON/XML, depending on implementation) and writes it to a file. This method is invoked at critical points, such as application shutdown or after any operation that alters user data.
+  The `saveModulesToFile` method serializes the current state of moduleList and user into a human-readable format (or a
+  structured format like JSON/XML, depending on implementation) and writes it to a file. This method is invoked at
+  critical points, such as application shutdown or after any operation that alters user data.
 
 - **Loading Data:**
-    The `loadDataFromFile` method reads the file contents, deserializes them back into the application's data structures (moduleList and user), and ensures that the application state reflects the persisted data. This method is typically called at application startup.
+  The `loadDataFromFile` method reads the file contents, deserializes them back into the application's data structures (
+  moduleList and user), and ensures that the application state reflects the persisted data. This method is typically
+  called at application startup.
 
 - **Data Integrity and Error Management:**
-    Implements `try-catch` blocks to manage `IOExceptions` and custom exceptions, ensuring the application can handle and recover from unexpected issues during file operations.
+  Implements `try-catch` blocks to manage `IOExceptions` and custom exceptions, ensuring the application can handle and
+  recover from unexpected issues during file operations.
 
-   ### UML Diagram
+  ### UML Diagram
 
-   A simplified UML diagram for the Storage class and its interaction with the Module, User, and exception classes is shown below:
--    ![View Storage Class](diagrams/Storage.png)
+  A simplified UML diagram for the Storage class and its interaction with the Module, User, and exception classes is
+  shown below:
+- ![View Storage Class](diagrams/Storage.png)
 
-   ### Integration with FAP
+### Integration with FAP
 
-   The FAP class incorporates the Storage class to manage application data persistence. At startup, FAP calls Storage.loadDataFromFile to restore the previous session's state. Before termination or at regular intervals, FAP invokes Storage.saveModulesToFile to save the current state.
+The FAP class incorporates the Storage class to manage application data persistence. At startup, FAP calls
+Storage.loadDataFromFile to restore the previous session's state. Before termination or at regular intervals, FAP
+invokes Storage.saveModulesToFile to save the current state.
 
-   This integration ensures that the application's data lifecycle is managed efficiently, providing a seamless user experience across sessions.
+This integration ensures that the application's data lifecycle is managed efficiently, providing a seamless user
+experience across sessions.
 
 ---
 

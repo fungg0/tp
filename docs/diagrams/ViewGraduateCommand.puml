@@ -1,0 +1,36 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+participant ViewGraduateCommand
+participant ModuleList
+participant CEGModules
+participant Ui
+-> ViewGraduateCommand: execute()
+activate ViewGraduateCommand
+ViewGraduateCommand -> ModuleList: getModulesToComplete()
+activate ModuleList
+loop all modules in ModuleList
+ModuleList -> ModuleList: containsCEGModuleInList()
+activate ModuleList
+loop all modules in CEGModules
+ModuleList -> CEGModules: mapStringToEnum()
+activate CEGModules
+CEGModules --> ModuleList: module: CEGModules
+deactivate CEGModules
+ModuleList -> CEGModules: getEquivalent()
+activate CEGModules
+CEGModules --> ModuleList: equivalentList: ArrayList<String>
+deactivate CEGModules
+end
+ModuleList --> ModuleList: containsModule: Boolean
+deactivate ModuleList
+end
+ModuleList --> ViewGraduateCommand: modulesToComplete: ArrayList<String>
+deactivate ModuleList
+
+ViewGraduateCommand -> Ui: printModulesToComplete()
+activate Ui
+Ui --> ViewGraduateCommand
+deactivate Ui
+
+@enduml
