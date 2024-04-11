@@ -56,6 +56,13 @@ public class JsonManager {
         for (JsonObject obj : jsonArray) {
             String name = obj.get("moduleCode").getAsString();
             if (name.equals(moduleCode)) {
+                JsonElement semesterData = obj.get("semesterData");
+                JsonArray semesterArray = semesterData.getAsJsonArray();
+                // JsonFile contains mods that do not have data on available semester to be taken in.
+                // So they are considered as not available just like in NusMods
+                if (semesterArray.isEmpty()) {
+                    return false;
+                }
                 return true;
             }
         }
