@@ -1,0 +1,55 @@
+@startuml
+
+participant ViewCommand
+participant JsonManager
+participant Ui
+participant ModuleList
+
+
+
+-> ViewCommand: execute()
+activate ViewCommand
+alt Input contains c/COURSE_CODE
+    ViewCommand -> JsonManager: moduleExist()
+    activate JsonManager
+    alt NUS Module exists
+    JsonManager --> ViewCommand: true
+    deactivate JsonManager
+    ViewCommand -> JsonManager: queryModuleInfo()
+    activate JsonManager
+    JsonManager --> ViewCommand: moduleInfo
+    deactivate JsonManager
+    ViewCommand -> Ui: printViewModule()
+    activate Ui
+    Ui --> ViewCommand
+    deactivate Ui
+    else else
+
+    JsonManager --> ViewCommand: false
+    ViewCommand -> Ui: printModuleDoesNotExist()
+    activate Ui
+    Ui --> ViewCommand
+    deactivate Ui
+    end
+else else
+    ViewCommand -> ModuleList: getModuleBySemester()
+
+    activate ModuleList
+    ModuleList --> ViewCommand: modulesBySemMap: Map<Integer, ArrayList<Module>>
+    deactivate ModuleList
+    ViewCommand -> Ui: printScheduleHeader()
+    activate Ui
+    Ui --> ViewCommand
+    deactivate Ui
+    ViewCommand -> Ui: printModulePlan()
+    activate Ui
+    Ui --> ViewCommand
+    deactivate Ui
+    ViewCommand -> Ui: printScheduleDetails()
+    activate Ui
+    Ui --> ViewCommand
+    deactivate Ui
+end
+deactivate ViewCommand
+
+@enduml
