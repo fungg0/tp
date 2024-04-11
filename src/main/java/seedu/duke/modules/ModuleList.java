@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import static seedu.duke.FAP.LOGGER;
 
 public class ModuleList {
-    private static final int DEFAULT_MC_REQUIRED = 160;
+    private static final float DEFAULT_MC_REQUIRED = 160;
 
     protected ArrayList<Module> moduleList;
     private float moduleCreditsByGraduation = DEFAULT_MC_REQUIRED;

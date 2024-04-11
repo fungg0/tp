@@ -8,16 +8,19 @@ public class Module {
     private float moduleMC;
     private boolean moduleTaken;
     private int moduleDate;
+    private boolean gradedGradingBasis;
 
     private String moduleDescription;
 
-    public Module(String moduleCode, float moduleMC, int moduleDate, String moduleDescription) {
+    public Module(String moduleCode, float moduleMC, int moduleDate, String moduleDescription,
+                  boolean gradedGradingBasis) {
         this.moduleCode = moduleCode;
         this.moduleMC = moduleMC;
         this.moduleDate = moduleDate;
         this.moduleTaken = false;
         this.moduleGrade = null;
         this.moduleDescription = moduleDescription;
+        this.gradedGradingBasis = gradedGradingBasis;
     }
 
     public String getModuleDescription() {
