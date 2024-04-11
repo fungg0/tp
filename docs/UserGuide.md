@@ -11,17 +11,19 @@ faster than your traditional GUI app.
 - [Quick Start](#quick-start)
 - [Features](#features)
     - [User Management](#user-management)
-        - [`set`: Personalizes the bot for the user.](#personalization-set)
+        - [`set`: Personalizes the bot for the user](#personalization-set)
     - [Course Management](#course-management)
-        - [`add`: Adds a module.](#add-module-add)
-        - [`remove`: Removes a module.](#remove-module-remove)
-        - [`view`: View modules in schedule.](#view-modules-in-schedule-view)
-        - [`graduate`: View remaining modules required to graduate.](#view-remaining-modules-to-graduate-graduate)
+        - [`add`: Adds a module](#add-module-add)
+        - [`remove`: Removes a module](#remove-module-remove)
+        - [`view`: View modules](#view-modules-view)
+        - [`graduate`: View remaining modules required to graduate](#view-remaining-modules-to-graduate-graduate)
     - [Grade Management](#grade-management)
-        - [`grade`: Add or edit grades to a module.](#change-grade-grade)
-        - [`gpa`: View current GPA.](#view-gpa-gpa)
-        - [`desiredgpa`: Calculate grades required for a gpa goal.](#feasibility-of-desired-gpa-desiredgpa)
-    - [Exit Program](#exit-program-bye)
+        - [`grade`: Add or edit grades to a module](#change-grade-grade)
+        - [`gpa`: View current GPA](#view-gpa-gpa)
+        - [`desiredgpa`: Calculate grades required for a gpa goal](#feasibility-of-desired-gpa-desiredgpa)
+    - [Miscellaneous Commands](#miscellaneous-commands)
+        - [`help`: View list of command syntax available for FAP](#display-help-message-in-FAP-help)
+        - [`exit`: Exit Program](#exit-program-bye)
 - [FAQ](#faq)
 - [Command Summary](#command-summary)
 
@@ -134,7 +136,7 @@ Module CS2113 removed!
 __________________________________________________
 ```
 
-### View modules in schedule: `view`
+### View modules: `view`
 
 `view`: Allows users to view their academic plan.
 
@@ -143,7 +145,6 @@ Format: `view`
 - This will show various details, including the user’s
     - `name` (`Anonymous` if not inputted by the user)
     - `current studying` semester (`1` if not inputted by the user)
-    - `expected graduating` semester (`8` if not inputted by the user)
     - `module course code` and `grade`, along with the semester associated with it (`empty` if not inputted by the
       user)
     - `total modular credits taken` (modular credits of all modules taken up till and including current semester)
@@ -331,9 +332,50 @@ With the above grades, your end GPA will be: 4.75
 __________________________________________________
 ```
 
-## Exit Program: `bye`
+## Miscellaneous commands
+
+### Display help message in FAP: `help`
+
+`help`: View list of command syntax available for FAP
+
+Format: `help`
+
+Example usage:
+
+`help`
+
+Expected output:
+```
+_____________________________________________________________
+Available Commands:
+NOTE: "<WORD>" represents a user-typed argument that is required for the command
+1. set n/<NAME> curr/<CURR_SEM> - Set name & current semester
+2. add c/<COURSE_CODE> w/<WHEN> - Add a module to your schedule
+3. remove c/<COURSE_CODE> - Remove a module from your schedule
+4. grade c/<COURSE_CODE> g/<GRADE> - Add or change a module grade
+5. gpa - View your GPA
+6. desiredgpa <GPA> - Calculates grades needed to achieve a desired GPA
+7. view - View modules on your schedule
+8. view c/<COURSE_CODE> - View selected module information
+9. graduate - View remaining core modules and MCs left to graduate
+10. help - View command syntax and list of commands available for FAP
+11. bye - Exit the program
+
+Argument format:
+<NAME>: Alphabetic characters and optionally spaces between
+<CURR_SEM>: Valid semester from 1-8
+<COURSE_CODE>: Valid NUS course code from AY23-24
+<WHEN>: Valid semester from 1-8
+<GRADE>: Alphabetic grade (A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, S)
+<GPA>: Number from 0 to 5
+_____________________________________________________________
+```
+
+### Exit Program: `bye`
 
 `bye`: Close and exits the program safely
+
+Format: `bye`
 
 Example usage:
 
@@ -361,12 +403,23 @@ Bye. Enjoy your studies!
 
 ## Command Summary
 
-* Initialise user `init n/NAME curr/CURR_SEM grad/GRAD_SEM`
+#### Command format:
+* Set user information `set n/NAME curr/CURR_SEM`
 * Add modules `add c/COURSE_CODE w/WHEN`
 * Remove modules `remove c/COURSE_CODE`
 * Input grade `grade c/COURSE_CODE g/GRADE`
 * View GPA `gpa`
 * Check for desired GPA `desiredgpa DESIRED_GPA`
-* View modules added `view`
+* View modules in schedule `view`
+* View specific module information `view c/COURSE_CODE`
 * View modules still required for graduation `graduation`
+* Show help message `help`
 * Exit the program `bye`
+
+
+####  Argument format:
+* `NAME`: Alphabetic characters and optionally spaces between
+* `CURR_SEM` / `WHEN`: Valid semester from 1-8
+* `COURSE_CODE`: Valid NUS course code from AY23-24
+* `GRADE`: Alphabetic grade (A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, S)
+* `GPA`/ `DESIRED_GPA`: Number from 0 to 5
