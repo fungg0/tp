@@ -16,7 +16,7 @@ public class AddCommand extends Command {
     private String moduleCode;
     private int moduleDate;
 
-    private int moduleMC;
+    private float moduleMC;
 
     public AddCommand(String moduleCode, int moduleDate) {
         assert moduleCode != null && !moduleCode.trim().isEmpty() : "Module code cannot be null or empty";
@@ -58,7 +58,7 @@ public class AddCommand extends Command {
             } else if (!moduleInNUS) {
                 throw new ModuleNotFoundException("Module does not exist in NUS!");
             } else if (!correctSemester){
-                throw new WrongSemesterException("You can't take this module in this semester! " +
+                throw new WrongSemesterException("You can't take this module in this semester! " + "\n" +
                         "Try another one instead!");
             }
         } catch (ModuleAlreadyExistException e) {

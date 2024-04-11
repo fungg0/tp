@@ -88,10 +88,10 @@ public class Ui {
         System.out.println(title);
     }
 
-    public static void printScheduleDetails(int startSem, int mcsTaken, int mcslisted) {
+    public static void printScheduleDetails(int startSem, float mcsTaken, float mcslisted) {
         String currentSemesterInfo = String.format("- Current Study: Semester %d", startSem);
-        String mcsTakenInfo = String.format("- Total MCs taken: %d / 160", mcsTaken);
-        String mcsListedInfo = String.format("- Total MCs listed: %d / 160", mcslisted);
+        String mcsTakenInfo = String.format("- Total MCs taken: %.2f / 160", mcsTaken);
+        String mcsListedInfo = String.format("- Total MCs listed: %.2f / 160", mcslisted);
 
         System.out.println(currentSemesterInfo);
         System.out.println(mcsTakenInfo);

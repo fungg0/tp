@@ -23,7 +23,7 @@ public class JsonManager {
 
     String moduleDescription;
 
-    int moduleMC;
+    float moduleMC;
 
     String moduleTitle;
 
@@ -67,7 +67,7 @@ public class JsonManager {
             String name = obj.get("moduleCode").getAsString();
             if (name.equals(moduleCode)) {
                 moduleSemester = new ArrayList<>();
-                this.moduleMC = obj.get("moduleCredit").getAsInt();
+                this.moduleMC = obj.get("moduleCredit").getAsFloat();
                 this.moduleDescription = obj.get("description").getAsString();
                 this.moduleTitle = obj.get("title").getAsString();
                 JsonElement semesterData = obj.get("semesterData");
@@ -100,7 +100,7 @@ public class JsonManager {
         return moduleDescription;
     }
 
-    public int getModuleMC() {
+    public float getModuleMC() {
         return moduleMC;
     }
 

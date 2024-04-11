@@ -191,7 +191,7 @@ public class Storage {
 
             handleModuleException(moduleCode, moduleDate, moduleStatus, moduleGrade);
             jsonManager.getModuleInfo(moduleCode);
-            int moduleMC = jsonManager.getModuleMC();
+            float moduleMC = jsonManager.getModuleMC();
             String moduleDescription = jsonManager.getModuleDescription();
 
             Module module = new Module(moduleCode, moduleMC, moduleDate, moduleDescription);
