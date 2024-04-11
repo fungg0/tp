@@ -403,12 +403,23 @@ Bye. Enjoy your studies!
 
 ## Command Summary
 
-* Initialise user `init n/NAME curr/CURR_SEM grad/GRAD_SEM`
+#### Command format:
+* Set user information `set n/NAME curr/CURR_SEM`
 * Add modules `add c/COURSE_CODE w/WHEN`
 * Remove modules `remove c/COURSE_CODE`
 * Input grade `grade c/COURSE_CODE g/GRADE`
 * View GPA `gpa`
 * Check for desired GPA `desiredgpa DESIRED_GPA`
-* View modules added `view`
+* View modules in schedule `view`
+* View specific module information `view c/COURSE_CODE`
 * View modules still required for graduation `graduation`
+* Show help message `help`
 * Exit the program `bye`
+
+
+####  Argument format:
+* `NAME`: Alphabetic characters and optionally spaces between
+* `CURR_SEM` / `WHEN`: Valid semester from 1-8
+* `COURSE_CODE`: Valid NUS course code from AY23-24
+* `GRADE`: Alphabetic grade (A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, S)
+* `GPA`/ `DESIRED_GPA`: Number from 0 to 5
