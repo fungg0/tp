@@ -150,8 +150,7 @@ public class Storage {
         if (!line.startsWith(INITIALISED_USER)) {
             if (line.endsWith("true") || line.endsWith("false")) {
                 return false;
-            }
-            else {
+            } else {
                 throw new StorageException("User data is corrupted.");
             }
         }
@@ -192,7 +191,7 @@ public class Storage {
 
             handleModuleException(moduleCode, moduleDate, moduleStatus, moduleGrade);
             jsonManager.getModuleInfo(moduleCode);
-            int moduleMC = jsonManager.getModuleMC();
+            float moduleMC = jsonManager.getModuleMC();
             String moduleDescription = jsonManager.getModuleDescription();
 
             Module module = new Module(moduleCode, moduleMC, moduleDate, moduleDescription);

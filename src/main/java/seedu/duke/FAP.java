@@ -79,9 +79,10 @@ public class FAP {
                     continueRunning = false;
                     ui.close();
                 }
+
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
-                System.out.println("An error occurred: " + e.getMessage());
+                System.err.println("An error occurred: " + e.getMessage());
                 ui.close();
                 continueRunning = false; // Exit loop on error
             }

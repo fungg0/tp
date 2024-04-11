@@ -19,9 +19,9 @@ public class ModuleList {
     private static final int DEFAULT_MC_REQUIRED = 160;
 
     protected ArrayList<Module> moduleList;
-    private int moduleCreditsByGraduation = DEFAULT_MC_REQUIRED;
+    private float moduleCreditsByGraduation = DEFAULT_MC_REQUIRED;
     private double currentGPA;
-    private int moduleCreditsCountedToGPA;
+    private float moduleCreditsCountedToGPA;
 
     public ModuleList() {
         this.moduleList = new ArrayList<Module>();
@@ -60,6 +60,7 @@ public class ModuleList {
         moduleList.add(module);
     }
 
+    // for debugging purposes
     public void printModules() {
         for (Module module : moduleList) {
             System.out.println(module.getModuleCode());
@@ -93,11 +94,12 @@ public class ModuleList {
     }
 
     public void tallyGPA() throws GpaNullException {
-        int totalMC = 0;
+        float totalMC = 0;
         double sumOfGPA = 0;
 
         for (Module module : moduleList) {
-            if (module.getModuleGrade() == null || module.getModuleGrade().equals("CS")) {
+            if (module.getModuleGrade() == null || module.getModuleGrade().equals("CS") ||
+                    module.getModuleGrade().equals("S")) {
                 continue;
             }
             totalMC += module.getModuleMC();
@@ -156,16 +158,16 @@ public class ModuleList {
         return modulesToComplete;
     }
 
-    public int calculateTotalMCs() {
+    public float calculateTotalMCs() {
         return calculateMCs(module -> true);
     }
 
-    public int calculateTakenMCs() {
+    public float calculateTakenMCs() {
         return calculateMCs(Module::getModuleStatus);
     }
 
-    private int calculateMCs(Predicate<Module> predicate) {
-        int totalMCs = 0;
+    private float calculateMCs(Predicate<Module> predicate) {
+        float totalMCs = 0;
         for (Module module : moduleList) {
             if (predicate.test(module)) {
                 totalMCs += module.getModuleMC();
@@ -180,9 +182,9 @@ public class ModuleList {
 
     public void calcGradesExpectations(double desiredGPA) throws InvalidGpaException {
         tallyGPAForCalcGradesExpectations();
-        int moduleCreditsTaken = getModuleCreditsTaken();
-        int moduleCreditsNotTaken = moduleCreditsByGraduation - moduleCreditsTaken;
-        int totalModuleCreditsCountedToGPA = moduleCreditsNotTaken + moduleCreditsCountedToGPA;
+        float moduleCreditsTaken = getValidCreditsTaken();
+        float moduleCreditsNotTaken = moduleCreditsByGraduation - moduleCreditsTaken;
+        float totalModuleCreditsCountedToGPA = moduleCreditsNotTaken + moduleCreditsCountedToGPA;
         double requiredFutureAverageGrade = (desiredGPA * totalModuleCreditsCountedToGPA -
                 currentGPA * moduleCreditsCountedToGPA) /
                 moduleCreditsNotTaken;
@@ -192,7 +194,7 @@ public class ModuleList {
         int upperBoundGradeNeeded = 0;
         int lowerBoundGradeNeeded = 0;
         double mockGPA = lowerBound;
-        for (int i = moduleCreditsNotTaken; i > 0; i -= 4) {
+        for (float i = moduleCreditsNotTaken; i > 0; i -= 4) {
             if (mockGPA < requiredFutureAverageGrade) {
                 upperBoundGradeNeeded += 1;
             } else {
@@ -209,6 +211,13 @@ public class ModuleList {
                 (4 * (upperBoundGradeNeeded + lowerBoundGradeNeeded))) / totalModuleCreditsCountedToGPA;
         printGradeExpectations(desiredGPA, acquiredGPA, upperBoundGradeNeeded,
                 upperBound, lowerBoundGradeNeeded, lowerBound, moduleCreditsNotTaken);
+    }
+
+    private float getValidCreditsTaken() throws InvalidGpaException {
+        if (getModuleCreditsTaken() >= 160) {
+            throw new InvalidGpaException("You have already taken 160 MCs or more");
+        }
+        return getModuleCreditsTaken();
     }
 
     private void tallyGPAForCalcGradesExpectations() {
@@ -237,7 +246,7 @@ public class ModuleList {
 
     private void printGradeExpectations(double desiredGPA, double acquiredGPA, int upperBoundGradeNeeded,
                                         double upperBound, int lowerBoundGradeNeeded, double lowerBound,
-                                        int moduleCreditsNotTaken) {
+                                        float moduleCreditsNotTaken) {
         String formattedDesiredGPA = String.format("%.02f", desiredGPA);
         String formattedAcquiredGPA = String.format("%.02f", acquiredGPA);
         System.out.println("MCs left to take: " + moduleCreditsNotTaken);
@@ -323,8 +332,8 @@ public class ModuleList {
     }
 
 
-    private int getModuleCreditsTaken() {
-        int moduleCreditsTaken = 0;
+    private float getModuleCreditsTaken() {
+        float moduleCreditsTaken = 0;
         for (Module module : moduleList) {
             if (module.getModuleStatus() && !module.gradeIsNull()) {
                 moduleCreditsTaken += module.getModuleMC();
