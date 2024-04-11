@@ -41,7 +41,7 @@ public class Module {
 
     public void setModuleGrade(String moduleGrade) throws ModuleException {
 
-        if (moduleGrade == null || !moduleGrade.matches("[AB][+-]?|[CD][+]?|F|CS")) {
+        if (moduleGrade == null || !moduleGrade.matches("[AB][+-]?|[CD][+]?|F|CS|S")) {
             throw new IllegalArgumentException("Invalid module grade.");
         }
         if (!moduleTaken) {

@@ -3,42 +3,76 @@ package seedu.duke.command;
 import seedu.duke.exceptions.ModuleAlreadyExistException;
 import seedu.duke.exceptions.ModuleException;
 import seedu.duke.exceptions.ModuleNotFoundException;
+import seedu.duke.exceptions.WrongSemesterException;
 import seedu.duke.modules.Module;
 
+import java.util.logging.Level;
+
+import static seedu.duke.FAP.LOGGER;
 import static seedu.duke.FAP.jsonManager;
 
 public class AddCommand extends Command {
+
     private String moduleCode;
     private int moduleDate;
 
     private int moduleMC;
 
-    public AddCommand(String moduleCode, int moduleDate) throws ModuleNotFoundException, ModuleAlreadyExistException {
+    public AddCommand(String moduleCode, int moduleDate) {
         assert moduleCode != null && !moduleCode.trim().isEmpty() : "Module code cannot be null or empty";
         assert moduleDate > 0 : "Module date must be a positive number";
 
         try {
-            Module moduleToAdd = moduleList.getModule(moduleCode);
-            throw new ModuleAlreadyExistException("You have already added the module!");
+            tryAddingModule(moduleCode, moduleDate);
         } catch (ModuleNotFoundException e) {
-            if (jsonManager.moduleExist(moduleCode)) {
-                jsonManager.getModuleInfo(moduleCode);
-                this.moduleMC = jsonManager.getModuleMC();
-                this.moduleCode = moduleCode;
-                this.moduleDate = moduleDate;
-            } else {
-                throw new ModuleNotFoundException("Module do not exist in NUS!");
-            }
+            LOGGER.log(Level.WARNING, "An error occurred: " + e.getMessage());
+            System.out.println("An error occurred: " + e.getMessage());
+        } catch (WrongSemesterException e) {
+            LOGGER.log(Level.WARNING, "An error occured: " + e.getMessage());
+            System.out.println("An error occured: " + e.getMessage());
         }
     }
 
-    //to not throw error
-    public AddCommand() {
+    private void tryAddingModule(String moduleCode, int moduleDate) throws ModuleNotFoundException,
+            WrongSemesterException {
+        // try getting a module to see if it already exists, if it does then throw the exception
+        // will go to the catch block if there are no duplicate modules
+        try {
+            Module moduleToAdd = moduleList.getModule(moduleCode);      // intended unused variable
+            throw new ModuleAlreadyExistException("You have already added the module!");
+        } catch (ModuleNotFoundException e) {
+            boolean moduleInNUS = jsonManager.moduleExist(moduleCode);
+            int plannedSem = moduleDate % 2;
 
+            if (plannedSem == 0) {
+                plannedSem = 2;
+            }
+
+            jsonManager.getModuleInfo(moduleCode);
+            boolean correctSemester = jsonManager.correctSemester(plannedSem);
+
+            if (moduleInNUS && correctSemester) {
+                this.moduleMC = jsonManager.getModuleMC();
+                this.moduleCode = moduleCode;
+                this.moduleDate = moduleDate;
+            } else if (!moduleInNUS) {
+                throw new ModuleNotFoundException("Module does not exist in NUS!");
+            } else if (!correctSemester){
+                throw new WrongSemesterException("You can't take this module in this semester! " +
+                        "Try another one instead!");
+            }
+        } catch (ModuleAlreadyExistException e) {
+
+            LOGGER.log(Level.WARNING, "An error occurred: " + e.getMessage());
+            System.err.println("An error occurred: " + e.getMessage());
+        }
     }
 
     @Override
     public void execute(String userInput) {
+        if (this.moduleCode == null) {
+            return;
+        }
         try {
             // Assuming moduleList is a class attribute of Command
             if (moduleList == null) {
