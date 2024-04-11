@@ -82,9 +82,7 @@ public class JsonManager {
                 this.moduleMC = obj.get("moduleCredit").getAsFloat();
                 this.moduleDescription = obj.get("description").getAsString();
                 this.moduleTitle = obj.get("title").getAsString();
-                if (obj.get("gradingBasisDescription").getAsString().equals("Graded")) {
-                    this.gradedGradingBasis = true;
-                }
+                this.gradedGradingBasis = obj.get("gradingBasisDescription").getAsString().equals("Graded");
                 JsonElement semesterData = obj.get("semesterData");
 
                 JsonArray semesterArray = semesterData.getAsJsonArray();

@@ -50,6 +50,12 @@ public class Module {
         if (!moduleTaken) {
             throw new ModuleException("Module needs to be taken before its grade can be updated.");
         }
+        if(!gradedGradingBasis && !moduleGrade.matches("CS")) {
+            throw new ModuleException("This module is CS/CU. Please only input \"CS\" grade for this module");
+        }
+        if(gradedGradingBasis && moduleGrade.matches("CS")) {
+            throw new ModuleException("This module is graded. You cannot input \"CS\" grade for this module.");
+        }
         this.moduleGrade = moduleGrade;
     }
 
@@ -127,5 +133,9 @@ public class Module {
                 ", moduleGrade='" + moduleGrade + '\'' +
                 ", moduleMC='" + moduleMC + '\'' +
                 '}';
+    }
+
+    public boolean isGradedGradingBasis() {
+        return gradedGradingBasis;
     }
 }
