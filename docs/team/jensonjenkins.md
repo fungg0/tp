@@ -31,10 +31,14 @@ faster than your traditional GUI app.
 
 - **Documentation:**
     - User Guide:
-        - Wrote the section for view specific module information, view modules needed to graduate, and remove modules.
+        - Added documentation for `graduate`, `remove`, `view c/COURSE_CODE`
+          (Pull
+          requests [#87](https://github.com/AY2324S2-CS2113-W14-3/tp/pull/87), [#147](https://github.com/AY2324S2-CS2113-W14-3/tp/pull/147)).
     - Developer Guide:
-        - Wrote and created a class diagram for the design of `Command` class.
-        - Wrote and created sequence diagrams for the implementation of `View` commands.
+        - Design details and class diagram of `Command` class (Pull
+          request [#160](https://github.com/AY2324S2-CS2113-W14-3/tp/pull/160)).
+        - Implementation details and sequence diagrams of the `view` commands (Pull
+          request [#160](https://github.com/AY2324S2-CS2113-W14-3/tp/pull/160)).
 
 - **Contributions to team-based tasks:**
     - Helped team with the initial setup of the team and individual repositories.
