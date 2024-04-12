@@ -39,6 +39,7 @@ faster than your traditional GUI app.
           request [#160](https://github.com/AY2324S2-CS2113-W14-3/tp/pull/160)).
         - Implementation details and sequence diagrams of the `view` commands (Pull
           request [#160](https://github.com/AY2324S2-CS2113-W14-3/tp/pull/160)).
+        - Instructions for manual testing.
 
 - **Contributions to team-based tasks:**
     - Helped team with the initial setup of the team and individual repositories.
