@@ -34,8 +34,8 @@ public class ViewGpaCommandTest {
             command.setData(moduleList);
             command.execute("");
             assertEquals("No countable grades present to tally.", outContent.toString().trim());
-            moduleList.addModule(new Module("CS1010", 4,4, ""));
-            moduleList.addModule(new Module("CS1231",4, 4, ""));
+            moduleList.addModule(new Module("CS1010", 4,4, "", true));
+            moduleList.addModule(new Module("CS1231",4, 4, "", true));
             moduleList.getModule("CS1010").setModuleTaken(true);
             moduleList.getModule("CS1231").setModuleTaken(true);
             moduleList.changeModuleGrade("CS1010", "A-");

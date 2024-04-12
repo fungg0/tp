@@ -28,6 +28,7 @@ public class JsonManager {
     String moduleTitle;
 
     ArrayList<Integer> moduleSemester;
+    boolean gradedGradingBasis = false;
 
     public JsonManager() {
 
@@ -50,6 +51,10 @@ public class JsonManager {
 
     public boolean correctSemester(int intendedSem) {
         return moduleSemester.contains(intendedSem);
+    }
+
+    public boolean getGradedGradingBasis() {
+        return gradedGradingBasis;
     }
 
     public boolean moduleExist(String moduleCode) {
@@ -77,6 +82,7 @@ public class JsonManager {
                 this.moduleMC = obj.get("moduleCredit").getAsFloat();
                 this.moduleDescription = obj.get("description").getAsString();
                 this.moduleTitle = obj.get("title").getAsString();
+                this.gradedGradingBasis = obj.get("gradingBasisDescription").getAsString().equals("Graded");
                 JsonElement semesterData = obj.get("semesterData");
 
                 JsonArray semesterArray = semesterData.getAsJsonArray();

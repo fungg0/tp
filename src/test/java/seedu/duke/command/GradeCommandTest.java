@@ -13,7 +13,7 @@ class GradeCommandTest {
     void execute() {
         try {
             ModuleList moduleList = new ModuleList();
-            moduleList.addModule(new Module("CS1010", 4,4, ""));
+            moduleList.addModule(new Module("CS1010", 4,4, "", true));
             GradeCommand command = new GradeCommand("CS1010","B+");
             command.setData(moduleList);
             moduleList.getModule("CS1010").setModuleTaken(true);
