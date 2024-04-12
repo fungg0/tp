@@ -477,8 +477,8 @@ experience across sessions.
 
 ## Instructions for manual testing
 
-The provided test cases are independent of each other. Test cases that require multiple entries of command will be
-explicitly stated.
+Important note: The provided test cases are independent of each other, test cases that require multiple entries of
+command will be explicitly stated. All provided test cases are assumed to be executed fresh after launch.
 
 - [Launching and Termination](#launching-and-termination)
 - [Add](#add)
@@ -487,6 +487,7 @@ explicitly stated.
     - [Taken Modules](#taken-modules)
     - [Module Information](#module-information)
     - [Modules to Graduate](#modules-to-graduate)
+- [Set Grade](#set-grade)
 - [GPA](#gpa)
 - [Desired GPA](#desired-gpa)
 - [Storage](#storage)
@@ -672,6 +673,8 @@ explicitly stated.
     | covered.                                                                      |
     =================================================================================
     ```
+
+
 2. Test Case: `view c/AB1234`
 
    **Expected Results:** Prints out message saying module does not exist in NUS AY23/24:
@@ -684,13 +687,93 @@ explicitly stated.
 
 #### Modules to Graduate
 
+1. Test Case: `graduate`
+
+   **Expected Results:** Prints out all CEG Modules to be completed by default.
+
+
+2. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/CP3880
+    graduate
+    ```
+
+   **Expected Results:** Prints out all CEG Modules to be completed, except for `CP3880` and its equivalent `EG3611A`.
+
+
+3. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/GEC1015
+    graduate
+    ```
+
+   **Expected Results:** Same as first test case as `GEC1015` is a valid NUS module, but is not a necessary module for a
+   CEG student.
+
+
+4. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/GEA1000
+    graduate
+    ```
+
+   **Expected Results:** Prints out all CEG Modules to be completed, except for `GEA1000`.
+
+#### [Back to Manual Testing](#instructions-for-manual-testing)
+
+---
+
+### Set Grade
+
+1. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/GEA1000
+    grade c/GEA1000 g/A+
+    ```
+
+   **Expected Results:** Updates grade, prints out grade successfully updated message.
+
+
+2. Test Case: `grade c/GEA1000 g/A+`
+
+   **Expected Results:** Grade not updated, prints out module note found in list message.
+
+
+3. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/GEA1000
+    grade c/GEA1000 g/L
+    ```
+
+   **Expected Results:** Grade not updated, prints out invalid grade format/order message.
+
 #### [Back to Manual Testing](#instructions-for-manual-testing)
 
 ---
 
 ### GPA
 
-{provide manual testing for GPA}
+1. Test Case: `gpa`
+
+   **Expected Results:** Prints out message stating no grades available to calculate.
+
+
+2. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/GEA1000
+    add c/GEC1015
+    grade c/GEA1000 g/A+
+    grade c/GEC1015 g/A-
+    gpa
+    ```
+
+   **Expected Results:** Prints out calculated GPA.
 
 #### [Back to Manual Testing](#instructions-for-manual-testing)
 
@@ -705,6 +788,8 @@ explicitly stated.
 ---
 
 ### Storage
+
+{provide manual testing for storage class}
 
 #### [Back to Manual Testing](#instructions-for-manual-testing)
 
