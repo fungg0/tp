@@ -30,15 +30,15 @@ class ModuleListTest {
     @Test
     void addModules() {
         ModuleList moduleList = new ModuleList();
-        moduleList.addModule(new Module("CS1010", 4,4, ""));
-        moduleList.addModule(new Module("CS1231",4, 4, ""));
+        moduleList.addModule(new Module("CS1010", 4,4, "",true));
+        moduleList.addModule(new Module("CS1231",4, 4, "", true));
         assertEquals(moduleList.moduleList.get(0).getModuleCode(), "CS1010");
         assertEquals(moduleList.moduleList.get(1).getModuleCode(), "CS1231");
     }
     @Test
     void getModules() {
         ModuleList moduleList = new ModuleList();
-        moduleList.moduleList.add(new Module("CS1010",4, 4, ""));
+        moduleList.moduleList.add(new Module("CS1010",4, 4, "", true));
         try {
             Module obtainedModule = moduleList.getModule("CS1010");
             assertEquals("CS1010", obtainedModule.getModuleCode());
@@ -51,7 +51,7 @@ class ModuleListTest {
     @Test
     void changeModuleGrade() {
         ModuleList moduleList = new ModuleList();
-        moduleList.addModule(new Module("CS1010", 4,4, ""));
+        moduleList.addModule(new Module("CS1010", 4,4, "", true));
         ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStreamCaptor));
         moduleList.changeModuleGrade("CG1111A","A");
@@ -74,8 +74,8 @@ class ModuleListTest {
         try {
             ModuleList moduleList = new ModuleList();
             assertThrows(GpaNullException.class, () -> moduleList.tallyGPA());
-            moduleList.addModule(new Module("CS1010", 4,4, ""));
-            moduleList.addModule(new Module("CS1231",4, 4, ""));
+            moduleList.addModule(new Module("CS1010", 4,4, "", true));
+            moduleList.addModule(new Module("CS1231",4, 4, "", true));
             moduleList.getModule("CS1010").setModuleTaken(true);
             moduleList.getModule("CS1231").setModuleTaken(true);
             moduleList.changeModuleGrade("CS1010", "A-");

@@ -15,6 +15,14 @@ NOTE: "<WORD>" represents a user-typed argument that is required for the command
 9. graduate - View remaining core modules and MCs left to graduate
 10. help - View command syntax and list of commands available for FAP
 11. bye - Exit the program
+
+Argument format:
+<NAME>: Alphabetic characters and optionally spaces between
+<CURR_SEM>: Valid semester from 1-8
+<COURSE_CODE>: Valid NUS course code from AY23-24
+<WHEN>: Valid semester from 1-8
+<GRADE>: Alphabetic grade (A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, S)
+<GPA>: Number from 0 to 5
 _____________________________________________________________
 _____________________________________________________________
 Greetings James Gosling! Your details are updated:

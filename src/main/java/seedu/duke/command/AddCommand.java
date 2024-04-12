@@ -16,7 +16,8 @@ public class AddCommand extends Command {
     private String moduleCode;
     private int moduleDate;
 
-    private int moduleMC;
+    private float moduleMC;
+    private boolean gradedGradingBasis = false;
 
     public AddCommand(String moduleCode, int moduleDate) {
         assert moduleCode != null && !moduleCode.trim().isEmpty() : "Module code cannot be null or empty";
@@ -55,10 +56,11 @@ public class AddCommand extends Command {
                 this.moduleMC = jsonManager.getModuleMC();
                 this.moduleCode = moduleCode;
                 this.moduleDate = moduleDate;
+                this.gradedGradingBasis = jsonManager.getGradedGradingBasis();
             } else if (!moduleInNUS) {
                 throw new ModuleNotFoundException("Module does not exist in NUS!");
             } else if (!correctSemester){
-                throw new WrongSemesterException("You can't take this module in this semester! " +
+                throw new WrongSemesterException("You can't take this module in this semester! " + "\n" +
                         "Try another one instead!");
             }
         } catch (ModuleAlreadyExistException e) {
@@ -79,7 +81,8 @@ public class AddCommand extends Command {
                 throw new ModuleException("Module list is not initialized.");
             }
 
-            Module newModule = new Module(moduleCode, moduleMC, moduleDate, jsonManager.getModuleTitle());
+            Module newModule = new Module(moduleCode, moduleMC, moduleDate, jsonManager.getModuleTitle(),
+                    gradedGradingBasis);
             moduleList.addModule(newModule);
         } catch (ModuleException e) {
             System.err.println("Failed to add module: " + e.getMessage());

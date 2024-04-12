@@ -191,10 +191,11 @@ public class Storage {
 
             handleModuleException(moduleCode, moduleDate, moduleStatus, moduleGrade);
             jsonManager.getModuleInfo(moduleCode);
-            int moduleMC = jsonManager.getModuleMC();
+            float moduleMC = jsonManager.getModuleMC();
             String moduleDescription = jsonManager.getModuleDescription();
+            boolean gradedGradingBasis = jsonManager.getGradedGradingBasis();
 
-            Module module = new Module(moduleCode, moduleMC, moduleDate, moduleDescription);
+            Module module = new Module(moduleCode, moduleMC, moduleDate, moduleDescription, gradedGradingBasis);
             module.setModuleTaken("true".equals(moduleStatus));
             if (!moduleGrade.equals("null")) {
                 module.setModuleGrade(moduleGrade);

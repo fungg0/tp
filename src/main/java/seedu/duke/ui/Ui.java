@@ -11,18 +11,25 @@ public class Ui {
     private static final String COMMENT_LINE_FORMAT_REGEX = "#.*";
     private static final String COMMANDS_HELP_MESSAGE =
             "Available Commands:\n" +
-                    "NOTE: \"<WORD>\" represents a user-typed argument that is required for the command\n" +
-                    "1. set n/<NAME> curr/<CURR_SEM> - Set name & current semester\n" +
-                    "2. add c/<COURSE_CODE> w/<WHEN> - Add a module to your schedule\n" +
-                    "3. remove c/<COURSE_CODE> - Remove a module from your schedule\n" +
-                    "4. grade c/<COURSE_CODE> g/<GRADE> - Add or change a module grade\n" +
-                    "5. gpa - View your GPA\n" +
-                    "6. desiredgpa <GPA> - Calculates grades needed to achieve a desired GPA\n" +
-                    "7. view - View modules on your schedule\n" +
-                    "8. view c/<COURSE_CODE> - View selected module information\n" +
-                    "9. graduate - View remaining core modules and MCs left to graduate\n" +
-                    "10. help - View command syntax and list of commands available for FAP\n" +
-                    "11. bye - Exit the program";
+            "NOTE: \"<WORD>\" represents a user-typed argument that is required for the command\n" +
+            "1. set n/<NAME> curr/<CURR_SEM> - Set name & current semester\n" +
+            "2. add c/<COURSE_CODE> w/<WHEN> - Add a module to your schedule\n" +
+            "3. remove c/<COURSE_CODE> - Remove a module from your schedule\n" +
+            "4. grade c/<COURSE_CODE> g/<GRADE> - Add or change a module grade\n" +
+            "5. gpa - View your GPA\n" +
+            "6. desiredgpa <GPA> - Calculates grades needed to achieve a desired GPA\n" +
+            "7. view - View modules on your schedule\n" +
+            "8. view c/<COURSE_CODE> - View selected module information\n" +
+            "9. graduate - View remaining core modules and MCs left to graduate\n" +
+            "10. help - View command syntax and list of commands available for FAP\n" +
+            "11. bye - Exit the program\n\n" +
+            "Argument format:\n" +
+            "<NAME>: Alphabetic characters and optionally spaces between\n" +
+            "<CURR_SEM>: Valid semester from 1-8\n" +
+            "<COURSE_CODE>: Valid NUS course code from AY23-24\n" +
+            "<WHEN>: Valid semester from 1-8\n" +
+            "<GRADE>: Alphabetic grade (A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, S)\n" +
+            "<GPA>: Number from 0 to 5";
     private final Scanner in;
 
     public Ui() {
@@ -88,10 +95,10 @@ public class Ui {
         System.out.println(title);
     }
 
-    public static void printScheduleDetails(int startSem, int mcsTaken, int mcslisted) {
+    public static void printScheduleDetails(int startSem, float mcsTaken, float mcslisted) {
         String currentSemesterInfo = String.format("- Current Study: Semester %d", startSem);
-        String mcsTakenInfo = String.format("- Total MCs taken: %d / 160", mcsTaken);
-        String mcsListedInfo = String.format("- Total MCs listed: %d / 160", mcslisted);
+        String mcsTakenInfo = String.format("- Total MCs taken: %.2f / 160", mcsTaken);
+        String mcsListedInfo = String.format("- Total MCs listed: %.2f / 160", mcslisted);
 
         System.out.println(currentSemesterInfo);
         System.out.println(mcsTakenInfo);

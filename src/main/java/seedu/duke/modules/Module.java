@@ -5,19 +5,22 @@ import seedu.duke.exceptions.ModuleException;
 public class Module {
     private String moduleCode;
     private String moduleGrade;
-    private int moduleMC;
+    private float moduleMC;
     private boolean moduleTaken;
     private int moduleDate;
+    private boolean gradedGradingBasis;
 
     private String moduleDescription;
 
-    public Module(String moduleCode, int moduleMC, int moduleDate, String moduleDescription) {
+    public Module(String moduleCode, float moduleMC, int moduleDate, String moduleDescription,
+                  boolean gradedGradingBasis) {
         this.moduleCode = moduleCode;
         this.moduleMC = moduleMC;
         this.moduleDate = moduleDate;
         this.moduleTaken = false;
         this.moduleGrade = null;
         this.moduleDescription = moduleDescription;
+        this.gradedGradingBasis = gradedGradingBasis;
     }
 
     public String getModuleDescription() {
@@ -47,6 +50,12 @@ public class Module {
         if (!moduleTaken) {
             throw new ModuleException("Module needs to be taken before its grade can be updated.");
         }
+        if(!gradedGradingBasis && !moduleGrade.matches("CS")) {
+            throw new ModuleException("This module is CS/CU. Please only input \"CS\" grade for this module");
+        }
+        if(gradedGradingBasis && moduleGrade.matches("CS")) {
+            throw new ModuleException("This module is graded. You cannot input \"CS\" grade for this module.");
+        }
         this.moduleGrade = moduleGrade;
     }
 
@@ -54,7 +63,7 @@ public class Module {
         this.moduleGrade = null;
     }
 
-    public int getModuleMC() {
+    public float getModuleMC() {
         return moduleMC;
     }
 
@@ -124,5 +133,9 @@ public class Module {
                 ", moduleGrade='" + moduleGrade + '\'' +
                 ", moduleMC='" + moduleMC + '\'' +
                 '}';
+    }
+
+    public boolean isGradedGradingBasis() {
+        return gradedGradingBasis;
     }
 }

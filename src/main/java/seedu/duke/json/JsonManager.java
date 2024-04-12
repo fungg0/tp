@@ -23,11 +23,12 @@ public class JsonManager {
 
     String moduleDescription;
 
-    int moduleMC;
+    float moduleMC;
 
     String moduleTitle;
 
     ArrayList<Integer> moduleSemester;
+    boolean gradedGradingBasis = false;
 
     public JsonManager() {
 
@@ -52,10 +53,21 @@ public class JsonManager {
         return moduleSemester.contains(intendedSem);
     }
 
+    public boolean getGradedGradingBasis() {
+        return gradedGradingBasis;
+    }
+
     public boolean moduleExist(String moduleCode) {
         for (JsonObject obj : jsonArray) {
             String name = obj.get("moduleCode").getAsString();
             if (name.equals(moduleCode)) {
+                JsonElement semesterData = obj.get("semesterData");
+                JsonArray semesterArray = semesterData.getAsJsonArray();
+                // JsonFile contains mods that do not have data on available semester to be taken in.
+                // So they are considered as not available just like in NusMods
+                if (semesterArray.isEmpty()) {
+                    return false;
+                }
                 return true;
             }
         }
@@ -67,9 +79,10 @@ public class JsonManager {
             String name = obj.get("moduleCode").getAsString();
             if (name.equals(moduleCode)) {
                 moduleSemester = new ArrayList<>();
-                this.moduleMC = obj.get("moduleCredit").getAsInt();
+                this.moduleMC = obj.get("moduleCredit").getAsFloat();
                 this.moduleDescription = obj.get("description").getAsString();
                 this.moduleTitle = obj.get("title").getAsString();
+                this.gradedGradingBasis = obj.get("gradingBasisDescription").getAsString().equals("Graded");
                 JsonElement semesterData = obj.get("semesterData");
 
                 JsonArray semesterArray = semesterData.getAsJsonArray();
@@ -100,7 +113,7 @@ public class JsonManager {
         return moduleDescription;
     }
 
-    public int getModuleMC() {
+    public float getModuleMC() {
         return moduleMC;
     }
 
