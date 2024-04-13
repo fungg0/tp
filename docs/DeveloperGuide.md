@@ -486,6 +486,7 @@ invokes Storage.saveModulesToFile to save the current state.
 This integration ensures that the application's data lifecycle is managed efficiently, providing a seamless user
 experience across sessions.
 
+
 ---
 
 ## Product scope
@@ -515,8 +516,321 @@ experience across sessions.
 
 ## Instructions for manual testing
 
-{Give instructions on how to do a manual product testing e.g., how to load sample data to be used for testing}
+Important note: The provided test cases are independent of each other, test cases that require multiple entries of
+command will be explicitly stated. All provided test cases are assumed to be executed fresh after launch.
+
+- [Launching and Termination](#launching-and-termination)
+- [Add](#add)
+- [Remove](#remove)
+- [View](#view)
+    - [Taken Modules](#taken-modules)
+    - [Module Information](#module-information)
+    - [Modules to Graduate](#modules-to-graduate)
+- [Set Grade](#set-grade)
+- [GPA](#gpa)
+- [Desired GPA](#desired-gpa)
+- [Storage](#storage)
+
+---
+
+### Launching and Termination
+
+#### Launching
+
+1. Ensure you have `java 11` or above installed on your computer
+
+2. Download the latest `FAP.jar` from [here](https://github.com/AY2324S2-CS2113-W14-3/tp/releases)
+
+3. Copy the file `FAP.jar` to a new empty folder
+
+4. Open a command terminal in the directory of the folder, and use `java -jar FAP.jar` to run the application
+5. The list of available commands should show upon a successful launch as show below:
+
+    ```
+    ~\FAPTesting>java -jar FAP.jar
+    _____________________________________________________________
+    Hello! This is your CEG Future Academic Planner!
+    What would you like to do today?
+    _____________________________________________________________
+    Available Commands:
+    NOTE: "<WORD>" represents a user-typed argument that is required for the command
+    1. set n/<NAME> curr/<CURR_SEM> - Set name & current semester
+    2. add c/<COURSE_CODE> w/<WHEN> - Add a module to your schedule
+    3. remove c/<COURSE_CODE> - Remove a module from your schedule
+    4. grade c/<COURSE_CODE> g/<GRADE> - Add or change a module grade
+    5. gpa - View your GPA
+    6. desiredgpa <GPA> - Calculates grades needed to achieve a desired GPA
+    7. view - View modules on your schedule
+    8. view c/<COURSE_CODE> - View selected module information
+    9. graduate - View remaining core modules and MCs left to graduate
+    10. help - View command syntax and list of commands available for FAP
+    11. bye - Exit the program
+    
+    Argument format:
+    <NAME>: Alphabetic characters and optionally spaces between
+    <CURR_SEM>: Valid semester from 1-8
+    <COURSE_CODE>: Valid NUS course code from AY23-24
+    <WHEN>: Valid semester from 1-8
+    <GRADE>: Alphabetic grade (A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, S)
+    <GPA>: Number from 0 to 5
+    _____________________________________________________________
+    ```
+
+6. A new folder `data` in the same directory as `FAP.jar` should be created and initialized
+   with `CS2113_AY2324S2_FAP_Storage.txt`.
+
+#### Termination
+
+1. Exit FAP using the `bye` command.
+2. An exit message should be displayed as follows:
+
+    ```
+    bye
+    _____________________________________________________________
+    Bye. Enjoy your studies!
+    ```
+
+#### [Back to Manual Testing](#instructions-for-manual-testing)
+
+---
+
+### Add
+
+#### Adding a module:
+
+1. Test Case: `add c/CS2113 w/4`
+
+   **Expected result:** Module added, success message printed.
 
 
+2. Test Case: (The following test case requires multiple lines of inputs)
 
+    ```
+    add c/CS2113 w/4
+    add c/CS2113 w/4
+    ```
+   **Expected Result:** Module not added, error message printed saying duplicate module.
+
+
+3. Test Case: `add c/AB1234 w/1`
+
+   **Expected result:** Module not added, error message printed saying modules does not exist in NUS.
+
+#### [Back to Manual Testing](#instructions-for-manual-testing)
+
+---
+
+### Remove
+
+1. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/ST2334 w/4
+    remove c/ST2334
+    ```
+   **Expected Result:** Module removed, successful remove message printed.
+
+
+2. Test Case: `remove c/ST2334`
+
+   **Expected Result:** Module not removed (was not added in the first place), module not found message printed.
+
+#### [Back to Manual Testing](#instructions-for-manual-testing)
+
+---
+
+### View
+
+#### Taken Modules
+
+1. Test Case: `view`
+
+   **Expected Result:** Prints out an empty table of modules,
+   along with Anonymous as the user's name, and several other default statistics as shown:
+    ```
+    _____________________________________________________________
+    CEG Study Plan for: Anonymous
+    _____________________________________________________________
+    | Y1S1 [Sem 1] | Y1S2 [Sem 2] | Y2S1 [Sem 3] | Y2S2 [Sem 4] |
+    _____________________________________________________________
+    | Y3S1 [Sem 5] | Y3S2 [Sem 6] | Y4S1 [Sem 7] | Y4S2 [Sem 8] |
+    _____________________________________________________________
+    - Current Study: Semester 1
+    - Total MCs taken: 0.00 / 160
+    - Total MCs listed: 0.00 / 160
+    _____________________________________________________________
+
+    ```
+
+2. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/CS2113 w/4
+    add c/CS1010 w/1
+    add c/ST2334 w/6
+    set n/JohnDoe curr/6
+    view 
+    ```
+
+   **Expected Results:** Table filled with modules based on what was previously added, categorized based on when it was
+   taken, along with updated user data and other statistics as shown below:
+
+    ```
+    _____________________________________________________________
+    CEG Study Plan for: JohnDoe
+    _____________________________________________________________
+    | Y1S1 [Sem 1] | Y1S2 [Sem 2] | Y2S1 [Sem 3] | Y2S2 [Sem 4] |
+    |CS1010        |              |              |CS2113        |
+    _____________________________________________________________
+    | Y3S1 [Sem 5] | Y3S2 [Sem 6] | Y4S1 [Sem 7] | Y4S2 [Sem 8] |
+    |              |ST2334        |              |              |
+    _____________________________________________________________
+    - Current Study: Semester 6
+    - Total MCs taken: 12.00 / 160
+    - Total MCs listed: 12.00 / 160
+    _____________________________________________________________
+
+    ```
+
+#### Module Information
+
+1. Test Case: `view c/CS2113T`
+
+   **Expected Results:** Prints out module information as shown below:
+
+    ```
+    =================================================================================
+    | Title: Software Engineering & Object-Oriented Programming          Credits: 4 |
+    =================================================================================
+    | Description: This course introduces the necessary skills for systematic and   |
+    | rigorous development of software systems. It covers requirements, design,     |
+    | implementation, quality assurance, and project management aspects of          |
+    | small-to-medium size multi-person software projects. The course uses the      |
+    | Object Oriented Programming paradigm. Students of this course will receive    |
+    | hands-on practice of tools commonly used in the industry, such as test        |
+    | automation tools, build automation tools, and code revisioning tools will be  |
+    | covered.                                                                      |
+    =================================================================================
+    ```
+
+
+2. Test Case: `view c/AB1234`
+
+   **Expected Results:** Prints out message saying module does not exist in NUS AY23/24:
+
+    ```
+    _____________________________________________________________
+    No such module found in NUS AY23-24!
+    _____________________________________________________________
+    ```
+
+#### Modules to Graduate
+
+1. Test Case: `graduate`
+
+   **Expected Results:** Prints out all CEG Modules to be completed by default.
+
+
+2. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/CP3880
+    graduate
+    ```
+
+   **Expected Results:** Prints out all CEG Modules to be completed, except for `CP3880` and its equivalent `EG3611A`.
+
+
+3. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/GEC1015
+    graduate
+    ```
+
+   **Expected Results:** Same as first test case as `GEC1015` is a valid NUS module, but is not a necessary module for a
+   CEG student.
+
+
+4. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/GEA1000
+    graduate
+    ```
+
+   **Expected Results:** Prints out all CEG Modules to be completed, except for `GEA1000`.
+
+#### [Back to Manual Testing](#instructions-for-manual-testing)
+
+---
+
+### Set Grade
+
+1. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/GEA1000
+    grade c/GEA1000 g/A+
+    ```
+
+   **Expected Results:** Updates grade, prints out grade successfully updated message.
+
+
+2. Test Case: `grade c/GEA1000 g/A+`
+
+   **Expected Results:** Grade not updated, prints out module note found in list message.
+
+
+3. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/GEA1000
+    grade c/GEA1000 g/L
+    ```
+
+   **Expected Results:** Grade not updated, prints out invalid grade format/order message.
+
+#### [Back to Manual Testing](#instructions-for-manual-testing)
+
+---
+
+### GPA
+
+1. Test Case: `gpa`
+
+   **Expected Results:** Prints out message stating no grades available to calculate.
+
+
+2. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/GEA1000
+    add c/GEC1015
+    grade c/GEA1000 g/A+
+    grade c/GEC1015 g/A-
+    gpa
+    ```
+
+   **Expected Results:** Prints out calculated GPA.
+
+#### [Back to Manual Testing](#instructions-for-manual-testing)
+
+---
+
+### Desired GPA
+
+{provide manual testing for desired GPA}
+
+#### [Back to Manual Testing](#instructions-for-manual-testing)
+
+---
+
+### Storage
+
+{provide manual testing for storage class}
+
+#### [Back to Manual Testing](#instructions-for-manual-testing)
+
+---
 
