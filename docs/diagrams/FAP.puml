@@ -2,23 +2,33 @@
 skinparam classAttributeIconSize 0
 hide empty members
 hide circle
-hide empty methods
-hide empty fields
 
+' Definition of classes
 class FAP {
-    - static moduleList: ModuleList
-    - static LOGGER: Logger
-    + static main(args: String[]): void
-    - static runApplication(): void
+    - static user : User
+    - static moduleList : ModuleList
+    - static jsonManager : JsonManager
+    - static filePath : String
+    - static LOGGER : Logger
+    - static final BYE : String
+    + static void main(String[] args)
+    - static void runApplication()
+}
+
+class User {
 }
 
 class ModuleList {
-    - maxSize: int
+}
+
+class JsonManager {
 }
 
 class Ui {
-    + printGreeting(): void
+    + printGreeting(name: String)
+    + printCommandGuide()
     + getUserCommand(): String
+    + close()
 }
 
 class Parser {
@@ -26,15 +36,20 @@ class Parser {
 }
 
 class Command {
-    + execute(userInput: String): void
+    + execute(userInput: String)
 }
 
-FAP .down.> ModuleList : uses
-FAP .right.> Logger : uses
-FAP .down.> Ui : uses
-Ui --> FAP : calls\nstatic methods
-FAP .down.> Parser : uses
-Parser --> Command : returns
+' Relationships
+FAP --> User : uses
+FAP --> ModuleList : uses
+FAP --> JsonManager : uses
+FAP --> "data\CS2113_AY2324S2_FAP_Storage.txt" : uses
+FAP --> Logger : uses <color:DarkSlateGray>logs</color>
+FAP --> Ui : uses
+FAP --> Parser : uses
 FAP ..> Command : uses
+Ui ..> User : uses
+Parser --> Command : returns
+Logger ..> FAP : logs
 
 @enduml
