@@ -1,4 +1,10 @@
 @startuml
+skinparam classAttributeIconSize 0
+hide empty members
+hide circle
+hide empty methods
+hide empty fields
+
 class FAP {
     - static moduleList: ModuleList
     - static LOGGER: Logger
