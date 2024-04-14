@@ -2,8 +2,39 @@
 
 ## Acknowledgements
 
-{list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the
-original source as well}
+---
+### Gson library
+
+This project utilizes the [Gson library](https://github.com/google/gson) for JSON deserialization.
+Gson is an open-source library developed by Google, providing simple methods to convert Java objects into JSON and back.
+It simplifies adding or retrieving data from a JSON data format, which is particularly useful in projects requiring
+extensive manipulation of JSON files.
+
+**License**: Gson is released under the [Apache License 2.0](https://github.com/google/gson/blob/master/LICENSE).
+This license allows for commercial and private use, modification, distribution, and distribution of modified versions
+of the library, making it an excellent choice for open-source projects.
+
+**More Information**:
+- For further details about Gson and its capabilities, visit the official Gson repository on GitHub:
+  [Gson GitHub](https://github.com/google/gson).
+
+### NUS Mods API
+
+This project utilizes data from [NUSMods API](https://api.nusmods.com/v2/) for accessing National University of
+Singapore (NUS) modules information. This data is downloaded once and used statically within FAP.
+
+The NUSMods API is an open-source initiative that provides academic data on modules available
+at NUS, which are publicly accessible and regularly updated. It simplifies the process of retrieving detailed module
+information & module credits, which are crucial for planning academic modules effectively in the FAP application.
+
+**Source**:
+- For more details about the API and the data it provides, visit the official NUSMods API documentation site:
+  [NUSMods API Documentation](https://api.nusmods.com/v2/).
+
+**Acknowledgments**:
+- We are grateful to the [NUSMods team](https://nusmods.com/about) for maintaining the API and making it freely
+  available, which significantly enhances the functionality of academic applications like ours by providing reliable and
+  up-to-date academic information.
 
 ## Design
 
