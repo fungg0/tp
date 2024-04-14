@@ -1,5 +1,38 @@
 # Developer Guide
 
+- [Acknowledgements](#acknowledgements)
+- [Design](#design)
+    - [Architecture](#architecture)
+        - [Classes Involved](#classes-involved)
+        - [Associations](#associations)
+        - [Flow and Interactions](#flow-and-interactions)
+    - [Running the Application Loop](#running-the-application-loop)
+        - [Key points](#key-points)
+    - [UI Class](#ui-class)
+    - [User Class](#user-class)
+    - [Parser Package](#parser-package)
+    - [Storage](#storage)
+    - [Module Class and Module List Class](#module-class-and-module-list-class)
+    - [Command Class](#command)
+- [Implementation](#implementation)
+    - [Parsing User Inputs](#parsing-user-inputs)
+    - [Saving modules to file](#saving-modules-to-file)
+    - [View Commands](#view-commands)
+        - [View Schedule](#view-schedule)
+        - [View Specific Course Information](#view-specific-course-information-with-c/COURSE_CODE)
+        - [View Courses Needed to Graduate](#view-courses-needed-to-graduate)
+    - [Adding a Module](#adding-a-module)
+    - [Getting course details from Json File](#getting-course-details-from-json-file)
+    - [GPA](#gpa)
+    - [Desired GPA](#desired-gpa)
+- [Appendix: Requirements]()
+    - [Product Scope]()
+    - [User Stories]()
+    - [Use Cases]()
+    - [Non-Functional Requirements]()
+    - [Glossary]()
+- [Appendix: Instructions for manual testing]()
+
 ## Acknowledgements
 
 {list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the
