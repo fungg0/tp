@@ -145,35 +145,6 @@ The `Parser` class, together with the `CommandMetadata` class parses user input 
 **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no
 matching command is found, it returns an `Invalid` command instance.
 
-### Module and ModuleList
-**Code**: 
-- [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java) 
-- [`ModuleList.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/ModuleList.java) 
-
-The `Module` class and `ModuleList` class work together to store the data of the modules added by the user
-
-The `Module` class is responsible for containing the main attributes of a module such as moduleCode, moduleGrade, moduleMC, moduleTaken, moduleDate, gradedGradingBasis, and moduleDescription. These are relevant attributes that other classes use for certain actions done by the user. 
-
-The `ModuleList` class is responsible for managing the attributes contained in the `Module` class. They are mainly actions that value add to these attributes. For example, calculating the total amount of MC (module credit) the user has, calculating the GPA the user has, changing the grade of a certain mod, or adding a new module. 
-
-Hence, these are not just simple getters and setters, instead actions that value add to the attributes of the `Module` class, letting the user use them for different purposes in real life.
-
-This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
-
-**Overview:**
-
-Below is a class diagram that shows the associations between `Module`, `ModuleList`, and other relevant classes
-
-
-![Module.png](diagrams%2FModuleList.png)
-
-
-The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
-for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
-and parsed arguments.** For every `Command` class, there would be a corresponding `CommandMetadata` class (with the 
-exception of `Invalid` command) that overrides the method `createCommandInstance` to generate the `Command` instance of
-the specific `Command`.
-
 The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
 identify a given user command.
 
@@ -201,7 +172,34 @@ created based on the overwritten method `createCommandInstance` in the respectiv
 
 ### Storage
 
-### Module, Module List, JSON
+### Module, Module List
+**Code**:
+- [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java)
+- [`ModuleList.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/ModuleList.java)
+
+The `Module` class and `ModuleList` class work together to store the data of the modules added by the user
+
+The `Module` class is responsible for containing the main attributes of a module such as moduleCode, moduleGrade, moduleMC, moduleTaken, moduleDate, gradedGradingBasis, and moduleDescription. These are relevant attributes that other classes use for certain actions done by the user.
+
+The `ModuleList` class is responsible for managing the attributes contained in the `Module` class. They are mainly actions that value add to these attributes. For example, calculating the total amount of MC (module credit) the user has, calculating the GPA the user has, changing the grade of a certain mod, or adding a new module.
+
+Hence, these are not just simple getters and setters, instead actions that value add to the attributes of the `Module` class, letting the user use them for different purposes in real life.
+
+This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
+
+**Overview:**
+
+Below is a sequence diagram that shows the flow of the implementation when a module is added by the user
+
+![AddModuleSequence.png](diagrams%2FAddCommand.png)
+
+
+The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
+for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
+and parsed arguments.** For every `Command` class, there would be a corresponding `CommandMetadata` class (with the
+exception of `Invalid` command) that overrides the method `createCommandInstance` to generate the `Command` instance of
+the specific `Command`.
+
 
 ### Command
 
@@ -450,41 +448,13 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 
 ![ViewGraduateCommand Sequence Diagram](diagrams/ViewGraduateCommand-0.png)
 
-1. **Application Initialization and Entry Point:**
-
-   The `main` method, as the application's entry point, performs initial setups such as greeting the user and ensuring
-   critical components are initialized properly. It encapsulates high-level flow control and implements error handling
-   to manage assertion errors and unexpected exceptions.
-
-   ```java
-   public static void main(String[] args) {
-       try {
-           printGreeting();
-           assert moduleList != null : "moduleList should not be null";
-           runApplication();
-       } catch (AssertionError e) {
-           LOGGER.log(Level.SEVERE, "Assertion failed: " + e.getMessage(), e);
-           System.err.println("Critical assertion failure: " + e.getMessage());
-       } catch (Exception e) {
-           LOGGER.log(Level.SEVERE, "An unexpected error occurred: " + e.getMessage(), e);
-           System.err.println("An unexpected error occurred: " + e.getMessage());
-       }
-   }
-   ```
-   #### UML Diagram
-
-   ![FAP class diagram](diagrams/FAP.png)
-
-### UML Diagram Description
-
-
-2. **Adding a Module**
+### Adding a Module ###
 
    #### **Classes Involved:**
-   - **`Module`**: Manages the important attributes of an academic module.
-   - **`ModuleList`**: Manages a collection of academic modules.
-   - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
-   - **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and handle them appropriately
+    - **`Module`**: Manages the important attributes of an academic module.
+    - **`ModuleList`**: Manages a collection of academic modules.
+    - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
+    - **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and handle them appropriately
 
    **Module Class:**
    #### Purpose
@@ -532,16 +502,16 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
       modules in that semester.
 
    #### **Flow and Interactions:**
-   - Main point of entry is `AddCommand` class where it will check the usercommands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
-   - If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
-   - If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
-  
-   #### Error Handling
-   - `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
-   - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
-   - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
+    - Main point of entry is `AddCommand` class where it will check the usercommands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
+    - If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
+    - If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
 
-3. **Getting module details from Json File (JsonManager Class):**
+   #### Error Handling
+    - `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
+    - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
+    - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
+
+### Getting module details from Json File (JsonManager Class): ###
 
    #### Overview
 
@@ -597,6 +567,38 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
        System.out.println("Module MC: " + jsonManager.getModuleMC());
    }
    ```
+   Below is the sequence diagram for adding of module.
+   ![Adding a Module Sequence Diagram](diagrams/AddCommand.png)
+
+
+1. **Application Initialization and Entry Point:**
+
+   The `main` method, as the application's entry point, performs initial setups such as greeting the user and ensuring
+   critical components are initialized properly. It encapsulates high-level flow control and implements error handling
+   to manage assertion errors and unexpected exceptions.
+
+   ```java
+   public static void main(String[] args) {
+       try {
+           printGreeting();
+           assert moduleList != null : "moduleList should not be null";
+           runApplication();
+       } catch (AssertionError e) {
+           LOGGER.log(Level.SEVERE, "Assertion failed: " + e.getMessage(), e);
+           System.err.println("Critical assertion failure: " + e.getMessage());
+       } catch (Exception e) {
+           LOGGER.log(Level.SEVERE, "An unexpected error occurred: " + e.getMessage(), e);
+           System.err.println("An unexpected error occurred: " + e.getMessage());
+       }
+   }
+   ```
+   #### UML Diagram
+
+   ![FAP class diagram](diagrams/FAP.png)
+
+### UML Diagram Description
+
+
 
 4. **Viewing GPA**
 
