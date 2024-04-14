@@ -267,6 +267,10 @@ Hence, these are not just simple getters and setters, instead actions that value
 
 This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
 
+Below is the class diagram of how the module and modulelist class interacts with other relevant classes 
+
+![Module diagram](diagrams/ModuleList.png)
+
 ### Command
 
 Here's how the `Command` class interact with the other classes:
@@ -514,89 +518,78 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 
 ### Adding a Module ###
 
-   #### **Classes Involved:**
-   - **`Module`**: Manages the important attributes of an academic module.
-   - **`ModuleList`**: Manages a collection of academic modules.
-   - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
-   - **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and handle them appropriately
+#### **Classes Involved:**
+- **`Module`**: Manages the important attributes of an academic module.
+- **`ModuleList`**: Manages a collection of academic modules.
+- **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
+- **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and
+  handle them appropriately
 
-   **Module Class:**
-   #### Purpose
-
-   Represents an academic module, holding information such as the module code, credits (MCs), grade, and description.
-
-   #### Key Methods
-
+**`Module` Class:**
+- Purpose
+    - Represents an academic module, holding information such as the module code, credits (MCs), grade, and description.
+- Key Methods
     - **`setModuleGrade(String moduleGrade)`**  
       Sets the grade for the module. Validates the grade format and throws `ModuleException` if the module hasn't been
       taken yet.
-
     - **`getGradeNumber()`**  
       Returns a numerical value associated with the module's grade, used for GPA calculation.
 
-   **ModuleList Class:**
+**`ModuleList` Class:**
+- Purpose
+    - Manages a collection of `Module` objects. It facilitates operations such as adding, removing, retrieving modules,
+      calculating GPA, and grouping modules by semester.
 
-   #### Purpose
-
-   Manages a collection of `Module` objects. It facilitates operations such as adding, removing, retrieving modules,
-   calculating GPA, and grouping modules by semester.
-
-   #### Key Methods
-
+- Key Methods
     - **`addModule(Module module)`**  
-      Adds a new module to the list.  
-      Throws `IllegalArgumentException` if the module is `null`.
-
+      Adds a new module to the list. Throws `IllegalArgumentException` if the module is `null`.
     - **`getModule(String courseCode)`**  
-      Retrieves a module by its course code.  
-      Throws `ModuleNotFoundException` if the module is not found.
-
+      Retrieves a module by its course code. Throws `ModuleNotFoundException` if the module is not found.
     - **`removeModule(Module module)`**  
       Removes a specified module from the list.
-
     - **`changeModuleGrade(String moduleCode, String grade)`**  
       Changes the grade of a module identified by its course code.
-
     - **`tallyGPA()`**  
-      Calculates and returns the GPA based on the modules in the list.  
-      Throws `GpaNullException` if there are no modules with countable grades.
-
+      Calculates and returns the GPA based on the modules in the list.
+      Throws `GpaNullException` if there are no modules
+      with countable grades
     - **`groupModulesBySemester()`**  
       Groups modules by their semester and returns a map where each key is a semester, and each value is a list of
       modules in that semester.
 
-   #### **Flow and Interactions:**
-   - Main point of entry is `AddCommand` class where it will check the usercommands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
-   - If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
-   - If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
-  
-   #### Error Handling
-   - `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
-   - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
-   - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
+#### **Flow and Interactions:**
+- Main point of entry is `AddCommand` class where it will check the user commands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
+- If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
+- If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
 
-### Getting module details from Json File (JsonManager Class): ###
+#### Error Handling
+- `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
+- `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
+- `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
 
-   #### Overview
+---
+### Getting module details from Json File (JsonManager Class):
 
-   The `JsonManager` class is designed to manage and interact with module information stored in a JSON format. It
-   provides functionalities for checking the existence of modules, retrieving module information such as Modular
-   Credits (MCs), description, and title from a JSON file.
+#### Overview
 
-   #### Constructor
+The `JsonManager` class is designed to manage and interact with module information stored in a JSON format. It
+provides functionalities for checking the existence of modules, retrieving module information such as Modular
+Credits (MCs), description, and title from a JSON file.
 
-    - `JsonManager()`: Initializes a new instance of the `JsonManager` by loading the module information from a JSON
-      file located at `/moduleInfo.json`.
+#### Constructor:
 
-   #### Methods
+- `JsonManager()`: Initializes a new instance of the `JsonManager` by loading the module information from a JSON
+  file located at `/moduleInfo.json`.
 
-   ##### Module Existence
+#### Methods:
+
+- Module Existence
 
     - **`moduleExist(String moduleCode)`**: Checks if a module with the specified code exists in the JSON data.
         - **Parameters**: `String moduleCode` - The code of the module to check for existence.
         - **Returns**: `boolean` - `true` if the module exists, `false` otherwise.
 
-   ##### Module Information Retrieval
+- Module Information Retrieval
 
     - **`getModuleInfo(String moduleCode)`**: Retrieves detailed information about a module, including its Modular
       Credits, description, and title, based on the module code.
@@ -604,7 +597,7 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
         - **Note**: This method updates the internal state of the `JsonManager` object with the retrieved module
           information.
 
-   ##### Information Accessors
+- Information Accessors
 
     - **`getModuleDescription()`**: Returns the description of the last module queried.
         - **Returns**: `String` - The description of the module.
@@ -615,24 +608,26 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
     - **`getModuleTitle()`**: Returns the title of the last module queried.
         - **Returns**: `String` - The title of the module.
 
-   #### Error Handling
+#### Error Handling
 
-    - The constructor throws a `RuntimeException` if the JSON file containing module information cannot be found or
-      accessed, ensuring that the application is aware of missing or inaccessible module data.
+- The constructor throws a `RuntimeException` if the JSON file containing module information cannot be found or
+  accessed, ensuring that the application is aware of missing or inaccessible module data.
 
-   #### Usage
+#### Usage
 
-   ```java
-   JsonManager jsonManager = new JsonManager();
-   if (jsonManager.moduleExist("CS1010")) {
-       jsonManager.getModuleInfo("CS1010");
-       System.out.println("Module Title: " + jsonManager.getModuleTitle());
-       System.out.println("Module Description: " + jsonManager.getModuleDescription());
-       System.out.println("Module MC: " + jsonManager.getModuleMC());
-   }
-   ```
-   Below is the sequence diagram for adding of module.
-   ![Adding a Module Sequence Diagram](diagrams/AddCommand.png)
+```java
+JsonManager jsonManager = new JsonManager();
+if (jsonManager.moduleExist("CS1010")) {
+   jsonManager.getModuleInfo("CS1010");
+   System.out.println("Module Title: " + jsonManager.getModuleTitle());
+   System.out.println("Module Description: " + jsonManager.getModuleDescription());
+   System.out.println("Module MC: " + jsonManager.getModuleMC());
+}
+```
+Below is a sequence diagram that shows the flow of the implementation when a module is added by the user.
+![Adding a Module Sequence Diagram](diagrams/AddCommand.png)
+
+--- 
 
 
 1. **Application Initialization and Entry Point:**
