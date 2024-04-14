@@ -304,8 +304,78 @@ public AddCommandMetadata() {
 
 ### Saving modules to file
 
+The `Storage` class is responsible for managing the persistence of user and module data to and from files. This document section focuses on the `saveModulesToFile` method, which saves the current user's information and their module list to a specified file path.
+
+#### Method: `saveModulesToFile`
+
+```java
+public static void saveModulesToFile(String filePath) throws StorageException {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        writer.write(toString(user) + System.lineSeparator());
+        for (Module module : moduleList.getTakenModuleList()) {
+            writer.write(toString(module) + System.lineSeparator());
+        }
+    } catch (IOException | SecurityException e) {
+        throw new StorageException("An error occurred while saving modules to file: " + filePath);
+    }
+}
+```
+
+#### Parameters:
+- `filePath` - The path of the file where the data is to be saved.
+
+#### Throws:
+- `StorageException` - if an error occurs during the file writing process.
+
+#### Process Description:
+
+1. **File Writing Setup**:
+    - Initializes a `BufferedWriter` wrapped around a `FileWriter` to write text to the file efficiently. 
+    This setup benefits from buffered writing, which minimizes the number of physical disk writes.
+
+2. **Writing User Data**:
+    - The user's data is converted to a string format and written to the file first, followed by a 
+    newline character to separate entries clearly.
+
+3. **Writing Modules Data**:
+    - Iterates over the list of taken modules (`moduleList.getTakenModuleList()`), converting each module 
+    to a string format and writing it to the file. Each module entry is written on a new line.
+
+4. **Resource Management**:
+    - The `BufferedWriter` is declared within a try-with-resources statement, ensuring that it is closed at 
+    the end of the statement block, regardless of whether the operation completes successfully or fails.
+
+#### Error Handling:
+- Catches `IOException` and `SecurityException`, throwing a `StorageException` with a message detailing the failure. 
+    This encapsulation of exceptions provides a clear API for the method, simplifying error handling for the caller.
+
+### UML Sequence Diagram Explanation
+
+Below is the UML sequence diagram for the `saveModulesToFile` method, illustrating the interactions 
+between components during the file-saving process.
+
 ![StorageSequenceDiagram.png](diagrams/StorageSequenceDiagram.png)
 
+#### Steps Illustrated in the Diagram:
+
+1. **Main Initiates Save**:
+    - The `FAP` class (or the main method) calls `saveModulesToFile`, passing the file path where 
+    data needs to be saved.
+
+2. **Storage Operations**:
+    - **Directory Check**: Verifies or creates the necessary directory.
+    - **File Writer Setup**: Sets up the `BufferedWriter` and `FileWriter`.
+    - **Data Writing**:
+        - Writes user data.
+        - Iteratively writes data for each module in the `ModuleList`.
+
+3. **Completion**:
+    - Once all data is written, the `BufferedWriter` is closed (implicitly by the try-with-resources), 
+    which also flushes the buffer to the file, finalizing the write operation.
+
+#### Conclusion:
+This sequence diagram and the corresponding detailed explanation provide a clear, step-by-step guide 
+to the `saveModulesToFile` method's operations, highlighting how data integrity and error handling are maintained.
 
 ### Commands
 
