@@ -145,35 +145,6 @@ The `Parser` class, together with the `CommandMetadata` class parses user input 
 **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no
 matching command is found, it returns an `Invalid` command instance.
 
-### Module and ModuleList
-**Code**: 
-- [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java) 
-- [`ModuleList.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/ModuleList.java) 
-
-The `Module` class and `ModuleList` class work together to store the data of the modules added by the user
-
-The `Module` class is responsible for containing the main attributes of a module such as moduleCode, moduleGrade, moduleMC, moduleTaken, moduleDate, gradedGradingBasis, and moduleDescription. These are relevant attributes that other classes use for certain actions done by the user. 
-
-The `ModuleList` class is responsible for managing the attributes contained in the `Module` class. They are mainly actions that value add to these attributes. For example, calculating the total amount of MC (module credit) the user has, calculating the GPA the user has, changing the grade of a certain mod, or adding a new module. 
-
-Hence, these are not just simple getters and setters, instead actions that value add to the attributes of the `Module` class, letting the user use them for different purposes in real life.
-
-This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
-
-**Overview:**
-
-Below is a class diagram that shows the associations between `Module`, `ModuleList`, and other relevant classes
-
-
-![Module.png](diagrams%2FModuleList.png)
-
-
-The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
-for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
-and parsed arguments.** For every `Command` class, there would be a corresponding `CommandMetadata` class (with the 
-exception of `Invalid` command) that overrides the method `createCommandInstance` to generate the `Command` instance of
-the specific `Command`.
-
 The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
 identify a given user command.
 
@@ -201,7 +172,35 @@ created based on the overwritten method `createCommandInstance` in the respectiv
 
 ### Storage
 
-### Module, Module List, JSON
+### Module, Module List
+**Code**:
+- [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java)
+- [`ModuleList.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/ModuleList.java)
+
+The `Module` class and `ModuleList` class work together to store the data of the modules added by the user
+
+The `Module` class is responsible for containing the main attributes of a module such as moduleCode, moduleGrade, moduleMC, moduleTaken, moduleDate, gradedGradingBasis, and moduleDescription. These are relevant attributes that other classes use for certain actions done by the user.
+
+The `ModuleList` class is responsible for managing the attributes contained in the `Module` class. They are mainly actions that value add to these attributes. For example, calculating the total amount of MC (module credit) the user has, calculating the GPA the user has, changing the grade of a certain mod, or adding a new module.
+
+Hence, these are not just simple getters and setters, instead actions that value add to the attributes of the `Module` class, letting the user use them for different purposes in real life.
+
+This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
+
+**Overview:**
+
+Below is a class diagram that shows the associations between `Module`, `ModuleList`, and other relevant classes
+
+
+![Module.png](diagrams%2FModuleList.png)
+
+
+The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
+for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
+and parsed arguments.** For every `Command` class, there would be a corresponding `CommandMetadata` class (with the
+exception of `Invalid` command) that overrides the method `createCommandInstance` to generate the `Command` instance of
+the specific `Command`.
+
 
 ### Command
 
