@@ -32,9 +32,68 @@ resources. It embodies key software design principles and showcases thoughtful a
 
 ### UI
 
-### User
+### User class
+**Code** : [`User.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/user/User.java)
 
-### Parser
+The `User` class carries general information about the user of FAP.
+As of `v2.1`, the user class is limited in functionality and only contain information about the user's
+1. `name`
+2. `current semester` of study
+
+The `User` class is mainly utilized by SetCommand and ViewCommand through its getter and setter methods.
+
+The main purpose of the `User` class is to introduce a basic level of personalization by allowing users to input and 
+store their personal information. This information will be shown to the users through `Ui` class 
+methods such as `printUserInfo()` and `printGreeting()`.
+
+Additionally, the `User` class helps to verify the status of the modules in the user's plan, determining whether the 
+modules have been taken or not.
+
+### Parser package
+**Code**: 
+- [`Parser.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/parser/Parser.java) 
+- [`CommandMetadata.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/parser/CommandMetadata.java)
+
+The `Parser` class, together with the `CommandMetadata` class parses user input to
+**return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no
+matching command is found, it returns an `Invalid` command instance.
+
+**Overview:**
+
+Below is a class diagram that shows the associations between `Parser` and `CommandMetadata`
+
+![ParserClassDiagram.png](diagrams%2FParserClassDiagram.png)
+
+The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
+for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
+and parsed arguments.** For every `Command` class, there would be a corresponding `CommandMetadata` class (with the 
+exception of `Invalid` command) that overrides the method `createCommandInstance` to generate the `Command` instance of
+the specific `Command`.
+
+The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
+identify a given user command. 
+
+Further implementation details are available at "Parsing User Inputs" section under Implementation.
+
+**How it works (Sequence):**
+
+Below is a sequence diagram that shows how the `FAP` main method calls `Parser` to parse a `userInput` 
+for a `Command` to return:
+
+![ParserSequenceDiagram.png](diagrams%2FParserSequenceDiagram.png)
+
+The method to parse and validate user inputs is handled in the `Parser` method `getCommand(String userInput)`:
+1. `userInput` is first checked to see if it is null or empty. If either condition is met, `Parser` returns an 'Invalid' 
+command instance.
+2. The first `word` of the `userInput` string is then checked to see if it matches with a valid command 
+`keyword` (Eg. `add`, `remove`, `view` etc)
+3. If there is no match, return an `Invalid` command instance (on loop end)
+4. If there is a match, the corresponding `CommandMetadata` class for the `keyword` is called upon, 
+and there will be a further attempt to match the `userInput` string with the command `regex` expression
+5. If it does not match, the `CommandMetadata` class will validate the error in user string syntax, print out 
+an error message, and return an `Invalid` command instance
+6. If it matches, the command `arguments` will be extracted out and the respective command class instance will be
+created based on the overwritten method `createCommandInstance` in the respective `CommandMetadata` class
 
 ### Storage
 
@@ -56,7 +115,119 @@ How the `Command` component works (together with other classes):
 
 ## Implementation
 
-### Classes
+### Classes / Package
+
+**Parsing User Inputs**
+
+**Use of regular expressions (Regex) in FAP:**
+
+The add command class requires a user input that best matches this string
+```
+add c/COURSECODE w/SEMESTERTAKEN
+```
+where `COURSECODE` and `SEMESTERTAKEN` have their defined restrictions: `COURSECODE` should best match an actual
+course code at NUS, `SEMESTERTAKEN` should be a number value in some range. The `COURSECODE` and `SEMESTERTAKEN`
+will thus have their own argument regex pattern.
+
+A simple regex example would be that `SEMESTERTAKEN` would be a number ranging from 1-8 to represent a normal honours
+pathway for a CEG student (FAP's target user). A regex pattern for that could look like `w/(?<semester>[1-8])` (In this 
+case, `w/` is used as a `delimitter` but it is not **strictly** neccessary **unless** the `regex` have special 
+conditions such as allowing whitespaces). An **argument name capturing group** `semester` is enclosed within the 
+brackets so that the argument group will be **named** and thus the argument value (anywhere between `1-8`) can be 
+referenced/called and retrieved by using the `Matcher` method `group()` with the argument `"semester"`.
+Meanwhile, the java utility classes `Pattern` and `Matcher` would handle the checks that the argument value given
+is indeed between `1-8`.
+
+A userInput regex for FAP would thus follow this convention:
+```
+keyword argument_1 argument_2 ...
+```
+This full regex pattern for a command itself can be generated by having a `keyword`, as well as all the
+argument `group names` (a name to use so as to _reference_ the argument) and the argument `regex` pattern
+corresponding to that name reference. Typically, these arguments should be spaced out and thus a `\s+` (representing
+at least one whitespace character) is placed between the gaps of the regex pattern for
+`keyword, argument_1, argument_2...`
+
+While regex allows the `userInput` checks to be prudent, as well as potentially offering the flexibility for string
+inputs to allow a different order of arguments, there are limitations where it becomes hard to determine the exact
+error of the user's input solely based on the regular expressions, because it solely returns a true/false value
+if the string value itself fits the `regex` criteria given). Regardless, we think the use of regex in FAP can help provide
+us **safety in the arguments** that passes through to the commands via the userInput.
+
+**Developer usage FAP: Parser & CommandMetadata class as of `v2.1`**: **How to create a new command**
+
+- First, we need a `Command` type class to return as an object. In the future, this may be expanded to any `T` type.
+- Second, we need a string that would be used to create this `Command` instance. This string should follow the
+  format `keyword argument_1 argument_2...` where the `keyword` is mandatory, `argument_1, argument_2...` 
+  are **optional**.
+- Third, for every argument available, make a **regex pattern with name capturing** that encloses the value within the
+  brackets. (e.g., `n/(?<name>[A-Za-z0-9 ]+)`, `g/(?<grade>[ab][+-]?|[cd][+]?|f|cs)`)
+
+**Using example `add c/COURSECODE w/SEMESTERTAKEN`**
+- Create a subclass that extends `CommandMetadata`.
+- Put in the `keyword` (e.g., `add`) and `groupArgumentNames` (e.g., `{"courseCode", "semester"}`) in the superclass
+  constructor.
+- Define the argument regex pattern in the static variable `argsRegexMap` with the corresponding `groupArgumentName` and 
+argument `regex` pattern. 
+  - Note: Currently `argsRegexMap` is in the superclass `CommandMetadata` 
+  (e.g., `argRegexMap.put("semester", "w/(?<semester>[1-8])")`).
+- Override the method `createCommandInstance(Map<String, String> args)` to implement the method on how to create
+  the `Command` object you want. Return the `Command` instance.
+    - Note: `Map<String, String> args` contains the `groupArgumentName : argumentValue` pairing.
+- In the `Parser` class, add the created `CommandMetadata` subclass to `metadataList`.
+- The `Parser` method `getCommand(String userInput)` will help validate the `userInput`. If the `userInput` matches
+  the string you wanted, then `getCommand(String userInput)` will return the Command instance you require.
+
+Sample `CommandMetadata` example code:
+```java
+public class AddCommandMetadata extends CommandMetadata {
+private static final String ADD_KEYWORD = "add";
+private static final String[] ADD_ARGUMENTS = {"courseCode", "semester"};
+
+public AddCommandMetadata() {
+    super(ADD_KEYWORD, ADD_ARGUMENTS);
+}
+
+// Add Command Creator
+@Override
+protected Command createCommandInstance(Map<String, String> args) {
+    String moduleCode = args.getOrDefault("courseCode", "COURSECODE_ERROR");
+    String semester = args.getOrDefault("semester", "SEMESTER_ERROR");
+    int semesterInt = Integer.parseInt(semester);
+    
+    return new AddCommand(moduleCode, semesterInt);
+}
+```
+
+`v2.1`: **Optional** regex arguments is now supported (eg. `userInput` regex expressions `view` and `view c/COURSECODE` 
+can now be both valid). This feature is still under testing.
+
+**Here is an extended developer usage guide:**
+- For every argument that can be optional, a new `String[]` has been introduced. This String[] should match the 
+length of the regular `String[]` containing the argument names. Each element in this new array should indicate whether 
+the corresponding argument is optional or mandatory. For instance, if `courseCode` is mandatory, and `semester` is 
+optional:
+
+```java
+private static final String[] ADD_ARGUMENTS = {"courseCode", "semester"};
+private static final String[] ADD_ARG_FLAGS = {"mandatory", "optional"};
+```
+
+- Put the new `String[]` inside the superclass constructor, an example is as follows:
+
+```java
+public AddCommandMetadata() {
+    super(ADD_KEYWORD, ADD_ARGUMENTS, ADD_ARG_FLAGS);
+}
+```
+
+- Otherwise, if all argument `regex` is mandatory, there is no need to include it in the superclass constructor:
+
+```java
+public AddCommandMetadata() {
+    super(ADD_KEYWORD, ADD_ARGUMENTS);
+}
+```
 
 ### Commands
 
@@ -284,119 +455,6 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 
    Below is the sequence diagram for `ViewGpaCommand`.
    ![View Gpa Command Sequence Diagram](diagrams/ViewGpaCommand.png)
-
-7. **Parsing UserInput**
-
-   The `Parser` class, together with the `CommandMetadata` class parses user input to
-   **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no
-   matching command is found, it returns an `Invalid` command instance.
-   <br />
-   <br />
-   **High Level Overview:**
-
-   The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
-   for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
-   and
-   parsed arguments.**
-   <br />
-   <br />
-   The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
-   identify a given user command.
-   <br />
-   <br />
-   Below is a diagram that shows this relationship
-
-   ![ParserClassDiagram.png](diagrams/ParserClassDiagram.png)
-   <br />
-   <br />
-   **Use of regular expressions (Regex) in FAP:**
-
-   The add command class requires a user input that best
-   matches this string
-    ```
-    add c/COURSECODE w/SEMESTERTAKEN
-    ```
-   where `COURSECODE` and `SEMESTERTAKEN` have their defined restrictions: `COURSECODE` should best match an actual
-   course code at NUS, `SEMESTERTAKEN` should be a number value in some range. The `COURSECODE` and `SEMESTERTAKEN`
-   will thus have their own argument regex pattern.
-   <br />
-   <br />
-   A simple example would be that `SEMESTERTAKEN` would be a number ranging from 1-8 to represent a normal honours
-   pathway for a CEG student (FAP's target user). A regex pattern for that would look like `w/(?<semester>[1-8])`.
-   An **argument name capturing group** `semester` is enclosed within the brackets so that the argument group will be
-   **named** and thus the argument value (anywhere between `1-8`) can be referenced/called by using the
-   `matcher.group()` method.
-   Meanwhile, the `Pattern` and `Matcher` methods used for regex would handle the checks that the argument value given
-   is indeed between `1-8`
-   <br />
-   <br />
-   A userInput regex would thus follow this convention:
-    ```
-    keyword argument_1 argument_2 ...
-    ```
-   This full regex pattern for a command itself can be generated by having a `keyword`, as well as all the
-   `argument group names` (a name to use so as to _reference_ the argument) and the `argument regex pattern`
-   corresponding to that name reference. Typically, these arguments would be spaced out and thus a `\s+` (representing
-   at least one whitespace character) is placed between the gaps of the regex pattern for
-   `keyword, argument_1, argument_2...`
-   <br />
-   <br />
-   While regex allows the `userInput` checks to be prudent, as well as potentially offering the flexibility for string
-   inputs to allow a different order of arguments, there are limitations where it becomes hard to determine the exact
-   error of the user's input solely based on the regular expressions, because it solely returns a true/false value
-   if the string value itself fits the criteria given). Regardless, we think the use of regex in FAP can help provide
-   us **safety in the arguments** that passes through to the commands via the userInput.
-   <br />
-   <br />
-   **Developer usage FAP: Parser & CommandMetadata class as of v2.0**: **How to create a new command**
-
-- First, we need a `Command` type class to return as an object. In the future, this may be expanded to any `T` type.
-- Second, we need a string that would be used to create this `Command` instance. This string should follow the
-  format `keyword argument_1 argument_2` where arguments are **optional**.
-- Third, for every argument available, make a **regex pattern with name capturing** that encloses the value within the
-  brackets. (e.g., `n/(?<name>[A-Za-z0-9 ]+)`, `g/(?<grade>[ab][+-]?|[cd][+]?|f|cs|cu)`)
-
-- **Using example `add c/COURSECODE w/SEMESTERTAKEN`**
-    - Create a subclass that extends `CommandMetadata`.
-    - Put in the `keyword` (e.g., `add`) and `groupArgumentNames` (e.g., `{"courseCode", "semester"}`) in the superclass
-      constructor.
-    - Define the argument regex pattern in the static variable `argsRegexMap` Note: Currently, `argsRegexMap` is in the
-      superclass `CommandMetadata`. (e.g., `argRegexMap.put("semester", "w/(?<semester>[1-8])")`).
-    - Override the method `createCommandInstance(Map<String, String> args)` to implement the method on how to create
-      the `Command` object you want. Return the `Command` instance.
-        - `Map<String, String> args` contains the `groupArgumentName : argumentValue` pairing.
-    - In the `Parser` class, add the created `CommandMetadata` subclass to `metadataList`.
-    - The `Parser` method `getCommand(String userInput)` will help validate the `userInput`. If the `userInput` matches
-      the string you wanted, then `getCommand(String userInput)` will return the Command instance you require.
-
-Sample example code:
-
-  ```java
-  public class AddCommandMetadata extends CommandMetadata {
-    private static final String ADD_KEYWORD = "add";
-    private static final String[] ADD_ARGUMENTS = {"courseCode", "semester"};
-
-    public AddCommandMetadata() {
-        super(ADD_KEYWORD, ADD_ARGUMENTS);
-    }
-
-    // Add Command Creator
-    @Override
-    protected Command createCommandInstance(Map<String, String> args) {
-        try {
-            String moduleCode = args.getOrDefault("courseCode", "COURSECODE_ERROR");
-            String semester = args.getOrDefault("semester", "SEMESTER_ERROR");
-            int semesterInt = Integer.parseInt(semester);
-
-            return new AddCommand(moduleCode, semesterInt);
-        } catch (ModuleNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage());
-            System.out.println("An error occurred: " + e.getMessage());
-        }
-        return new InvalidCommand();
-    }
-}
-  ```
 
 Design & Implementation
 Storage Class

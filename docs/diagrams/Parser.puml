@@ -1,5 +1,9 @@
 @startuml
 
+skinparam classAttributeIconSize 0
+hide empty members
+hide circle
+
 class Parser {
     - metadataList : ArrayList<CommandMetadata>
     + getCommand(userInput : String) : Command
@@ -19,9 +23,12 @@ abstract class CommandMetadata {
 class ABCCommandMetadata extends CommandMetadata {}
 class XYZCommandMetadata extends CommandMetadata {}
 
+note right of XYZCommandMetadata
+  ABCCommandMetadata, XYZCommandMetadata =
+  ViewCommandMetadata, AddCommandMetadata etc
+end note
+
 Parser -up-> "1" XYZCommandMetadata : uses
 Parser -up-> "1" ABCCommandMetadata : uses
-
-
 
 @enduml
