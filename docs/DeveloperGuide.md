@@ -754,17 +754,18 @@ Below is the sequence diagram of the entire function:
 
 | Version | As a ...               | I can ...                         | So that I can ...                                |
 |---------|------------------------|-----------------------------------|--------------------------------------------------|
-| v1.0    | Student User           | Add modules                       | add in modules that I have taken or plan to take |
-| v1.0    | Student User           | Remove modules                    | remove wrong inputs                              |
-| v1.0    | Student User           | View modules that I have inputted | track the modules I have added                   |
-| v1.0    | Student User           | Insert module grade               | track my grades                                  |
-| v1.0    | Recurrent Student User | View my GPA                       | keep track of my overall performance             |
-| v1.0    | New Student User       | Add my name                       | personalise my app                               |
-| v2.0    | Recurrent Student User | Input my current semester         | use features related to my current semester      |
-| v2.0    | Recurrent Student User | Store my data                     | personalise my app                               |
-| v2.0    | Student User           | View courses needed to graduate   | personalise my app                               |
-| v2.0    | Recurrent Student User | Check feasibility of desired GPA  | personalise my app                               |
-| v2.0    | New Student User       | View help command                 | personalise my app                               |
+| v1.0    | Student User           | Add modules                       | Add in modules that I have taken or plan to take |
+| v1.0    | Student User           | Remove modules                    | Remove wrong inputs                              |
+| v1.0    | Student User           | View modules that I have inputted | Track the modules I have added                   |
+| v1.0    | Student User           | Insert module grade               | Track my grades                                  |
+| v1.0    | Recurrent Student User | View my GPA                       | Keep track of my overall performance             |
+| v1.0    | New Student User       | Add my name                       | Personalise my app                               |
+| v2.0    | Recurrent Student User | Input my current semester         | Use features related to my current semester      |
+| v2.0    | Recurrent Student User | Store my data                     | Load my progress from my previous usage          |
+| v2.0    | Student User           | View modules needed to graduate   | See which modules I still need to plan for       |
+| v2.0    | Recurrent Student User | Check feasibility of desired GPA  | Work towards my ideal GPA                        |
+| v2.0    | New Student User       | View commands for CLI             | Navigate the app                                 |
+| v2.1    | Student User           | View module details               | Find out more about a module                     |
 
 ### Use Cases
 
