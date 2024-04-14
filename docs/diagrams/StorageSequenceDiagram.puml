@@ -6,20 +6,21 @@ participant ":ModuleList" as ModuleList
 participant "BufferedWriter" as BW
 database "File" as File
 
+activate FAP
 FAP -> Storage : saveModulesToFile(filePath)
 activate Storage
 
 Storage -> BW : new BufferedWriter(new FileWriter(filePath))
 activate BW
 
-opt User Data
-    Storage -> User : toString()
-    activate User
-    User --> Storage : user data as string
-    deactivate User
-    Storage -> BW : write(user data + System.lineSeparator())
-    BW -> File : write user data
-end
+
+Storage -> User : toString()
+activate User
+User --> Storage : user data as string
+deactivate User
+Storage -> BW : write(user data + System.lineSeparator())
+BW -> File : write user data
+
 
 Storage -> ModuleList : getTakenModuleList()
 activate ModuleList

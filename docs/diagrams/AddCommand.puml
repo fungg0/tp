@@ -1,8 +1,8 @@
 @startuml
 participant "Fap" as Fap <<class>>
 participant "Parser" as Parser <<class>>
-participant "AddCommandMetaData" as AddCommandMetaData
 participant "AddCommand" as AddCommand
+participant "AddCommandMetaData" as AddCommandMetaData
 participant "ModuleList" as ModuleList
 participant "JsonManager" as JsonManager
 participant "Module" as Module

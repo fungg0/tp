@@ -2,20 +2,25 @@
 
 actor Student as "CEG Student"
 
+participant FAP as FAP <<class>>
 participant Storage as Storage <<class>>
 participant Ui as ":Ui"
-participant FAP as FAP <<class>>
 participant Parser as Parser <<class>>
 participant Command as ":Command"
 participant User as ":User"
 participant ModuleList as ":ModuleList"
 
 activate FAP
-note over FAP: runApplication() infinite loop
 
-Student -> Ui: userInput
+loop until "Bye" Command
+
+FAP -> Ui: getUserInput()
 activate Ui
-Ui --> FAP: return valid userInput
+
+Ui -> Student: Scanner
+Student --> Ui: userInput
+Ui --> FAP: valid userInput
+
 deactivate Ui
 
 FAP -> Parser: getCommand(userInput)
@@ -39,7 +44,6 @@ User --> FAP
 deactivate User
 
 FAP -> Storage: saveModulesToFile(filePath)
-
-note over FAP: until "Bye" command is sent
+end loop
 
 @enduml

@@ -11,7 +11,7 @@ skinparam rectangle {
 rectangle {
   rectangle FAP as main #E1E1E1
   rectangle ModuleList #ADC2A9
-  rectangle UI #B4A7D6
+  rectangle Ui as UI #B4A7D6
   rectangle Parser #FFD966
   rectangle Command #A2C4C9
   rectangle JsonManager #D5A6BD
@@ -25,18 +25,21 @@ actor "CEG Student"
 
 "CEG Student" --> main
 main --> User
+User --.> main
 main --> ModuleList
-main --> UI
+main --.> UI
 main --> Parser
-main --> Storage
-main --> JsonManager
+main --.> Storage
+main --.> JsonManager
 
 JsonManager --> Command
 JsonManager --> Storage
 
 Parser --> Command
-Command --> UI
+Command <--.> main
 Command --> Storage
+Command --> ModuleList
+ModuleList <--.> UI
 Storage <--.> User
 Storage <.--> DataFile
 Storage <--.> ModuleList
