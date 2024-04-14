@@ -223,6 +223,7 @@ public class ModuleList {
             upperBoundGradeNeeded += 1;
             mockGPA = calculateMockGPA(upperBound, upperBoundGradeNeeded, lowerBound, lowerBoundGradeNeeded);
         }
+        totalModuleCreditsCountedToGPA = moduleCreditsCountedToGPA + (lowerBoundGradeNeeded+upperBoundGradeNeeded) * 4;
         double acquiredGPA = (currentGPA * moduleCreditsCountedToGPA + mockGPA *
                 (4 * (upperBoundGradeNeeded + lowerBoundGradeNeeded))) / totalModuleCreditsCountedToGPA;
         Ui.printGradeExpectations(this, desiredGPA, acquiredGPA, upperBoundGradeNeeded,

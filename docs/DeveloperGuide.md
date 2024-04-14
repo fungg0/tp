@@ -1083,7 +1083,23 @@ command will be explicitly stated. All provided test cases are assumed to be exe
 
 ### Desired GPA
 
-{provide manual testing for desired GPA}
+1. Test Case: `desiredgpa 4.75`
+
+    **Expected Results:** Prints out student require 20 A and 20 A- to attain 4.75 GPA.
+
+2. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/GEA1000 w/1
+    add c/GEC1015 w/1
+    add c/CFG1002 w/1
+    grade c/CFG1002 g/CS
+    grade c/GEA1000 g/B+
+    grade c/GEC1015 g/A-
+    desiredgpa 4.6
+    ```
+
+    **Expected Results:** Prints message that MCs left to take is 150, user will need 2 A and 36 A- and end GPA is 4.51.
 
 #### [Back to Manual Testing](#instructions-for-manual-testing)
 
