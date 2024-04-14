@@ -131,11 +131,28 @@ The `Parser` class, together with the `CommandMetadata` class parses user input 
 **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no
 matching command is found, it returns an `Invalid` command instance.
 
+### Module and ModuleList
+**Code**: 
+- [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java) 
+- [`ModuleList.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/ModuleList.java) 
+
+The `Module` class and `ModuleList` class work together to store the data of the modules added by the user
+
+The `Module` class is responsible for containing the main attributes of a module such as moduleCode, moduleGrade, moduleMC, moduleTaken, moduleDate, gradedGradingBasis, and moduleDescription. These are relevant attributes that other classes use for certain actions done by the user. 
+
+The `ModuleList` class is responsible for managing the attributes contained in the `Module` class. They are mainly actions that value add to these attributes. For example, calculating the total amount of MC (module credit) the user has, calculating the GPA the user has, changing the grade of a certain mod, or adding a new module. 
+
+Hence, these are not just simple getters and setters, instead actions that value add to the attributes of the `Module` class, letting the user use them for different purposes in real life.
+
+This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
+
 **Overview:**
 
-Below is a class diagram that shows the associations between `Parser` and `CommandMetadata`
+Below is a class diagram that shows the associations between `Module`, `ModuleList`, and other relevant classes
 
-![ParserClassDiagram.png](diagrams/ParserClassDiagram.png)
+
+![Module.png](diagrams%2FModuleList.png)
+
 
 The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
 for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
@@ -447,8 +464,15 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 ### UML Diagram Description
 
 
-3. **Module Class:**
+2. **Adding a Module**
 
+   #### **Classes Involved:**
+   - **`Module`**: Manages the important attributes of an academic module.
+   - **`ModuleList`**: Manages a collection of academic modules.
+   - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
+   - **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and handle them appropriately
+
+   **Module Class:**
    #### Purpose
 
    Represents an academic module, holding information such as the module code, credits (MCs), grade, and description.
@@ -462,7 +486,7 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
     - **`getGradeNumber()`**  
       Returns a numerical value associated with the module's grade, used for GPA calculation.
 
-4. **ModuleList Class:**
+   **ModuleList Class:**
 
    #### Purpose
 
@@ -493,11 +517,17 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
       Groups modules by their semester and returns a map where each key is a semester, and each value is a list of
       modules in that semester.
 
+   #### **Flow and Interactions:**
+   - Main point of entry is `AddCommand` class where it will check the usercommands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
+   - If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
+   - If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
+  
    #### Error Handling
+   - `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
+   - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
+   - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
 
-   Uses exceptions to handle errors, such as when trying to access or modify modules that don't exist.
-
-5. **Getting module details from Json File (JsonManager Class):**
+3. **Getting module details from Json File (JsonManager Class):**
 
    #### Overview
 
@@ -554,7 +584,7 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
    }
    ```
 
-6. **Viewing GPA**
+4. **Viewing GPA**
 
    The `ViewGpaCommand` class is responsible for displaying the current GPA attained by the student. It
    accesses `ModuleList`, which looks through all `Module` object contained in the list. If the `Module` is marked as
