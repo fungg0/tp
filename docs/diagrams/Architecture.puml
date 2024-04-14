@@ -9,7 +9,7 @@ skinparam rectangle {
 }
 
 rectangle {
-  rectangle main #E1E1E1
+  rectangle FAP as main #E1E1E1
   rectangle ModuleList #ADC2A9
   rectangle UI #B4A7D6
   rectangle Parser #FFD966

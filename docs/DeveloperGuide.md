@@ -165,7 +165,7 @@ This design allows a separation of concern which separates the purpose of each o
 Below is a class diagram that shows the associations between `Module`, `ModuleList`, and other relevant classes
 
 
-![Module.png](diagrams%2FModuleList.png)
+![Module.png](diagrams/ModuleList.png)
 
 
 The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
@@ -200,6 +200,67 @@ an error message, and return an `Invalid` command instance
 created based on the overwritten method `createCommandInstance` in the respective `CommandMetadata` class
 
 ### Storage
+
+![Storage diagram](diagrams/Storage.png)
+
+**Code** :
+[`Storage.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/storage/Storage.java)
+
+The `Storage` class in the Future Academic Planner (FAP) application is essential for handling the persistence 
+of user and module data. It allows the application to maintain state between sessions by reading from and writing 
+to files.
+
+As of `v2.1`, the `Storage` class is capable of handling several critical functionalities:
+1. **Saving Data**: It serializes the `User` and `ModuleList` objects into a text format and writes this information 
+to a specified file path.
+2. **Loading Data**: It deserializes text data from a specified file path back into `User` and `ModuleList` objects.
+
+### Key Functionalities
+
+#### 1. **Saving User and Module Data**
+- **Method**: `saveModulesToFile(String filePath)`
+- **Description**: This method saves serialized user information and a list of taken modules to a specified file.
+It first checks and, if necessary, creates the directory path provided in the filePath. It then initializes a 
+`BufferedWriter` to write the data efficiently.
+
+#### 2. **Loading User and Module Data**
+- **Method**: `loadDataFromFile(String filePath)`
+- **Description**: This method loads user information and module data from the specified file. If the file does not 
+exist, it creates a new one and returns early to avoid errors. It reads the file line by line, updating the user and 
+module data within the application.
+
+#### 3. **File and Directory Management**
+- **Methods**: `createFile(String filePath)`, `ensureDirectoryExists(String filePath)`
+- **Description**: These methods manage the file system interactions necessary for reading from and writing to files, 
+such as verifying directory existence and creating files as needed to prevent errors during the data load and 
+save processes.
+
+### Usage in Commands
+
+- **SetCommand and ViewCommand**: These commands utilize the `Storage` class to persist changes to the user and 
+modules immediately after modifications, ensuring data integrity and continuity.
+- **Startup and Shutdown**: On startup, `loadDataFromFile` is invoked to initialize the application state, and 
+on shutdown, `saveModulesToFile` is called to save the current state.
+
+### Purpose
+
+The main purpose of the `Storage` class is to abstract the complexities of file management and data serialization away 
+from the core application logic. This simplification allows other parts of the application, such as commands and 
+controllers, to interact with user and module data more efficiently and reliably.
+
+Additionally, by handling data persistence, the `Storage` class ensures that user progress and configurations are not
+lost between application sessions, thereby enhancing user experience and application reliability.
+
+### Interaction with Other Classes
+
+- **Interacts With**:
+    - `User`: To save and load user-specific data like name and current semester.
+    - `ModuleList`: To save and load the list of modules the user has taken.
+    - `FileWriter`/`BufferedWriter`: Used within `saveModulesToFile` to write data to files.
+    - `Scanner`/`FileReader`: Used within `loadDataFromFile` to read data from files.
+
+This robust functionality provided by the `Storage` class is critical for maintaining the long-term usability 
+and flexibility of the FAP application, making it a cornerstone of the application's architecture.
 
 ### Module, Module List, JSON
 
