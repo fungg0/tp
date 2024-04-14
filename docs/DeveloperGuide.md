@@ -9,6 +9,71 @@ original source as well}
 
 ![Architecture](diagrams/Architecture.png)
 
+Below is an elaborate description of the UML diagram that outlines the structure and relationships of Architecture:
+
+#### **Classes Involved:**
+- **`FAP`**: The central class that initializes and coordinates the various components of the application.
+- **`ModuleList`**: Manages a collection of academic modules.
+- **`Ui`**: Facilitates all user interactions through a command-line interface.
+- **`Parser`**: Interprets user input into executable commands.
+- **`Command`**: Implements the logic necessary for executing commands identified by the `Parser`.
+- **`User`**: Contains details about the user and their current semester.
+- **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
+- **`Storage`**: Manages data storage and retrieval operations.
+
+#### **Associations:**
+- **`FAP`** has associations with:
+    - **`ModuleList`** for managing academic modules.
+    - **`Ui`** for handling inputs and outputs to and from the user.
+    - **`Parser`** for converting user input into commands.
+    - **`Command`** for executing actions based on user commands.
+    - **`JsonManager`** and **`Storage`** for data persistence functionalities.
+
+#### **Flow and Interactions:**
+- The diagram centers on **`FAP`**, highlighting its role as the orchestrator for the application’s operations.
+- It illustrates **`FAP`**'s interactions with components like **`Ui`**, **`Parser`**, **`JsonManager`**, and **`Storage`**, emphasizing a structured and controlled flow of operations.
+
+This narrative emphasizes the `FAP` class's critical role in integrating the application's functionalities, showcasing its design focused on modularity, maintainability, and extensibility.
+
+### Running the Application Loop
+
+The `runApplication` method encapsulates the application's runtime loop, processing user commands until an exit condition is met (either through an error or the 'bye' command). This method highlights the application of polymorphism (via the `Command` class) and encapsulation, detailing interactions with other components.
+
+```java
+private static void runApplication() {
+    Ui ui = new Ui();
+    boolean continueRunning = true;
+
+    while (continueRunning) {
+        try {
+            String userInput = ui.getUserCommand();
+            LOGGER.log(Level.INFO, "User input: " + userInput);
+            Command command = Parser.getCommand(userInput);
+            command.execute(userInput);
+            user.resetModuleStatuses();
+            saveModulesToFile(filePath);
+            if (userInput.equalsIgnoreCase(BYE)) {
+                continueRunning = false;
+                ui.close();
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage(), e);
+            System.err.println("An error occurred: " + e.getMessage());
+            ui.close();
+            continueRunning = false;  // Exit loop on error
+        }
+    }
+}
+```
+
+#### **Key Points:**
+
+- **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application loop appropriately.
+- **Command Processing**: It continuously processes commands through a loop that persists until 'bye' is entered or an exception is thrown, using polymorphic `Command` objects for executing a variety of actions.
+- **Resource Management**: Ensures all resources are appropriately closed upon exiting the loop, reflecting prudent resource management practices (e.g., closing `Ui`).
+
+This method is instrumental in understanding the dynamic interactions and procedural flow within the `FAP` application, highlighting the effective use of OOP principles like polymorphism and encapsulation to manage complex behaviors and state transitions efficiently.
+
 ### Overview
 
 The application follows a layered architecture, with distinct components responsible for user interaction, data, 
@@ -80,11 +145,28 @@ The `Parser` class, together with the `CommandMetadata` class parses user input 
 **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no
 matching command is found, it returns an `Invalid` command instance.
 
+### Module and ModuleList
+**Code**: 
+- [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java) 
+- [`ModuleList.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/ModuleList.java) 
+
+The `Module` class and `ModuleList` class work together to store the data of the modules added by the user
+
+The `Module` class is responsible for containing the main attributes of a module such as moduleCode, moduleGrade, moduleMC, moduleTaken, moduleDate, gradedGradingBasis, and moduleDescription. These are relevant attributes that other classes use for certain actions done by the user. 
+
+The `ModuleList` class is responsible for managing the attributes contained in the `Module` class. They are mainly actions that value add to these attributes. For example, calculating the total amount of MC (module credit) the user has, calculating the GPA the user has, changing the grade of a certain mod, or adding a new module. 
+
+Hence, these are not just simple getters and setters, instead actions that value add to the attributes of the `Module` class, letting the user use them for different purposes in real life.
+
+This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
+
 **Overview:**
 
-Below is a class diagram that shows the associations between `Parser` and `CommandMetadata`
+Below is a class diagram that shows the associations between `Module`, `ModuleList`, and other relevant classes
 
-![ParserClassDiagram.png](diagrams%2FParserClassDiagram.png)
+
+![Module.png](diagrams%2FModuleList.png)
+
 
 The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
 for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
@@ -93,7 +175,7 @@ exception of `Invalid` command) that overrides the method `createCommandInstance
 the specific `Command`.
 
 The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
-identify a given user command. 
+identify a given user command.
 
 Further implementation details are available at "Parsing User Inputs" section under Implementation.
 
@@ -102,7 +184,7 @@ Further implementation details are available at "Parsing User Inputs" section un
 Below is a sequence diagram that shows how the `FAP` main method calls `Parser` to parse a `userInput` 
 for a `Command` to return:
 
-![ParserSequenceDiagram.png](diagrams%2FParserSequenceDiagram.png)
+![ParserSequenceDiagram.png](diagrams/ParserSequenceDiagram.png)
 
 The method to parse and validate user inputs is handled in the `Parser` method `getCommand(String userInput)`:
 1. `userInput` is first checked to see if it is null or empty. If either condition is met, `Parser` returns an 'Invalid' 
@@ -251,6 +333,81 @@ public AddCommandMetadata() {
 }
 ```
 
+### Saving modules to file
+
+The `Storage` class is responsible for managing the persistence of user and module data to and from files. This document section focuses on the `saveModulesToFile` method, which saves the current user's information and their module list to a specified file path.
+
+#### Method: `saveModulesToFile`
+
+```java
+public static void saveModulesToFile(String filePath) throws StorageException {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        writer.write(toString(user) + System.lineSeparator());
+        for (Module module : moduleList.getTakenModuleList()) {
+            writer.write(toString(module) + System.lineSeparator());
+        }
+    } catch (IOException | SecurityException e) {
+        throw new StorageException("An error occurred while saving modules to file: " + filePath);
+    }
+}
+```
+
+#### Parameters:
+- `filePath` - The path of the file where the data is to be saved.
+
+#### Throws:
+- `StorageException` - if an error occurs during the file writing process.
+
+#### Process Description:
+
+1. **File Writing Setup**:
+    - Initializes a `BufferedWriter` wrapped around a `FileWriter` to write text to the file efficiently. 
+    This setup benefits from buffered writing, which minimizes the number of physical disk writes.
+
+2. **Writing User Data**:
+    - The user's data is converted to a string format and written to the file first, followed by a 
+    newline character to separate entries clearly.
+
+3. **Writing Modules Data**:
+    - Iterates over the list of taken modules (`moduleList.getTakenModuleList()`), converting each module 
+    to a string format and writing it to the file. Each module entry is written on a new line.
+
+4. **Resource Management**:
+    - The `BufferedWriter` is declared within a try-with-resources statement, ensuring that it is closed at 
+    the end of the statement block, regardless of whether the operation completes successfully or fails.
+
+#### Error Handling:
+- Catches `IOException` and `SecurityException`, throwing a `StorageException` with a message detailing the failure. 
+    This encapsulation of exceptions provides a clear API for the method, simplifying error handling for the caller.
+
+### UML Sequence Diagram Explanation
+
+Below is the UML sequence diagram for the `saveModulesToFile` method, illustrating the interactions 
+between components during the file-saving process.
+
+![StorageSequenceDiagram.png](diagrams/StorageSequenceDiagram.png)
+
+#### Steps Illustrated in the Diagram:
+
+1. **Main Initiates Save**:
+    - The `FAP` class (or the main method) calls `saveModulesToFile`, passing the file path where 
+    data needs to be saved.
+
+2. **Storage Operations**:
+    - **Directory Check**: Verifies or creates the necessary directory.
+    - **File Writer Setup**: Sets up the `BufferedWriter` and `FileWriter`.
+    - **Data Writing**:
+        - Writes user data.
+        - Iteratively writes data for each module in the `ModuleList`.
+
+3. **Completion**:
+    - Once all data is written, the `BufferedWriter` is closed (implicitly by the try-with-resources), 
+    which also flushes the buffer to the file, finalizing the write operation.
+
+#### Conclusion:
+This sequence diagram and the corresponding detailed explanation provide a clear, step-by-step guide 
+to the `saveModulesToFile` method's operations, highlighting how data integrity and error handling are maintained.
+
 ### Commands
 
 #### View Commands
@@ -318,79 +475,18 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 
    ![FAP class diagram](diagrams/FAP.png)
 
-Below is the revised content formatted in Markdown, suitable for documentation purposes such as GitHub README files or other Markdown-supported environments.
-
 ### UML Diagram Description
 
-![FAP class diagram](diagrams/FAP.png)
 
-Below is an elaborate description of the UML diagram that outlines the structure and relationships of the `FAP` class:
+2. **Adding a Module**
 
-#### **Classes Involved:**
-- **`FAP`**: The central class that initializes and coordinates the various components of the application.
-- **`ModuleList`**: Manages a collection of academic modules.
-- **`Ui`**: Facilitates all user interactions through a command-line interface.
-- **`Parser`**: Interprets user input into executable commands.
-- **`Command`**: Implements the logic necessary for executing commands identified by the `Parser`.
-- **`User`**: Contains details about the user and their session history.
-- **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
-- **`Storage`**: Manages data storage and retrieval operations.
+   #### **Classes Involved:**
+   - **`Module`**: Manages the important attributes of an academic module.
+   - **`ModuleList`**: Manages a collection of academic modules.
+   - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
+   - **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and handle them appropriately
 
-#### **Associations:**
-- **`FAP`** has associations with:
-    - **`ModuleList`** for managing academic modules.
-    - **`Ui`** for handling inputs and outputs to and from the user.
-    - **`Parser`** for converting user input into commands.
-    - **`Command`** for executing actions based on user commands.
-    - **`JsonManager`** and **`Storage`** for data persistence functionalities.
-
-#### **Flow and Interactions:**
-- The diagram centers on **`FAP`**, highlighting its role as the orchestrator for the application’s operations.
-- It illustrates **`FAP`**'s interactions with components like **`Ui`**, **`Parser`**, **`JsonManager`**, and **`Storage`**, emphasizing a structured and controlled flow of operations.
-
-This narrative emphasizes the `FAP` class's critical role in integrating the application's functionalities, showcasing its design focused on modularity, maintainability, and extensibility.
-
-### Running the Application Loop
-
-The `runApplication` method encapsulates the application's runtime loop, processing user commands until an exit condition is met (either through an error or the 'bye' command). This method highlights the application of polymorphism (via the `Command` class) and encapsulation, detailing interactions with other components.
-
-```java
-private static void runApplication() {
-    Ui ui = new Ui();
-    boolean continueRunning = true;
-
-    while (continueRunning) {
-        try {
-            String userInput = ui.getUserCommand();
-            LOGGER.log(Level.INFO, "User input: " + userInput);
-            Command command = Parser.getCommand(userInput);
-            command.execute(userInput);
-            user.resetModuleStatuses();
-            saveModulesToFile(filePath);
-            if (userInput.equalsIgnoreCase(BYE)) {
-                continueRunning = false;
-                ui.close();
-            }
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage(), e);
-            System.err.println("An error occurred: " + e.getMessage());
-            ui.close();
-            continueRunning = false;  // Exit loop on error
-        }
-    }
-}
-```
-
-#### **Key Points:**
-
-- **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application loop appropriately.
-- **Command Processing**: It continuously processes commands through a loop that persists until 'bye' is entered or an exception is thrown, using polymorphic `Command` objects for executing a variety of actions.
-- **Resource Management**: Ensures all resources are appropriately closed upon exiting the loop, reflecting prudent resource management practices (e.g., closing `Ui`).
-
-This method is instrumental in understanding the dynamic interactions and procedural flow within the `FAP` application, highlighting the effective use of OOP principles like polymorphism and encapsulation to manage complex behaviors and state transitions efficiently.
-
-3. **Module Class:**
-
+   **Module Class:**
    #### Purpose
 
    Represents an academic module, holding information such as the module code, credits (MCs), grade, and description.
@@ -404,7 +500,7 @@ This method is instrumental in understanding the dynamic interactions and proced
     - **`getGradeNumber()`**  
       Returns a numerical value associated with the module's grade, used for GPA calculation.
 
-4. **ModuleList Class:**
+   **ModuleList Class:**
 
    #### Purpose
 
@@ -435,11 +531,17 @@ This method is instrumental in understanding the dynamic interactions and proced
       Groups modules by their semester and returns a map where each key is a semester, and each value is a list of
       modules in that semester.
 
+   #### **Flow and Interactions:**
+   - Main point of entry is `AddCommand` class where it will check the usercommands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
+   - If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
+   - If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
+  
    #### Error Handling
+   - `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
+   - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
+   - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
 
-   Uses exceptions to handle errors, such as when trying to access or modify modules that don't exist.
-
-5. **Getting module details from Json File (JsonManager Class):**
+3. **Getting module details from Json File (JsonManager Class):**
 
    #### Overview
 
@@ -496,7 +598,7 @@ This method is instrumental in understanding the dynamic interactions and proced
    }
    ```
 
-6. **Viewing GPA**
+4. **Viewing GPA**
 
    The `ViewGpaCommand` class is responsible for displaying the current GPA attained by the student. It
    accesses `ModuleList`, which looks through all `Module` object contained in the list. If the `Module` is marked as
