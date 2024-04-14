@@ -448,29 +448,28 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 
 ![ViewGraduateCommand Sequence Diagram](diagrams/ViewGraduateCommand-0.png)
 
-### Adding a Module ###
+#### Adding a Module ####
 
-   #### **Classes Involved:**
+1) #### **Classes Involved:**
     - **`Module`**: Manages the important attributes of an academic module.
     - **`ModuleList`**: Manages a collection of academic modules.
     - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
     - **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and handle them appropriately
 
-   **Module Class:**
+2) #### **`Module` Class:**
    #### Purpose
-
    Represents an academic module, holding information such as the module code, credits (MCs), grade, and description.
 
    #### Key Methods
 
-    - **`setModuleGrade(String moduleGrade)`**  
+   - **`setModuleGrade(String moduleGrade)`**  
       Sets the grade for the module. Validates the grade format and throws `ModuleException` if the module hasn't been
       taken yet.
 
-    - **`getGradeNumber()`**  
+   - **`getGradeNumber()`**  
       Returns a numerical value associated with the module's grade, used for GPA calculation.
 
-   **ModuleList Class:**
+3) **`ModuleList` Class:**
 
    #### Purpose
 
@@ -501,7 +500,7 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
       Groups modules by their semester and returns a map where each key is a semester, and each value is a list of
       modules in that semester.
 
-   #### **Flow and Interactions:**
+   #### Flow and Interactions:
     - Main point of entry is `AddCommand` class where it will check the usercommands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
     - If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
     - If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
@@ -511,60 +510,49 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
     - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
     - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
 
-### Getting module details from Json File (JsonManager Class): ###
+#### Getting module details from Json File (JsonManager Class): ####
 
-   #### Overview
+   1) **Overview**
 
    The `JsonManager` class is designed to manage and interact with module information stored in a JSON format. It
    provides functionalities for checking the existence of modules, retrieving module information such as Modular
    Credits (MCs), description, and title from a JSON file.
 
-   #### Constructor
+   2) **Key Methods**
 
-    - `JsonManager()`: Initializes a new instance of the `JsonManager` by loading the module information from a JSON
-      file located at `/moduleInfo.json`.
-
-   #### Methods
-
-   ##### Module Existence
-
-    - **`moduleExist(String moduleCode)`**: Checks if a module with the specified code exists in the JSON data.
+   + **`moduleExist(String moduleCode)`**: Checks if a module with the specified code exists in the JSON data.
         - **Parameters**: `String moduleCode` - The code of the module to check for existence.
         - **Returns**: `boolean` - `true` if the module exists, `false` otherwise.
 
-   ##### Module Information Retrieval
-
-    - **`getModuleInfo(String moduleCode)`**: Retrieves detailed information about a module, including its Modular
+   + **`getModuleInfo(String moduleCode)`**: Retrieves detailed information about a module, including its Modular
       Credits, description, and title, based on the module code.
         - **Parameters**: `String moduleCode` - The code of the module for which information is to be retrieved.
         - **Note**: This method updates the internal state of the `JsonManager` object with the retrieved module
           information.
 
-   ##### Information Accessors
-
-    - **`getModuleDescription()`**: Returns the description of the last module queried.
+   + **`getModuleDescription()`**: Returns the description of the last module queried.
         - **Returns**: `String` - The description of the module.
 
-    - **`getModuleMC()`**: Returns the Modular Credits of the last module queried.
+   + **`getModuleMC()`**: Returns the Modular Credits of the last module queried.
         - **Returns**: `int` - The Modular Credits of the module.
 
-    - **`getModuleTitle()`**: Returns the title of the last module queried.
+   + **`getModuleTitle()`**: Returns the title of the last module queried.
         - **Returns**: `String` - The title of the module.
 
-   #### Error Handling
+   3) Error Handling
 
-    - The constructor throws a `RuntimeException` if the JSON file containing module information cannot be found or
-      accessed, ensuring that the application is aware of missing or inaccessible module data.
+   + The constructor throws a `RuntimeException` if the JSON file containing module information cannot be found or
+   accessed, ensuring that the application is aware of missing or inaccessible module data.
 
-   #### Usage
+   4) Usage
 
    ```java
    JsonManager jsonManager = new JsonManager();
    if (jsonManager.moduleExist("CS1010")) {
-       jsonManager.getModuleInfo("CS1010");
-       System.out.println("Module Title: " + jsonManager.getModuleTitle());
-       System.out.println("Module Description: " + jsonManager.getModuleDescription());
-       System.out.println("Module MC: " + jsonManager.getModuleMC());
+      jsonManager.getModuleInfo("CS1010");
+      System.out.println("Module Title: " + jsonManager.getModuleTitle());
+      System.out.println("Module Description: " + jsonManager.getModuleDescription());
+      System.out.println("Module MC: " + jsonManager.getModuleMC());
    }
    ```
    Below is the sequence diagram for adding of module.

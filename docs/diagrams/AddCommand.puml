@@ -17,7 +17,8 @@ activate Parser
 Parser -> AddCommandMetaData : createCommandInstance(commandArgument)
 activate AddCommandMetaData
 
-AddCommandMetaData -> AddCommand : AddCommand(moduleCode, moduleDate)
+
+AddCommandMetaData -> "AddCommand"** : new AddCommand(moduleCode, moduleDate)
 activate AddCommand
 
 AddCommand -> AddCommand : tryAddingModule(moduleCode, moduleDate)
@@ -33,15 +34,15 @@ JsonManager --> AddCommand : moduleExists=true
 
 AddCommand -> JsonManager : getModuleInfo(moduleCode)
 
-JsonManager --> AddCommand
+JsonManager --> AddCommand : moduleCode=nameOfAModule
 
 AddCommand -> JsonManager : correctSemester(plannedSem)
 
 JsonManager --> AddCommand : correctSemester=true
 
-AddCommand -> AddCommandMetaData
-AddCommandMetaData -> Parser
-Parser -> Fap
+AddCommand --> AddCommandMetaData
+AddCommandMetaData --> Parser
+Parser --> Fap
 
 Fap -> AddCommand: execute(userInput)
 
@@ -52,7 +53,7 @@ AddCommand -> Module : Module(moduleCode, moduleMC, moduleDate, jsonManager.getM
 Module -> AddCommand : newModule
 AddCommand -> ModuleList : addCommand(newModule)
 ModuleList -> ModuleList : add(newModule)
-ModuleList -> AddCommand
-AddCommand -> Fap
+ModuleList --> AddCommand
+AddCommand --> Fap
 
 @enduml
