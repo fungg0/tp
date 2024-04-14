@@ -264,6 +264,10 @@ Hence, these are not just simple getters and setters, instead actions that value
 
 This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
 
+Below is the class diagram of how the module and modulelist class interacts with other relevant classes 
+
+![Module diagram](diagrams/ModuleList.png)
+
 ### Command
 
 Here's how the `Command` class interact with the other classes:
