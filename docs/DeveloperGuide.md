@@ -1,11 +1,78 @@
 # Developer Guide
 
+- [Acknowledgements](#acknowledgements)
+- [Design](#design)
+    - [Architecture](#architecture)
+        - [Classes Involved](#classes-involved)
+        - [Flow and Interactions](#flow-and-interactions)
+    - [Running the Application Loop](#running-the-application-loop)
+        - [Key points](#key-points)
+    - [UI Class](#ui-class)
+    - [User Class](#user-class)
+    - [Parser Package](#parser-package)
+    - [Storage](#storage)
+    - [Module Class and Module List Class](#module-class-and-module-list-class)
+    - [Command Class](#command)
+- [Implementation](#implementation)
+    - [Parsing User Inputs](#parsing-user-inputs)
+    - [Saving modules to file](#saving-modules-to-file)
+    - [View Commands](#view-commands)
+        - [View Schedule](#view-schedule-without-ccourse_code)
+        - [View Specific Course Information](#view-specific-course-information-with-ccourse_code)
+        - [View Courses Needed to Graduate](#view-courses-needed-to-graduate)
+    - [Adding a Module](#adding-a-module)
+    - [Getting module details from Json File](#getting-module-details-from-json-file-jsonmanager-class)
+    - [GPA](#gpa)
+    - [Desired GPA](#desired-gpa)
+- [Appendix: Requirements](#appendix)
+    - [Product Scope](#product-scope)
+    - [User Stories](#user-stories)
+    - [Use Cases](#use-cases)
+    - [Non-Functional Requirements](#non-functional-requirements)
+    - [Glossary](#glossary)
+- [Appendix: Instructions for manual testing](#instructions-for-manual-testing)
+
 ## Acknowledgements
 
-{list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the
-original source as well}
+---
+### Gson library
 
-## Architecture
+This project utilizes the [Gson library](https://github.com/google/gson) for JSON deserialization.
+Gson is an open-source library developed by Google, providing simple methods to convert Java objects into JSON and back.
+It simplifies adding or retrieving data from a JSON data format, which is particularly useful in projects requiring
+extensive manipulation of JSON files.
+
+**License**: Gson is released under the [Apache License 2.0](https://github.com/google/gson/blob/master/LICENSE).
+This license allows for commercial and private use, modification, distribution, and distribution of modified versions
+of the library, making it an excellent choice for open-source projects.
+
+**More Information**:
+- For further details about Gson and its capabilities, visit the official Gson repository on GitHub:
+  [Gson GitHub](https://github.com/google/gson).
+
+### NUS Mods API
+
+This project utilizes data from [NUSMods API](https://api.nusmods.com/v2/) for accessing National University of
+Singapore (NUS) modules information. This data is downloaded once and used statically within FAP.
+
+The NUSMods API is an open-source initiative that provides academic data on modules available
+at NUS, which are publicly accessible and regularly updated. It simplifies the process of retrieving detailed module
+information & module credits, which are crucial for planning academic modules effectively in the FAP application.
+
+**Source**:
+- For more details about the API and the data it provides, visit the official NUSMods API documentation site:
+  [NUSMods API Documentation](https://api.nusmods.com/v2/).
+
+**Acknowledgments**:
+- We are grateful to the [NUSMods team](https://nusmods.com/about) for maintaining the API and making it freely
+  available, which significantly enhances the functionality of academic applications like ours by providing reliable and
+  up-to-date academic information.
+
+## Design
+
+---
+
+### Architecture
 
 ![Architecture](diagrams/Architecture.png)
 
@@ -21,23 +88,19 @@ Below is an elaborate description of the UML diagram that outlines the structure
 - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
 - **`Storage`**: Manages data storage and retrieval operations.
 
-#### **Associations:**
-- **`FAP`** has associations with:
-    - **`ModuleList`** for managing academic modules.
-    - **`Ui`** for handling inputs and outputs to and from the user.
-    - **`Parser`** for converting user input into commands.
-    - **`Command`** for executing actions based on user commands.
-    - **`JsonManager`** and **`Storage`** for data persistence functionalities.
-
 #### **Flow and Interactions:**
 - The diagram centers on **`FAP`**, highlighting its role as the orchestrator for the application’s operations.
-- It illustrates **`FAP`**'s interactions with components like **`Ui`**, **`Parser`**, **`JsonManager`**, and **`Storage`**, emphasizing a structured and controlled flow of operations.
+- It illustrates **`FAP`**'s interactions with components like **`Ui`**, **`Parser`**, **`JsonManager`**,
+  and **`Storage`**, emphasizing a structured and controlled flow of operations.
 
-This narrative emphasizes the `FAP` class's critical role in integrating the application's functionalities, showcasing its design focused on modularity, maintainability, and extensibility.
+This narrative emphasizes the `FAP` class's critical role in integrating the application's functionalities, showcasing
+its design focused on modularity, maintainability, and extensibility.
 
-### Running the Application Loop
+#### Running the Application Loop
 
-The `runApplication` method encapsulates the application's runtime loop, processing user commands until an exit condition is met (either through an error or the 'bye' command). This method highlights the application of polymorphism (via the `Command` class) and encapsulation, detailing interactions with other components.
+The `runApplication` method encapsulates the application's runtime loop, processing user commands until an
+exit condition is met (either through an error or the 'bye' command). This method highlights the application of
+polymorphism (via the `Command` class) and encapsulation, detailing interactions with other components.
 
 ```java
 private static void runApplication() {
@@ -66,45 +129,19 @@ private static void runApplication() {
 }
 ```
 
-Below is a **Sequence diagram** that shows this application loop:
+Below is a **Sequence diagram** that describes the application loop:
 ![ArchitectureSequenceDiagram.png](diagrams/ArchitectureSequenceDiagram.png)
 
 #### **Key Points:**
 
-- **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application loop appropriately.
-- **Command Processing**: It continuously processes commands through a loop that persists until 'bye' is entered or an exception is thrown, using polymorphic `Command` objects for executing a variety of actions.
-- **Resource Management**: Ensures all resources are appropriately closed upon exiting the loop, reflecting prudent resource management practices (e.g., closing `Ui`).
+- **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application
+  loop appropriately.
+- **Command Processing**: It continuously processes commands through a loop that persists until 'bye' is entered or an
+  exception is thrown, using polymorphic `Command` objects for executing a variety of actions.
+- **Resource Management**: Ensures all resources are appropriately closed upon exiting the loop, reflecting prudent
+  resource management practices (e.g., closing `Ui`).
 
-This method is instrumental in understanding the dynamic interactions and procedural flow within the `FAP` application, highlighting the effective use of OOP principles like polymorphism and encapsulation to manage complex behaviors and state transitions efficiently.
-
-### Overview
-
-The application follows a layered architecture, with distinct components responsible for user interaction, data, 
-storage, and logic. This design promotes modularity, maintainability, and extensibility, allowing for easy integration 
-of new features and enhancements.
-
-### Main Class: `FAP`
-
-The `FAP` class serves as the central hub of the application, orchestrating the flow of execution and managing critical
-resources. It embodies key software design principles and showcases thoughtful architectural decisions.
-
-#### Design Overview
-
-- **Singleton Components:** `FAP` manages singleton components such as `moduleList` and `LOGGER`, ensuring they are
-  initialized once and accessible throughout the application's lifecycle.
-    - `ModuleList`: A collection that holds modules, initialized with a capacity of 10.
-    - `LOGGER`: Utilized for logging various levels of application events and errors.
-
-- **Separation of Concerns:** The class delegates specific responsibilities to specialized classes, adhering to the
-  principle of separation of concerns.
-    - Interaction with users is managed by the `Ui` class.
-    - Command parsing is delegated to the `Parser` class.
-    - Command execution is handled by implementations of the `Command` interface.
-
-- **Error Handling:** Demonstrates robust error handling strategies by catching and logging different exceptions, which
-  ensures graceful handling of unexpected situations.
-
-## Design
+---
 
 ### UI Class
 
@@ -122,6 +159,7 @@ The `Command` class and its subclasses will call methods in Ui class for anythin
 
 ![Ui diagram](diagrams/Ui.png)
 
+---
 ### User class
 **Code** : [`User.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/user/User.java)
 
@@ -139,6 +177,7 @@ methods such as `printUserInfo()` and `printGreeting()`.
 Additionally, the `User` class helps to verify the status of the modules in the user's plan, determining whether the 
 modules have been taken or not.
 
+---
 ### Parser package
 **Code**:
 - [`Parser.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/parser/Parser.java)
@@ -184,8 +223,8 @@ The method to parse and validate user inputs is handled in the `Parser` method `
    an error message, and return an `Invalid` command instance
 6. If it matches, the command `arguments` will be extracted out and the respective command class instance will be
    created based on the overwritten method `createCommandInstance` in the respective `CommandMetadata` class
----
 
+---
 ### Storage
 
 ![Storage diagram](diagrams/Storage.png)
@@ -193,52 +232,52 @@ The method to parse and validate user inputs is handled in the `Parser` method `
 **Code** :
 [`Storage.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/storage/Storage.java)
 
-The `Storage` class in the Future Academic Planner (FAP) application is essential for handling the persistence 
-of user and module data. It allows the application to maintain state between sessions by reading from and writing 
+The `Storage` class in the Future Academic Planner (FAP) application is essential for handling the persistence
+of user and module data. It allows the application to maintain state between sessions by reading from and writing
 to files.
 
 As of `v2.1`, the `Storage` class is capable of handling several critical functionalities:
-1. **Saving Data**: It serializes the `User` and `ModuleList` objects into a text format and writes this information 
-to a specified file path.
+1. **Saving Data**: It serializes the `User` and `ModuleList` objects into a text format and writes this information
+   to a specified file path.
 2. **Loading Data**: It deserializes text data from a specified file path back into `User` and `ModuleList` objects.
 
-### Key Functionalities
+#### Key Functionalities
 
-#### 1. **Saving User and Module Data**
+1. **Saving User and Module Data**
 - **Method**: `saveModulesToFile(String filePath)`
 - **Description**: This method saves serialized user information and a list of taken modules to a specified file.
-It first checks and, if necessary, creates the directory path provided in the filePath. It then initializes a 
-`BufferedWriter` to write the data efficiently.
+  It first checks and, if necessary, creates the directory path provided in the filePath. It then initializes a
+  `BufferedWriter` to write the data efficiently.
 
-#### 2. **Loading User and Module Data**
+2. **Loading User and Module Data**
 - **Method**: `loadDataFromFile(String filePath)`
-- **Description**: This method loads user information and module data from the specified file. If the file does not 
-exist, it creates a new one and returns early to avoid errors. It reads the file line by line, updating the user and 
-module data within the application.
+- **Description**: This method loads user information and module data from the specified file. If the file does not
+  exist, it creates a new one and returns early to avoid errors. It reads the file line by line, updating the user and
+  module data within the application.
 
-#### 3. **File and Directory Management**
+3. **File and Directory Management**
 - **Methods**: `createFile(String filePath)`, `ensureDirectoryExists(String filePath)`
-- **Description**: These methods manage the file system interactions necessary for reading from and writing to files, 
-such as verifying directory existence and creating files as needed to prevent errors during the data load and 
-save processes.
+- **Description**: These methods manage the file system interactions necessary for reading from and writing to files,
+  such as verifying directory existence and creating files as needed to prevent errors during the data load and
+  save processes.
 
-### Usage in Commands
+#### Usage in Commands
 
-- **SetCommand and ViewCommand**: These commands utilize the `Storage` class to persist changes to the user and 
-modules immediately after modifications, ensuring data integrity and continuity.
-- **Startup and Shutdown**: On startup, `loadDataFromFile` is invoked to initialize the application state, and 
-on shutdown, `saveModulesToFile` is called to save the current state.
+- **SetCommand and ViewCommand**: These commands utilize the `Storage` class to persist changes to the user and
+  modules immediately after modifications, ensuring data integrity and continuity.
+- **Startup and Shutdown**: On startup, `loadDataFromFile` is invoked to initialize the application state, and
+  on shutdown, `saveModulesToFile` is called to save the current state.
 
-### Purpose
+#### Purpose
 
-The main purpose of the `Storage` class is to abstract the complexities of file management and data serialization away 
-from the core application logic. This simplification allows other parts of the application, such as commands and 
+The main purpose of the `Storage` class is to abstract the complexities of file management and data serialization away
+from the core application logic. This simplification allows other parts of the application, such as commands and
 controllers, to interact with user and module data more efficiently and reliably.
 
 Additionally, by handling data persistence, the `Storage` class ensures that user progress and configurations are not
 lost between application sessions, thereby enhancing user experience and application reliability.
 
-### Interaction with Other Classes
+#### Interaction with Other Classes
 
 - **Interacts With**:
     - `User`: To save and load user-specific data like name and current semester.
@@ -246,10 +285,8 @@ lost between application sessions, thereby enhancing user experience and applica
     - `FileWriter`/`BufferedWriter`: Used within `saveModulesToFile` to write data to files.
     - `Scanner`/`FileReader`: Used within `loadDataFromFile` to read data from files.
 
-This robust functionality provided by the `Storage` class is critical for maintaining the long-term usability 
-and flexibility of the FAP application, making it a cornerstone of the application's architecture.
-
-### Module, Module List
+---
+### Module Class and Module List Class
 **Code**:
 - [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java)
 - [`ModuleList.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/ModuleList.java)
@@ -268,6 +305,7 @@ Below is the class diagram of how the module and modulelist class interacts with
 
 ![Module diagram](diagrams/ModuleList.png)
 
+---
 ### Command
 
 Here's how the `Command` class interact with the other classes:
@@ -397,11 +435,11 @@ public AddCommandMetadata() {
 }
 ```
 ---
-
-
 ### Saving modules to file
 
-The `Storage` class is responsible for managing the persistence of user and module data to and from files. This document section focuses on the `saveModulesToFile` method, which saves the current user's information and their module list to a specified file path.
+The `Storage` class is responsible for managing the persistence of user and module data to and from files.
+This document section focuses on the `saveModulesToFile` method, which saves the current user's information and their
+module list to a specified file path.
 
 #### Method: `saveModulesToFile`
 
@@ -427,28 +465,28 @@ public static void saveModulesToFile(String filePath) throws StorageException {
 #### Process Description:
 
 1. **File Writing Setup**:
-    - Initializes a `BufferedWriter` wrapped around a `FileWriter` to write text to the file efficiently. 
-    This setup benefits from buffered writing, which minimizes the number of physical disk writes.
+    - Initializes a `BufferedWriter` wrapped around a `FileWriter` to write text to the file efficiently.
+      This setup benefits from buffered writing, which minimizes the number of physical disk writes.
 
 2. **Writing User Data**:
-    - The user's data is converted to a string format and written to the file first, followed by a 
-    newline character to separate entries clearly.
+    - The user's data is converted to a string format and written to the file first, followed by a
+      newline character to separate entries clearly.
 
 3. **Writing Modules Data**:
-    - Iterates over the list of taken modules (`moduleList.getTakenModuleList()`), converting each module 
-    to a string format and writing it to the file. Each module entry is written on a new line.
+    - Iterates over the list of taken modules (`moduleList.getTakenModuleList()`), converting each module
+      to a string format and writing it to the file. Each module entry is written on a new line.
 
 4. **Resource Management**:
-    - The `BufferedWriter` is declared within a try-with-resources statement, ensuring that it is closed at 
-    the end of the statement block, regardless of whether the operation completes successfully or fails.
+    - The `BufferedWriter` is declared within a try-with-resources statement, ensuring that it is closed at
+      the end of the statement block, regardless of whether the operation completes successfully or fails.
 
 #### Error Handling:
-- Catches `IOException` and `SecurityException`, throwing a `StorageException` with a message detailing the failure. 
-    This encapsulation of exceptions provides a clear API for the method, simplifying error handling for the caller.
+- Catches `IOException` and `SecurityException`, throwing a `StorageException` with a message detailing the failure.
+  This encapsulation of exceptions provides a clear API for the method, simplifying error handling for the caller.
 
-### UML Sequence Diagram Explanation
+#### UML Sequence Diagram Explanation
 
-Below is the UML sequence diagram for the `saveModulesToFile` method, illustrating the interactions 
+Below is the UML sequence diagram for the `saveModulesToFile` method, illustrating the interactions
 between components during the file-saving process.
 
 ![StorageSequenceDiagram.png](diagrams/StorageSequenceDiagram.png)
@@ -456,8 +494,8 @@ between components during the file-saving process.
 #### Steps Illustrated in the Diagram:
 
 1. **Main Initiates Save**:
-    - The `FAP` class (or the main method) calls `saveModulesToFile`, passing the file path where 
-    data needs to be saved.
+    - The `FAP` class (or the main method) calls `saveModulesToFile`, passing the file path where
+      data needs to be saved.
 
 2. **Storage Operations**:
     - **Directory Check**: Verifies or creates the necessary directory.
@@ -467,16 +505,11 @@ between components during the file-saving process.
         - Iteratively writes data for each module in the `ModuleList`.
 
 3. **Completion**:
-    - Once all data is written, the `BufferedWriter` is closed (implicitly by the try-with-resources), 
-    which also flushes the buffer to the file, finalizing the write operation.
+    - Once all data is written, the `BufferedWriter` is closed (implicitly by the try-with-resources),
+      which also flushes the buffer to the file, finalizing the write operation.
 
-#### Conclusion:
-This sequence diagram and the corresponding detailed explanation provide a clear, step-by-step guide 
-to the `saveModulesToFile` method's operations, highlighting how data integrity and error handling are maintained.
-
-### Commands
-
-#### View Commands
+---
+### View Commands
 
 User input is passed to `Parser.getCommand()`, which determines that the input contains the keyword `view`, which
 branches out depending on whether it is followed by a `c/COURSE_CODE` (refer to the `Parser` implementation
@@ -627,39 +660,8 @@ if (jsonManager.moduleExist("CS1010")) {
 Below is a sequence diagram that shows the flow of the implementation when a module is added by the user.
 ![Adding a Module Sequence Diagram](diagrams/AddCommand.png)
 
---- 
-
-
-1. **Application Initialization and Entry Point:**
-
-   The `main` method, as the application's entry point, performs initial setups such as greeting the user and ensuring
-   critical components are initialized properly. It encapsulates high-level flow control and implements error handling
-   to manage assertion errors and unexpected exceptions.
-
-   ```java
-   public static void main(String[] args) {
-       try {
-           printGreeting();
-           assert moduleList != null : "moduleList should not be null";
-           runApplication();
-       } catch (AssertionError e) {
-           LOGGER.log(Level.SEVERE, "Assertion failed: " + e.getMessage(), e);
-           System.err.println("Critical assertion failure: " + e.getMessage());
-       } catch (Exception e) {
-           LOGGER.log(Level.SEVERE, "An unexpected error occurred: " + e.getMessage(), e);
-           System.err.println("An unexpected error occurred: " + e.getMessage());
-       }
-   }
-   ```
-   #### UML Diagram
-
-   ![FAP class diagram](diagrams/FAP.png)
-
-### UML Diagram Description
-
-
-
-4. **Viewing GPA**
+---
+### **Viewing GPA**
 
    The `ViewGpaCommand` class is responsible for displaying the current GPA attained by the student. It
    accesses `ModuleList`, which looks through all `Module` object contained in the list. If the `Module` is marked as
@@ -673,8 +675,9 @@ GPA = SUM(Course Grade Point * Course Units) / SUM(Course Units Counted Towards 
 
    Below is the sequence diagram for `ViewGpaCommand`.
    ![View Gpa Command Sequence Diagram](diagrams/ViewGpaCommand.png)
+---
 
-7. **Feasbility of desired gpa**
+### **Desired Gpa**
 
 The `DesiredGpaCommand` class executes the program to calculate if desired GPA is feasible. 
 
@@ -735,14 +738,19 @@ Below is the sequence diagram of the entire function:
 ![Desired GPA Sequence Diagram](diagrams/DesiredGpaSequence.png)
 
 
+
 ## Appendix: Requirements
 
 ---
-### Appendix A: Product scope
+### Product scope
 
 #### Target user profile
 
-NUS Computer Engineering Students planning their academic terms
++ has a lot of modules to manage
++ need to calculate the gpa fast without having to go to the school website
++ is reasonably comfortable using CLI apps
++ can type fast
++ wants to predict what grades to get to secure a certain GPA
 
 #### Value proposition
 
@@ -753,19 +761,65 @@ NUS Computer Engineering Students planning their academic terms
 + User can view their academic plan across all his/her semesters
 + User can save their academic plan upon quitting the program and view them later
 
+
 ### User Stories
 
+| Version | As a ...               | I can ...                         | So that I can ...                                |
+|---------|------------------------|-----------------------------------|--------------------------------------------------|
+| v1.0    | Student User           | Add modules                       | add in modules that I have taken or plan to take |
+| v1.0    | Student User           | Remove modules                    | remove wrong inputs                              |
+| v1.0    | Student User           | View modules that I have inputted | track the modules I have added                   |
+| v1.0    | Student User           | Insert module grade               | track my grades                                  |
+| v1.0    | Recurrent Student User | View my GPA                       | keep track of my overall performance             |
+| v1.0    | New Student User       | Add my name                       | personalise my app                               |
+| v2.0    | Recurrent Student User | Input my current semester         | use features related to my current semester      |
+| v2.0    | Recurrent Student User | Store my data                     | personalise my app                               |
+| v2.0    | Student User           | View courses needed to graduate   | personalise my app                               |
+| v2.0    | Recurrent Student User | Check feasibility of desired GPA  | personalise my app                               |
+| v2.0    | New Student User       | View help command                 | personalise my app                               |
 
 ### Use Cases
 
+#### Use case: Adding of Module
+1. User request to add a module and input the name of the module and the semester to be taken in
+2. JsonManager checks the existence of the module in NUS and retrieves the necessary information
+3. Prints out the module that is added and its description
+4. Module is added into moduleList and save in the corresponding savefile
+    
+    Use case ends
 
+#### Extensions
++ 2a. JsonManager could not find the module in the Jsonfile (does not exist in NUS) 
+  + 2a1. ModuleNotFoundException is thrown 
++ 2b. ModuleList finds a duplicate module
+  + 2b1. ModuleAlreadyExistException is thrown
+    
+  Use case ends
+
+#### Use case: Deleteing of a Module
+1. User requests to delete a module and inputs the name of the module
+2. ModuleList finds the module in its list
+3. Module is deleted
+4. savefile is updated
+
+   Use case ends
+#### Extensions
++ 2a. ModuleList could not find the module in its list
+    + ModuleNotFoundException is thrown
+
+      Use case ends
 ### Non-Functional Requirements
 
-{Give non-functional requirements}
+1. Should work on any mainstream OS as long as it has Java 11 or above installed.
+2. Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
+3. A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+4. User must be a major of computer engineering
+5. User must be aware of what the prerequisites of the modules they are adding as the program do not check it for you
+6. If the user failed a mod, the user is not allowed to retake the module and add it into the program
 
 ### Glossary
 
-* *glossary item* - Definition
++ *JsonManager*: The class that manages the json file
 
 ## Instructions for manual testing
 
