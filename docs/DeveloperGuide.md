@@ -306,14 +306,7 @@ public AddCommandMetadata() {
 
 ![StorageSequenceDiagram.png](diagrams/StorageSequenceDiagram.png)
 
-The `Storage` class is responsible for saving and loading user data to and from a file. 
-It interacts with the `ModuleList` and `User` classes to serialize and deserialize the data, ensuring that the user's
-module list and personal information are preserved between application sessions. The `Storage` class encapsulates file
-management operations, such as creating directories, reading and writing data, and handling exceptions gracefully. By 
-separating data storage concerns from other application logic, the `Storage` class promotes clean code architecture and 
-facilitates data persistence across multiple runs of the application. The sequence diagram above illustrates the flow of
-operations when saving user data to a file. The `Storage` class plays a crucial role in maintaining data integrity and 
-providing a seamless user experience by preserving user data between application sessions. 
+
 ### Commands
 
 #### View Commands

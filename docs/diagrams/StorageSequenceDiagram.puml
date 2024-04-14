@@ -1,21 +1,13 @@
 @startuml
-participant "Main" as Main
-participant "Storage" as Storage
-participant "User" as User
-participant "ModuleList" as ModuleList
+participant FAP as FAP <<Class>>
+participant "Storage" as Storage <<Class>>
+participant ":User" as User
+participant ":ModuleList" as ModuleList
 participant "BufferedWriter" as BW
 database "File" as File
 
-Main -> Storage : saveModulesToFile(filePath)
+FAP -> Storage : saveModulesToFile(filePath)
 activate Storage
-
-Storage -> Storage : ensureDirectoryExists(filePath)
-activate Storage
-opt if directory does not exist
-Storage -> File : create directory
-end
-Storage --> Storage : directory OK
-deactivate Storage
 
 Storage -> BW : new BufferedWriter(new FileWriter(filePath))
 activate BW
@@ -40,7 +32,7 @@ loop for each Module
 end
 
 deactivate BW
-Storage --> Main : Data saved
+Storage --> FAP : Data saved
 deactivate Storage
 
 @enduml
