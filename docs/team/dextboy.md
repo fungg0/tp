@@ -17,5 +17,6 @@ faster than your traditional GUI app.
 
 ### DG Contributions
 
+- Created Architecture design and implementation
 - Created implementation details of `FAP.java` and `Storage.java`
 - Created class diagrams for `FAP.java` and `Storage.java`

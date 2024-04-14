@@ -1,0 +1,32 @@
+@startuml
+
+hide circle
+hide empty members
+skinparam classAttributeIconSize 0
+class FAP {
+
+}
+
+class Parser {
+  + getCommand(userInput: String): Command
+}
+
+abstract Command {
+  + execute(userInput: String): void
+}
+
+class XYZCommand {
+
+}
+
+FAP ..> Parser : passes userInput
+FAP ..> Command : executes
+XYZCommand --|> Command
+Parser ..> XYZCommand : <<creates>>
+
+note right of XYZCommand
+  XYZCommand = ViewCommand,
+  AddCommand, GradeCommand, etc.
+end note
+
+@enduml
