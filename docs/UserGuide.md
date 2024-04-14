@@ -269,6 +269,7 @@ Format: `grade c/COURSE_CODE g/GRADE`
 `GRADE` represents the grade you attained for that module
 
 - The module should be added into the list first with the add module function
+- CS/CU modules can only have their grades be set to CS
 - `GRADE` only accepts alphabetical grade. Following are the allowed inputs for `GRADE`
     - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, S`
     - For U, CU, W, IP grade, user can simply remove the module from the list 
@@ -399,7 +400,11 @@ Bye. Enjoy your studies!
 
 **Q**: What if I S\U the mod, and the mod in the list originally has a grade?
 
-**A**: You can use the command `grade c/COURSE_CODE g/GRADE, then in the GRADE section put CS.
+**A**: You can use the command `grade c/COURSE_CODE g/GRADE, then in the GRADE section put S.
+
+**Q**: How can I change the current semester I am currently in?
+
+**A**: You can type the set command again to indicate the current semester you are in.
 
 ## Command Summary
 

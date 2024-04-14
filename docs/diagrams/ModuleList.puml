@@ -1,0 +1,78 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty members
+hide circle
+
+@startuml
+
+hide circle
+hide empty members
+skinparam classAttributeIconSize 0
+
+class Module {
+    - moduleCode: String
+    - moduleMC: float
+    - moduleDate: int
+    - gradedGradingBasis: boolean
+
+    + addModule(module: Module): void
+}
+
+class ModuleList {
+    - moduleList: ArrayList<Module>
+
+    + getModule(moduleCode: String): Module
+    + addModule(module: Module): void
+}
+
+class AddCommand {
+    - moduleCode: String
+    - moduleDate: int
+    - moduleMC: float
+    - gradedGradingBasis: boolean
+
+    + tryAddingModule(moduleCode: String, moduleDate: int): void
+    + execute(userInput: String): void
+}
+
+class JsonManager {
+    - jsonArray: List<JsonObject>
+    - moduleDescription: String
+    - moduleMC: float
+    - moduleTitle: String
+    - moduleSemester: ArrayList<Integer>
+    - gradedGradingBasis: boolean
+
+    + moduleExist(moduleCode: String): boolean
+    + getModuleInfo(moduleCode: String): void
+    + correctSemester(intendedSem: int): boolean
+    + getGradedGradingBasis(): boolean
+}
+
+AddCommand ..> JsonManager : uses
+AddCommand ..> ModuleList : uses
+AddCommand ..> Module : creates
+
+note left of AddCommand
+  AddCommand processes the addition of new modules
+  based on user input and module existence checks
+  in NUS module database via JsonManager. It interacts
+  with ModuleList to add or verify modules.
+end note
+
+note right of JsonManager
+  JsonManager handles JSON parsing and module data extraction,
+  providing functionalities to check semester availability,
+  existence of modules, and retrieval of detailed module information.
+end note
+
+note right of ModuleList
+  ModuleList manages a collection of Module instances,
+  offering functionalities to add new modules or retrieve
+  existing ones.
+end note
+
+@enduml
+
+@enduml
