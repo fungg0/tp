@@ -734,28 +734,36 @@ With this, we can find the least number of upperBound grade the user need to att
 Below is the sequence diagram of the entire function:
 ![Desired GPA Sequence Diagram](diagrams/DesiredGpaSequence.png)
 
-## Product scope
 
-### Target user profile
+## Appendix: Requirements
 
-{Describe the target user profile}
+---
+### Appendix A: Product scope
 
-### Value proposition
+#### Target user profile
 
-{Describe the value proposition: what problem does it solve?}
+NUS Computer Engineering Students planning their academic terms
 
-## User Stories
+#### Value proposition
 
-| Version | As a ... | I want to ...             | So that I can ...                                           |
-|---------|----------|---------------------------|-------------------------------------------------------------|
-| v1.0    | new user | see usage instructions    | refer to them when I forget how to use the application      |
-| v2.0    | user     | find a to-do item by name | locate a to-do without having to go through the entire list |
++ User can plan the modules they want to take in the future
++ User can add the modules they have taken so far to keep track of them
++ User can calculate their current GPA
++ User can calculate what are the grades they need to get based on the input desired GPA
++ User can view their academic plan across all his/her semesters
++ User can save their academic plan upon quitting the program and view them later
 
-## Non-Functional Requirements
+### User Stories
+
+
+### Use Cases
+
+
+### Non-Functional Requirements
 
 {Give non-functional requirements}
 
-## Glossary
+### Glossary
 
 * *glossary item* - Definition
 
