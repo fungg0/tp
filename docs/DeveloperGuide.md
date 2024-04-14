@@ -5,7 +5,11 @@
 {list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the
 original source as well}
 
-## Architecture
+## Design
+
+---
+
+### Architecture
 
 ![Architecture](diagrams/Architecture.png)
 
@@ -21,23 +25,19 @@ Below is an elaborate description of the UML diagram that outlines the structure
 - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
 - **`Storage`**: Manages data storage and retrieval operations.
 
-#### **Associations:**
-- **`FAP`** has associations with:
-    - **`ModuleList`** for managing academic modules.
-    - **`Ui`** for handling inputs and outputs to and from the user.
-    - **`Parser`** for converting user input into commands.
-    - **`Command`** for executing actions based on user commands.
-    - **`JsonManager`** and **`Storage`** for data persistence functionalities.
-
 #### **Flow and Interactions:**
 - The diagram centers on **`FAP`**, highlighting its role as the orchestrator for the application’s operations.
-- It illustrates **`FAP`**'s interactions with components like **`Ui`**, **`Parser`**, **`JsonManager`**, and **`Storage`**, emphasizing a structured and controlled flow of operations.
+- It illustrates **`FAP`**'s interactions with components like **`Ui`**, **`Parser`**, **`JsonManager`**,
+  and **`Storage`**, emphasizing a structured and controlled flow of operations.
 
-This narrative emphasizes the `FAP` class's critical role in integrating the application's functionalities, showcasing its design focused on modularity, maintainability, and extensibility.
+This narrative emphasizes the `FAP` class's critical role in integrating the application's functionalities, showcasing
+its design focused on modularity, maintainability, and extensibility.
 
-### Running the Application Loop
+#### Running the Application Loop
 
-The `runApplication` method encapsulates the application's runtime loop, processing user commands until an exit condition is met (either through an error or the 'bye' command). This method highlights the application of polymorphism (via the `Command` class) and encapsulation, detailing interactions with other components.
+The `runApplication` method encapsulates the application's runtime loop, processing user commands until an
+exit condition is met (either through an error or the 'bye' command). This method highlights the application of
+polymorphism (via the `Command` class) and encapsulation, detailing interactions with other components.
 
 ```java
 private static void runApplication() {
@@ -66,45 +66,19 @@ private static void runApplication() {
 }
 ```
 
-Below is a **Sequence diagram** that shows this application loop:
+Below is a **Sequence diagram** that describes the application loop:
 ![ArchitectureSequenceDiagram.png](diagrams/ArchitectureSequenceDiagram.png)
 
 #### **Key Points:**
 
-- **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application loop appropriately.
-- **Command Processing**: It continuously processes commands through a loop that persists until 'bye' is entered or an exception is thrown, using polymorphic `Command` objects for executing a variety of actions.
-- **Resource Management**: Ensures all resources are appropriately closed upon exiting the loop, reflecting prudent resource management practices (e.g., closing `Ui`).
+- **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application
+  loop appropriately.
+- **Command Processing**: It continuously processes commands through a loop that persists until 'bye' is entered or an
+  exception is thrown, using polymorphic `Command` objects for executing a variety of actions.
+- **Resource Management**: Ensures all resources are appropriately closed upon exiting the loop, reflecting prudent
+  resource management practices (e.g., closing `Ui`).
 
-This method is instrumental in understanding the dynamic interactions and procedural flow within the `FAP` application, highlighting the effective use of OOP principles like polymorphism and encapsulation to manage complex behaviors and state transitions efficiently.
-
-### Overview
-
-The application follows a layered architecture, with distinct components responsible for user interaction, data, 
-storage, and logic. This design promotes modularity, maintainability, and extensibility, allowing for easy integration 
-of new features and enhancements.
-
-### Main Class: `FAP`
-
-The `FAP` class serves as the central hub of the application, orchestrating the flow of execution and managing critical
-resources. It embodies key software design principles and showcases thoughtful architectural decisions.
-
-#### Design Overview
-
-- **Singleton Components:** `FAP` manages singleton components such as `moduleList` and `LOGGER`, ensuring they are
-  initialized once and accessible throughout the application's lifecycle.
-    - `ModuleList`: A collection that holds modules, initialized with a capacity of 10.
-    - `LOGGER`: Utilized for logging various levels of application events and errors.
-
-- **Separation of Concerns:** The class delegates specific responsibilities to specialized classes, adhering to the
-  principle of separation of concerns.
-    - Interaction with users is managed by the `Ui` class.
-    - Command parsing is delegated to the `Parser` class.
-    - Command execution is handled by implementations of the `Command` interface.
-
-- **Error Handling:** Demonstrates robust error handling strategies by catching and logging different exceptions, which
-  ensures graceful handling of unexpected situations.
-
-## Design
+---
 
 ### UI Class
 
@@ -184,8 +158,8 @@ The method to parse and validate user inputs is handled in the `Parser` method `
    an error message, and return an `Invalid` command instance
 6. If it matches, the command `arguments` will be extracted out and the respective command class instance will be
    created based on the overwritten method `createCommandInstance` in the respective `CommandMetadata` class
----
 
+---
 ### Storage
 
 ![Storage diagram](diagrams/Storage.png)
@@ -193,52 +167,52 @@ The method to parse and validate user inputs is handled in the `Parser` method `
 **Code** :
 [`Storage.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/storage/Storage.java)
 
-The `Storage` class in the Future Academic Planner (FAP) application is essential for handling the persistence 
-of user and module data. It allows the application to maintain state between sessions by reading from and writing 
+The `Storage` class in the Future Academic Planner (FAP) application is essential for handling the persistence
+of user and module data. It allows the application to maintain state between sessions by reading from and writing
 to files.
 
 As of `v2.1`, the `Storage` class is capable of handling several critical functionalities:
-1. **Saving Data**: It serializes the `User` and `ModuleList` objects into a text format and writes this information 
-to a specified file path.
+1. **Saving Data**: It serializes the `User` and `ModuleList` objects into a text format and writes this information
+   to a specified file path.
 2. **Loading Data**: It deserializes text data from a specified file path back into `User` and `ModuleList` objects.
 
-### Key Functionalities
+#### Key Functionalities
 
-#### 1. **Saving User and Module Data**
+1. **Saving User and Module Data**
 - **Method**: `saveModulesToFile(String filePath)`
 - **Description**: This method saves serialized user information and a list of taken modules to a specified file.
-It first checks and, if necessary, creates the directory path provided in the filePath. It then initializes a 
-`BufferedWriter` to write the data efficiently.
+  It first checks and, if necessary, creates the directory path provided in the filePath. It then initializes a
+  `BufferedWriter` to write the data efficiently.
 
-#### 2. **Loading User and Module Data**
+2. **Loading User and Module Data**
 - **Method**: `loadDataFromFile(String filePath)`
-- **Description**: This method loads user information and module data from the specified file. If the file does not 
-exist, it creates a new one and returns early to avoid errors. It reads the file line by line, updating the user and 
-module data within the application.
+- **Description**: This method loads user information and module data from the specified file. If the file does not
+  exist, it creates a new one and returns early to avoid errors. It reads the file line by line, updating the user and
+  module data within the application.
 
-#### 3. **File and Directory Management**
+3. **File and Directory Management**
 - **Methods**: `createFile(String filePath)`, `ensureDirectoryExists(String filePath)`
-- **Description**: These methods manage the file system interactions necessary for reading from and writing to files, 
-such as verifying directory existence and creating files as needed to prevent errors during the data load and 
-save processes.
+- **Description**: These methods manage the file system interactions necessary for reading from and writing to files,
+  such as verifying directory existence and creating files as needed to prevent errors during the data load and
+  save processes.
 
-### Usage in Commands
+#### Usage in Commands
 
-- **SetCommand and ViewCommand**: These commands utilize the `Storage` class to persist changes to the user and 
-modules immediately after modifications, ensuring data integrity and continuity.
-- **Startup and Shutdown**: On startup, `loadDataFromFile` is invoked to initialize the application state, and 
-on shutdown, `saveModulesToFile` is called to save the current state.
+- **SetCommand and ViewCommand**: These commands utilize the `Storage` class to persist changes to the user and
+  modules immediately after modifications, ensuring data integrity and continuity.
+- **Startup and Shutdown**: On startup, `loadDataFromFile` is invoked to initialize the application state, and
+  on shutdown, `saveModulesToFile` is called to save the current state.
 
-### Purpose
+#### Purpose
 
-The main purpose of the `Storage` class is to abstract the complexities of file management and data serialization away 
-from the core application logic. This simplification allows other parts of the application, such as commands and 
+The main purpose of the `Storage` class is to abstract the complexities of file management and data serialization away
+from the core application logic. This simplification allows other parts of the application, such as commands and
 controllers, to interact with user and module data more efficiently and reliably.
 
 Additionally, by handling data persistence, the `Storage` class ensures that user progress and configurations are not
 lost between application sessions, thereby enhancing user experience and application reliability.
 
-### Interaction with Other Classes
+#### Interaction with Other Classes
 
 - **Interacts With**:
     - `User`: To save and load user-specific data like name and current semester.
@@ -246,9 +220,7 @@ lost between application sessions, thereby enhancing user experience and applica
     - `FileWriter`/`BufferedWriter`: Used within `saveModulesToFile` to write data to files.
     - `Scanner`/`FileReader`: Used within `loadDataFromFile` to read data from files.
 
-This robust functionality provided by the `Storage` class is critical for maintaining the long-term usability 
-and flexibility of the FAP application, making it a cornerstone of the application's architecture.
-
+---
 ### Module, Module List
 **Code**:
 - [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java)
@@ -393,11 +365,11 @@ public AddCommandMetadata() {
 }
 ```
 ---
-
-
 ### Saving modules to file
 
-The `Storage` class is responsible for managing the persistence of user and module data to and from files. This document section focuses on the `saveModulesToFile` method, which saves the current user's information and their module list to a specified file path.
+The `Storage` class is responsible for managing the persistence of user and module data to and from files.
+This document section focuses on the `saveModulesToFile` method, which saves the current user's information and their
+module list to a specified file path.
 
 #### Method: `saveModulesToFile`
 
@@ -423,28 +395,28 @@ public static void saveModulesToFile(String filePath) throws StorageException {
 #### Process Description:
 
 1. **File Writing Setup**:
-    - Initializes a `BufferedWriter` wrapped around a `FileWriter` to write text to the file efficiently. 
-    This setup benefits from buffered writing, which minimizes the number of physical disk writes.
+    - Initializes a `BufferedWriter` wrapped around a `FileWriter` to write text to the file efficiently.
+      This setup benefits from buffered writing, which minimizes the number of physical disk writes.
 
 2. **Writing User Data**:
-    - The user's data is converted to a string format and written to the file first, followed by a 
-    newline character to separate entries clearly.
+    - The user's data is converted to a string format and written to the file first, followed by a
+      newline character to separate entries clearly.
 
 3. **Writing Modules Data**:
-    - Iterates over the list of taken modules (`moduleList.getTakenModuleList()`), converting each module 
-    to a string format and writing it to the file. Each module entry is written on a new line.
+    - Iterates over the list of taken modules (`moduleList.getTakenModuleList()`), converting each module
+      to a string format and writing it to the file. Each module entry is written on a new line.
 
 4. **Resource Management**:
-    - The `BufferedWriter` is declared within a try-with-resources statement, ensuring that it is closed at 
-    the end of the statement block, regardless of whether the operation completes successfully or fails.
+    - The `BufferedWriter` is declared within a try-with-resources statement, ensuring that it is closed at
+      the end of the statement block, regardless of whether the operation completes successfully or fails.
 
 #### Error Handling:
-- Catches `IOException` and `SecurityException`, throwing a `StorageException` with a message detailing the failure. 
-    This encapsulation of exceptions provides a clear API for the method, simplifying error handling for the caller.
+- Catches `IOException` and `SecurityException`, throwing a `StorageException` with a message detailing the failure.
+  This encapsulation of exceptions provides a clear API for the method, simplifying error handling for the caller.
 
-### UML Sequence Diagram Explanation
+#### UML Sequence Diagram Explanation
 
-Below is the UML sequence diagram for the `saveModulesToFile` method, illustrating the interactions 
+Below is the UML sequence diagram for the `saveModulesToFile` method, illustrating the interactions
 between components during the file-saving process.
 
 ![StorageSequenceDiagram.png](diagrams/StorageSequenceDiagram.png)
@@ -452,8 +424,8 @@ between components during the file-saving process.
 #### Steps Illustrated in the Diagram:
 
 1. **Main Initiates Save**:
-    - The `FAP` class (or the main method) calls `saveModulesToFile`, passing the file path where 
-    data needs to be saved.
+    - The `FAP` class (or the main method) calls `saveModulesToFile`, passing the file path where
+      data needs to be saved.
 
 2. **Storage Operations**:
     - **Directory Check**: Verifies or creates the necessary directory.
@@ -463,13 +435,10 @@ between components during the file-saving process.
         - Iteratively writes data for each module in the `ModuleList`.
 
 3. **Completion**:
-    - Once all data is written, the `BufferedWriter` is closed (implicitly by the try-with-resources), 
-    which also flushes the buffer to the file, finalizing the write operation.
+    - Once all data is written, the `BufferedWriter` is closed (implicitly by the try-with-resources),
+      which also flushes the buffer to the file, finalizing the write operation.
 
-#### Conclusion:
-This sequence diagram and the corresponding detailed explanation provide a clear, step-by-step guide 
-to the `saveModulesToFile` method's operations, highlighting how data integrity and error handling are maintained.
-
+---
 ### Commands
 
 #### View Commands
