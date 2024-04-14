@@ -66,6 +66,9 @@ private static void runApplication() {
 }
 ```
 
+Below is a **Sequence diagram** that shows this application loop:
+![ArchitectureSequenceDiagram.png](diagrams/ArchitectureSequenceDiagram.png)
+
 #### **Key Points:**
 
 - **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application loop appropriately.
@@ -137,13 +140,25 @@ Additionally, the `User` class helps to verify the status of the modules in the 
 modules have been taken or not.
 
 ### Parser package
-**Code**: 
-- [`Parser.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/parser/Parser.java) 
+**Code**:
+- [`Parser.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/parser/Parser.java)
 - [`CommandMetadata.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/parser/CommandMetadata.java)
 
 The `Parser` class, together with the `CommandMetadata` class parses user input to
 **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no
 matching command is found, it returns an `Invalid` command instance.
+
+**Overview:**
+
+Below is a class diagram that shows the associations between `Parser` and `CommandMetadata`
+
+![ParserClassDiagram.png](diagrams/ParserClassDiagram.png)
+
+The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
+for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
+and parsed arguments.** For every `Command` class, there would be a corresponding `CommandMetadata` class (with the
+exception of `Invalid` command) that overrides the method `createCommandInstance` to generate the `Command` instance of
+the specific `Command`.
 
 The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
 identify a given user command.
@@ -152,23 +167,23 @@ Further implementation details are available at "Parsing User Inputs" section un
 
 **How it works (Sequence):**
 
-Below is a sequence diagram that shows how the `FAP` main method calls `Parser` to parse a `userInput` 
+Below is a sequence diagram that shows how the `FAP` main method calls `Parser` to parse a `userInput`
 for a `Command` to return:
 
 ![ParserSequenceDiagram.png](diagrams/ParserSequenceDiagram.png)
 
 The method to parse and validate user inputs is handled in the `Parser` method `getCommand(String userInput)`:
-1. `userInput` is first checked to see if it is null or empty. If either condition is met, `Parser` returns an 'Invalid' 
-command instance.
-2. The first `word` of the `userInput` string is then checked to see if it matches with a valid command 
-`keyword` (Eg. `add`, `remove`, `view` etc)
+1. `userInput` is first checked to see if it is null or empty. If either condition is met, `Parser` returns an 'Invalid'
+   command instance.
+2. The first `word` of the `userInput` string is then checked to see if it matches with a valid command
+   `keyword` (Eg. `add`, `remove`, `view` etc)
 3. If there is no match, return an `Invalid` command instance (on loop end)
-4. If there is a match, the corresponding `CommandMetadata` class for the `keyword` is called upon, 
-and there will be a further attempt to match the `userInput` string with the command `regex` expression
-5. If it does not match, the `CommandMetadata` class will validate the error in user string syntax, print out 
-an error message, and return an `Invalid` command instance
+4. If there is a match, the corresponding `CommandMetadata` class for the `keyword` is called upon,
+   and there will be a further attempt to match the `userInput` string with the command `regex` expression
+5. If it does not match, the `CommandMetadata` class will validate the error in user string syntax, print out
+   an error message, and return an `Invalid` command instance
 6. If it matches, the command `arguments` will be extracted out and the respective command class instance will be
-created based on the overwritten method `createCommandInstance` in the respective `CommandMetadata` class
+   created based on the overwritten method `createCommandInstance` in the respective `CommandMetadata` class
 
 ### Storage
 
