@@ -9,6 +9,71 @@ original source as well}
 
 ![Architecture](diagrams/Architecture.png)
 
+Below is an elaborate description of the UML diagram that outlines the structure and relationships of Architecture:
+
+#### **Classes Involved:**
+- **`FAP`**: The central class that initializes and coordinates the various components of the application.
+- **`ModuleList`**: Manages a collection of academic modules.
+- **`Ui`**: Facilitates all user interactions through a command-line interface.
+- **`Parser`**: Interprets user input into executable commands.
+- **`Command`**: Implements the logic necessary for executing commands identified by the `Parser`.
+- **`User`**: Contains details about the user and their current semester.
+- **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
+- **`Storage`**: Manages data storage and retrieval operations.
+
+#### **Associations:**
+- **`FAP`** has associations with:
+    - **`ModuleList`** for managing academic modules.
+    - **`Ui`** for handling inputs and outputs to and from the user.
+    - **`Parser`** for converting user input into commands.
+    - **`Command`** for executing actions based on user commands.
+    - **`JsonManager`** and **`Storage`** for data persistence functionalities.
+
+#### **Flow and Interactions:**
+- The diagram centers on **`FAP`**, highlighting its role as the orchestrator for the application’s operations.
+- It illustrates **`FAP`**'s interactions with components like **`Ui`**, **`Parser`**, **`JsonManager`**, and **`Storage`**, emphasizing a structured and controlled flow of operations.
+
+This narrative emphasizes the `FAP` class's critical role in integrating the application's functionalities, showcasing its design focused on modularity, maintainability, and extensibility.
+
+### Running the Application Loop
+
+The `runApplication` method encapsulates the application's runtime loop, processing user commands until an exit condition is met (either through an error or the 'bye' command). This method highlights the application of polymorphism (via the `Command` class) and encapsulation, detailing interactions with other components.
+
+```java
+private static void runApplication() {
+    Ui ui = new Ui();
+    boolean continueRunning = true;
+
+    while (continueRunning) {
+        try {
+            String userInput = ui.getUserCommand();
+            LOGGER.log(Level.INFO, "User input: " + userInput);
+            Command command = Parser.getCommand(userInput);
+            command.execute(userInput);
+            user.resetModuleStatuses();
+            saveModulesToFile(filePath);
+            if (userInput.equalsIgnoreCase(BYE)) {
+                continueRunning = false;
+                ui.close();
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage(), e);
+            System.err.println("An error occurred: " + e.getMessage());
+            ui.close();
+            continueRunning = false;  // Exit loop on error
+        }
+    }
+}
+```
+
+#### **Key Points:**
+
+- **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application loop appropriately.
+- **Command Processing**: It continuously processes commands through a loop that persists until 'bye' is entered or an exception is thrown, using polymorphic `Command` objects for executing a variety of actions.
+- **Resource Management**: Ensures all resources are appropriately closed upon exiting the loop, reflecting prudent resource management practices (e.g., closing `Ui`).
+
+This method is instrumental in understanding the dynamic interactions and procedural flow within the `FAP` application, highlighting the effective use of OOP principles like polymorphism and encapsulation to manage complex behaviors and state transitions efficiently.
+
 ### Overview
 
 The application follows a layered architecture, with distinct components responsible for user interaction, data, 
@@ -70,7 +135,7 @@ matching command is found, it returns an `Invalid` command instance.
 
 Below is a class diagram that shows the associations between `Parser` and `CommandMetadata`
 
-![ParserClassDiagram.png](diagrams%2FParserClassDiagram.png)
+![ParserClassDiagram.png](diagrams/ParserClassDiagram.png)
 
 The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
 for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
@@ -79,7 +144,7 @@ exception of `Invalid` command) that overrides the method `createCommandInstance
 the specific `Command`.
 
 The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
-identify a given user command. 
+identify a given user command.
 
 Further implementation details are available at "Parsing User Inputs" section under Implementation.
 
@@ -88,7 +153,7 @@ Further implementation details are available at "Parsing User Inputs" section un
 Below is a sequence diagram that shows how the `FAP` main method calls `Parser` to parse a `userInput` 
 for a `Command` to return:
 
-![ParserSequenceDiagram.png](diagrams%2FParserSequenceDiagram.png)
+![ParserSequenceDiagram.png](diagrams/ParserSequenceDiagram.png)
 
 The method to parse and validate user inputs is handled in the `Parser` method `getCommand(String userInput)`:
 1. `userInput` is first checked to see if it is null or empty. If either condition is met, `Parser` returns an 'Invalid' 
@@ -237,6 +302,81 @@ public AddCommandMetadata() {
 }
 ```
 
+### Saving modules to file
+
+The `Storage` class is responsible for managing the persistence of user and module data to and from files. This document section focuses on the `saveModulesToFile` method, which saves the current user's information and their module list to a specified file path.
+
+#### Method: `saveModulesToFile`
+
+```java
+public static void saveModulesToFile(String filePath) throws StorageException {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        writer.write(toString(user) + System.lineSeparator());
+        for (Module module : moduleList.getTakenModuleList()) {
+            writer.write(toString(module) + System.lineSeparator());
+        }
+    } catch (IOException | SecurityException e) {
+        throw new StorageException("An error occurred while saving modules to file: " + filePath);
+    }
+}
+```
+
+#### Parameters:
+- `filePath` - The path of the file where the data is to be saved.
+
+#### Throws:
+- `StorageException` - if an error occurs during the file writing process.
+
+#### Process Description:
+
+1. **File Writing Setup**:
+    - Initializes a `BufferedWriter` wrapped around a `FileWriter` to write text to the file efficiently. 
+    This setup benefits from buffered writing, which minimizes the number of physical disk writes.
+
+2. **Writing User Data**:
+    - The user's data is converted to a string format and written to the file first, followed by a 
+    newline character to separate entries clearly.
+
+3. **Writing Modules Data**:
+    - Iterates over the list of taken modules (`moduleList.getTakenModuleList()`), converting each module 
+    to a string format and writing it to the file. Each module entry is written on a new line.
+
+4. **Resource Management**:
+    - The `BufferedWriter` is declared within a try-with-resources statement, ensuring that it is closed at 
+    the end of the statement block, regardless of whether the operation completes successfully or fails.
+
+#### Error Handling:
+- Catches `IOException` and `SecurityException`, throwing a `StorageException` with a message detailing the failure. 
+    This encapsulation of exceptions provides a clear API for the method, simplifying error handling for the caller.
+
+### UML Sequence Diagram Explanation
+
+Below is the UML sequence diagram for the `saveModulesToFile` method, illustrating the interactions 
+between components during the file-saving process.
+
+![StorageSequenceDiagram.png](diagrams/StorageSequenceDiagram.png)
+
+#### Steps Illustrated in the Diagram:
+
+1. **Main Initiates Save**:
+    - The `FAP` class (or the main method) calls `saveModulesToFile`, passing the file path where 
+    data needs to be saved.
+
+2. **Storage Operations**:
+    - **Directory Check**: Verifies or creates the necessary directory.
+    - **File Writer Setup**: Sets up the `BufferedWriter` and `FileWriter`.
+    - **Data Writing**:
+        - Writes user data.
+        - Iteratively writes data for each module in the `ModuleList`.
+
+3. **Completion**:
+    - Once all data is written, the `BufferedWriter` is closed (implicitly by the try-with-resources), 
+    which also flushes the buffer to the file, finalizing the write operation.
+
+#### Conclusion:
+This sequence diagram and the corresponding detailed explanation provide a clear, step-by-step guide 
+to the `saveModulesToFile` method's operations, highlighting how data integrity and error handling are maintained.
+
 ### Commands
 
 #### View Commands
@@ -304,76 +444,8 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 
    ![FAP class diagram](diagrams/FAP.png)
 
-Below is the revised content formatted in Markdown, suitable for documentation purposes such as GitHub README files or other Markdown-supported environments.
-
 ### UML Diagram Description
 
-![FAP class diagram](diagrams/FAP.png)
-
-Below is an elaborate description of the UML diagram that outlines the structure and relationships of the `FAP` class:
-
-#### **Classes Involved:**
-- **`FAP`**: The central class that initializes and coordinates the various components of the application.
-- **`ModuleList`**: Manages a collection of academic modules.
-- **`Ui`**: Facilitates all user interactions through a command-line interface.
-- **`Parser`**: Interprets user input into executable commands.
-- **`Command`**: Implements the logic necessary for executing commands identified by the `Parser`.
-- **`User`**: Contains details about the user and their session history.
-- **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
-- **`Storage`**: Manages data storage and retrieval operations.
-
-#### **Associations:**
-- **`FAP`** has associations with:
-    - **`ModuleList`** for managing academic modules.
-    - **`Ui`** for handling inputs and outputs to and from the user.
-    - **`Parser`** for converting user input into commands.
-    - **`Command`** for executing actions based on user commands.
-    - **`JsonManager`** and **`Storage`** for data persistence functionalities.
-
-#### **Flow and Interactions:**
-- The diagram centers on **`FAP`**, highlighting its role as the orchestrator for the application’s operations.
-- It illustrates **`FAP`**'s interactions with components like **`Ui`**, **`Parser`**, **`JsonManager`**, and **`Storage`**, emphasizing a structured and controlled flow of operations.
-
-This narrative emphasizes the `FAP` class's critical role in integrating the application's functionalities, showcasing its design focused on modularity, maintainability, and extensibility.
-
-### Running the Application Loop
-
-The `runApplication` method encapsulates the application's runtime loop, processing user commands until an exit condition is met (either through an error or the 'bye' command). This method highlights the application of polymorphism (via the `Command` class) and encapsulation, detailing interactions with other components.
-
-```java
-private static void runApplication() {
-    Ui ui = new Ui();
-    boolean continueRunning = true;
-
-    while (continueRunning) {
-        try {
-            String userInput = ui.getUserCommand();
-            LOGGER.log(Level.INFO, "User input: " + userInput);
-            Command command = Parser.getCommand(userInput);
-            command.execute(userInput);
-            user.resetModuleStatuses();
-            saveModulesToFile(filePath);
-            if (userInput.equalsIgnoreCase(BYE)) {
-                continueRunning = false;
-                ui.close();
-            }
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage(), e);
-            System.err.println("An error occurred: " + e.getMessage());
-            ui.close();
-            continueRunning = false;  // Exit loop on error
-        }
-    }
-}
-```
-
-#### **Key Points:**
-
-- **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application loop appropriately.
-- **Command Processing**: It continuously processes commands through a loop that persists until 'bye' is entered or an exception is thrown, using polymorphic `Command` objects for executing a variety of actions.
-- **Resource Management**: Ensures all resources are appropriately closed upon exiting the loop, reflecting prudent resource management practices (e.g., closing `Ui`).
-
-This method is instrumental in understanding the dynamic interactions and procedural flow within the `FAP` application, highlighting the effective use of OOP principles like polymorphism and encapsulation to manage complex behaviors and state transitions efficiently.
 
 3. **Module Class:**
 
