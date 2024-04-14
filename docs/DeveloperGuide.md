@@ -9,6 +9,71 @@ original source as well}
 
 ![Architecture](diagrams/Architecture.png)
 
+Below is an elaborate description of the UML diagram that outlines the structure and relationships of Architecture:
+
+#### **Classes Involved:**
+- **`FAP`**: The central class that initializes and coordinates the various components of the application.
+- **`ModuleList`**: Manages a collection of academic modules.
+- **`Ui`**: Facilitates all user interactions through a command-line interface.
+- **`Parser`**: Interprets user input into executable commands.
+- **`Command`**: Implements the logic necessary for executing commands identified by the `Parser`.
+- **`User`**: Contains details about the user and their current semester.
+- **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
+- **`Storage`**: Manages data storage and retrieval operations.
+
+#### **Associations:**
+- **`FAP`** has associations with:
+    - **`ModuleList`** for managing academic modules.
+    - **`Ui`** for handling inputs and outputs to and from the user.
+    - **`Parser`** for converting user input into commands.
+    - **`Command`** for executing actions based on user commands.
+    - **`JsonManager`** and **`Storage`** for data persistence functionalities.
+
+#### **Flow and Interactions:**
+- The diagram centers on **`FAP`**, highlighting its role as the orchestrator for the application’s operations.
+- It illustrates **`FAP`**'s interactions with components like **`Ui`**, **`Parser`**, **`JsonManager`**, and **`Storage`**, emphasizing a structured and controlled flow of operations.
+
+This narrative emphasizes the `FAP` class's critical role in integrating the application's functionalities, showcasing its design focused on modularity, maintainability, and extensibility.
+
+### Running the Application Loop
+
+The `runApplication` method encapsulates the application's runtime loop, processing user commands until an exit condition is met (either through an error or the 'bye' command). This method highlights the application of polymorphism (via the `Command` class) and encapsulation, detailing interactions with other components.
+
+```java
+private static void runApplication() {
+    Ui ui = new Ui();
+    boolean continueRunning = true;
+
+    while (continueRunning) {
+        try {
+            String userInput = ui.getUserCommand();
+            LOGGER.log(Level.INFO, "User input: " + userInput);
+            Command command = Parser.getCommand(userInput);
+            command.execute(userInput);
+            user.resetModuleStatuses();
+            saveModulesToFile(filePath);
+            if (userInput.equalsIgnoreCase(BYE)) {
+                continueRunning = false;
+                ui.close();
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage(), e);
+            System.err.println("An error occurred: " + e.getMessage());
+            ui.close();
+            continueRunning = false;  // Exit loop on error
+        }
+    }
+}
+```
+
+#### **Key Points:**
+
+- **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application loop appropriately.
+- **Command Processing**: It continuously processes commands through a loop that persists until 'bye' is entered or an exception is thrown, using polymorphic `Command` objects for executing a variety of actions.
+- **Resource Management**: Ensures all resources are appropriately closed upon exiting the loop, reflecting prudent resource management practices (e.g., closing `Ui`).
+
+This method is instrumental in understanding the dynamic interactions and procedural flow within the `FAP` application, highlighting the effective use of OOP principles like polymorphism and encapsulation to manage complex behaviors and state transitions efficiently.
+
 ### Overview
 
 The application follows a layered architecture, with distinct components responsible for user interaction, data, 
@@ -304,76 +369,8 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 
    ![FAP class diagram](diagrams/FAP.png)
 
-Below is the revised content formatted in Markdown, suitable for documentation purposes such as GitHub README files or other Markdown-supported environments.
-
 ### UML Diagram Description
 
-![FAP class diagram](diagrams/FAP.png)
-
-Below is an elaborate description of the UML diagram that outlines the structure and relationships of the `FAP` class:
-
-#### **Classes Involved:**
-- **`FAP`**: The central class that initializes and coordinates the various components of the application.
-- **`ModuleList`**: Manages a collection of academic modules.
-- **`Ui`**: Facilitates all user interactions through a command-line interface.
-- **`Parser`**: Interprets user input into executable commands.
-- **`Command`**: Implements the logic necessary for executing commands identified by the `Parser`.
-- **`User`**: Contains details about the user and their session history.
-- **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
-- **`Storage`**: Manages data storage and retrieval operations.
-
-#### **Associations:**
-- **`FAP`** has associations with:
-    - **`ModuleList`** for managing academic modules.
-    - **`Ui`** for handling inputs and outputs to and from the user.
-    - **`Parser`** for converting user input into commands.
-    - **`Command`** for executing actions based on user commands.
-    - **`JsonManager`** and **`Storage`** for data persistence functionalities.
-
-#### **Flow and Interactions:**
-- The diagram centers on **`FAP`**, highlighting its role as the orchestrator for the application’s operations.
-- It illustrates **`FAP`**'s interactions with components like **`Ui`**, **`Parser`**, **`JsonManager`**, and **`Storage`**, emphasizing a structured and controlled flow of operations.
-
-This narrative emphasizes the `FAP` class's critical role in integrating the application's functionalities, showcasing its design focused on modularity, maintainability, and extensibility.
-
-### Running the Application Loop
-
-The `runApplication` method encapsulates the application's runtime loop, processing user commands until an exit condition is met (either through an error or the 'bye' command). This method highlights the application of polymorphism (via the `Command` class) and encapsulation, detailing interactions with other components.
-
-```java
-private static void runApplication() {
-    Ui ui = new Ui();
-    boolean continueRunning = true;
-
-    while (continueRunning) {
-        try {
-            String userInput = ui.getUserCommand();
-            LOGGER.log(Level.INFO, "User input: " + userInput);
-            Command command = Parser.getCommand(userInput);
-            command.execute(userInput);
-            user.resetModuleStatuses();
-            saveModulesToFile(filePath);
-            if (userInput.equalsIgnoreCase(BYE)) {
-                continueRunning = false;
-                ui.close();
-            }
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "An error occurred: " + e.getMessage(), e);
-            System.err.println("An error occurred: " + e.getMessage());
-            ui.close();
-            continueRunning = false;  // Exit loop on error
-        }
-    }
-}
-```
-
-#### **Key Points:**
-
-- **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application loop appropriately.
-- **Command Processing**: It continuously processes commands through a loop that persists until 'bye' is entered or an exception is thrown, using polymorphic `Command` objects for executing a variety of actions.
-- **Resource Management**: Ensures all resources are appropriately closed upon exiting the loop, reflecting prudent resource management practices (e.g., closing `Ui`).
-
-This method is instrumental in understanding the dynamic interactions and procedural flow within the `FAP` application, highlighting the effective use of OOP principles like polymorphism and encapsulation to manage complex behaviors and state transitions efficiently.
 
 3. **Module Class:**
 
