@@ -3,6 +3,9 @@ package seedu.duke.command;
 
 import seedu.duke.exceptions.GpaNullException;
 
+/**
+ * Represents the command to view the current GPA
+ */
 public class ViewGpaCommand extends Command{
     @Override
     public void execute(String userInput) {
