@@ -184,6 +184,7 @@ The method to parse and validate user inputs is handled in the `Parser` method `
    an error message, and return an `Invalid` command instance
 6. If it matches, the command `arguments` will be extracted out and the respective command class instance will be
    created based on the overwritten method `createCommandInstance` in the respective `CommandMetadata` class
+---
 
 ### Storage
 
@@ -263,20 +264,6 @@ Hence, these are not just simple getters and setters, instead actions that value
 
 This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
 
-**Overview:**
-
-Below is a sequence diagram that shows the flow of the implementation when a module is added by the user
-
-![AddModuleSequence.png](diagrams%2FAddCommand.png)
-
-
-The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
-for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
-and parsed arguments.** For every `Command` class, there would be a corresponding `CommandMetadata` class (with the
-exception of `Invalid` command) that overrides the method `createCommandInstance` to generate the `Command` instance of
-the specific `Command`.
-
-
 ### Command
 
 Here's how the `Command` class interact with the other classes:
@@ -292,10 +279,9 @@ How the `Command` component works (together with other classes):
 4. `execute()` is then called on the object to perform its task.
 
 ## Implementation
+This section describes some noteworthy details on how certain features are implemented.
 
-### Classes / Package
-
-**Parsing User Inputs**
+### Parsing User Inputs
 
 **Use of regular expressions (Regex) in FAP:**
 
@@ -308,10 +294,10 @@ course code at NUS, `SEMESTERTAKEN` should be a number value in some range. The 
 will thus have their own argument regex pattern.
 
 A simple regex example would be that `SEMESTERTAKEN` would be a number ranging from 1-8 to represent a normal honours
-pathway for a CEG student (FAP's target user). A regex pattern for that could look like `w/(?<semester>[1-8])` (In this 
-case, `w/` is used as a `delimitter` but it is not **strictly** neccessary **unless** the `regex` have special 
-conditions such as allowing whitespaces). An **argument name capturing group** `semester` is enclosed within the 
-brackets so that the argument group will be **named** and thus the argument value (anywhere between `1-8`) can be 
+pathway for a CEG student (FAP's target user). A regex pattern for that could look like `w/(?<semester>[1-8])` (In this
+case, `w/` is used as a `delimitter` but it is not **strictly** neccessary **unless** the `regex` have special
+conditions such as allowing whitespaces). An **argument name capturing group** `semester` is enclosed within the
+brackets so that the argument group will be **named** and thus the argument value (anywhere between `1-8`) can be
 referenced/called and retrieved by using the `Matcher` method `group()` with the argument `"semester"`.
 Meanwhile, the java utility classes `Pattern` and `Matcher` would handle the checks that the argument value given
 is indeed between `1-8`.
@@ -336,7 +322,7 @@ us **safety in the arguments** that passes through to the commands via the userI
 
 - First, we need a `Command` type class to return as an object. In the future, this may be expanded to any `T` type.
 - Second, we need a string that would be used to create this `Command` instance. This string should follow the
-  format `keyword argument_1 argument_2...` where the `keyword` is mandatory, `argument_1, argument_2...` 
+  format `keyword argument_1 argument_2...` where the `keyword` is mandatory, `argument_1, argument_2...`
   are **optional**.
 - Third, for every argument available, make a **regex pattern with name capturing** that encloses the value within the
   brackets. (e.g., `n/(?<name>[A-Za-z0-9 ]+)`, `g/(?<grade>[ab][+-]?|[cd][+]?|f|cs)`)
@@ -345,10 +331,10 @@ us **safety in the arguments** that passes through to the commands via the userI
 - Create a subclass that extends `CommandMetadata`.
 - Put in the `keyword` (e.g., `add`) and `groupArgumentNames` (e.g., `{"courseCode", "semester"}`) in the superclass
   constructor.
-- Define the argument regex pattern in the static variable `argsRegexMap` with the corresponding `groupArgumentName` and 
-argument `regex` pattern. 
-  - Note: Currently `argsRegexMap` is in the superclass `CommandMetadata` 
-  (e.g., `argRegexMap.put("semester", "w/(?<semester>[1-8])")`).
+- Define the argument regex pattern in the static variable `argsRegexMap` with the corresponding `groupArgumentName` and
+  argument `regex` pattern.
+    - Note: Currently `argsRegexMap` is in the superclass `CommandMetadata`
+      (e.g., `argRegexMap.put("semester", "w/(?<semester>[1-8])")`).
 - Override the method `createCommandInstance(Map<String, String> args)` to implement the method on how to create
   the `Command` object you want. Return the `Command` instance.
     - Note: `Map<String, String> args` contains the `groupArgumentName : argumentValue` pairing.
@@ -377,14 +363,14 @@ protected Command createCommandInstance(Map<String, String> args) {
 }
 ```
 
-`v2.1`: **Optional** regex arguments is now supported (eg. `userInput` regex expressions `view` and `view c/COURSECODE` 
+`v2.1`: **Optional** regex arguments is now supported (eg. `userInput` regex expressions `view` and `view c/COURSECODE`
 can now be both valid). This feature is still under testing.
 
 **Here is an extended developer usage guide:**
-- For every argument that can be optional, a new `String[]` has been introduced. This String[] should match the 
-length of the regular `String[]` containing the argument names. Each element in this new array should indicate whether 
-the corresponding argument is optional or mandatory. For instance, if `courseCode` is mandatory, and `semester` is 
-optional:
+- For every argument that can be optional, a new `String[]` has been introduced. This String[] should match the
+  length of the regular `String[]` containing the argument names. Each element in this new array should indicate whether
+  the corresponding argument is optional or mandatory. For instance, if `courseCode` is mandatory, and `semester` is
+  optional:
 
 ```java
 private static final String[] ADD_ARGUMENTS = {"courseCode", "semester"};
@@ -406,6 +392,8 @@ public AddCommandMetadata() {
     super(ADD_KEYWORD, ADD_ARGUMENTS);
 }
 ```
+---
+
 
 ### Saving modules to file
 
@@ -750,60 +738,6 @@ With this, we can find the least number of upperBound grade the user need to att
 
 Below is the sequence diagram of the entire function:
 ![Desired GPA Sequence Diagram](diagrams/DesiredGpaSequence.png)
-
-
-
-Design & Implementation
-Storage Class
-
-The Storage class is crucial for persisting user data between sessions, ensuring that module information and user
-preferences are not lost even after the application is closed. It interacts with the file system to load and save data,
-employing error handling to manage potential IO exceptions gracefully.
-Key Responsibilities
-
-- **File Management:** Ensures necessary directories and files exist at application startup or creates them if they
-  don't.
-- **Data Persistence:** Serializes and deserializes user data, including modules and user information, to and from a
-  designated file.
-- **Error Handling:** Captures and throws custom exceptions to signal file access or data integrity issues, facilitating
-  robust error management in higher-level components.
-
-**Implementation Details**
-
-- **Initialization:** Verifies the presence of required directories/files or creates them. This is crucial for
-  first-time application runs on a user's machine.
-
-- **Saving Data:**
-  The `saveModulesToFile` method serializes the current state of moduleList and user into a human-readable format (or a
-  structured format like JSON/XML, depending on implementation) and writes it to a file. This method is invoked at
-  critical points, such as application shutdown or after any operation that alters user data.
-
-- **Loading Data:**
-  The `loadDataFromFile` method reads the file contents, deserializes them back into the application's data structures (
-  moduleList and user), and ensures that the application state reflects the persisted data. This method is typically
-  called at application startup.
-
-- **Data Integrity and Error Management:**
-  Implements `try-catch` blocks to manage `IOExceptions` and custom exceptions, ensuring the application can handle and
-  recover from unexpected issues during file operations.
-
-  ### UML Diagram
-
-  A simplified UML diagram for the Storage class and its interaction with the Module, User, and exception classes is
-  shown below:
-- ![View Storage Class](diagrams/Storage.png)
-
-### Integration with FAP
-
-The FAP class incorporates the Storage class to manage application data persistence. At startup, FAP calls
-Storage.loadDataFromFile to restore the previous session's state. Before termination or at regular intervals, FAP
-invokes Storage.saveModulesToFile to save the current state.
-
-This integration ensures that the application's data lifecycle is managed efficiently, providing a seamless user
-experience across sessions.
-
-
----
 
 ## Product scope
 
