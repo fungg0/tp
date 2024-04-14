@@ -1,0 +1,51 @@
+@startuml
+participant FAP
+participant Parser
+participant CommandMetadata
+
+FAP -> Parser: getCommand(userInput)
+activate Parser
+
+opt userInput null or empty
+    Parser --> FAP: invalid command
+end
+
+loop over metadataList
+    Parser -> CommandMetadata: check userInput[0] with keyword
+    activate CommandMetadata
+    CommandMetadata --> Parser: keyword match
+    deactivate CommandMetadata
+    alt does not match keyword
+        Parser -> Parser: continue loop
+    else match keyword
+        Parser -> CommandMetadata: get regex pattern
+        activate CommandMetadata
+        CommandMetadata --> Parser: regex pattern
+        deactivate CommandMetadata
+
+        Parser -> Parser: create Matcher object
+        Parser -> CommandMetadata: check matcher with regex
+        activate CommandMetadata
+        CommandMetadata --> Parser: regex match
+        deactivate CommandMetadata
+
+        alt does not match regex
+            Parser -> CommandMetadata: check userinput syntax error
+            activate CommandMetadata
+            CommandMetadata --> Parser: throw error
+            deactivate CommandMetadata
+            Parser --> FAP: invalid command
+        else match regex
+            Parser -> CommandMetadata: create command instance
+            activate CommandMetadata
+            CommandMetadata --> Parser: command instance
+            deactivate CommandMetadata
+            Parser --> FAP: valid command
+        end
+
+        Parser --> FAP: invalid command (loop end)
+        deactivate Parser
+    end
+end
+@enduml
+
