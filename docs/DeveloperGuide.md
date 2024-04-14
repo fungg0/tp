@@ -184,8 +184,70 @@ The method to parse and validate user inputs is handled in the `Parser` method `
    an error message, and return an `Invalid` command instance
 6. If it matches, the command `arguments` will be extracted out and the respective command class instance will be
    created based on the overwritten method `createCommandInstance` in the respective `CommandMetadata` class
+---
 
 ### Storage
+
+![Storage diagram](diagrams/Storage.png)
+
+**Code** :
+[`Storage.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/storage/Storage.java)
+
+The `Storage` class in the Future Academic Planner (FAP) application is essential for handling the persistence 
+of user and module data. It allows the application to maintain state between sessions by reading from and writing 
+to files.
+
+As of `v2.1`, the `Storage` class is capable of handling several critical functionalities:
+1. **Saving Data**: It serializes the `User` and `ModuleList` objects into a text format and writes this information 
+to a specified file path.
+2. **Loading Data**: It deserializes text data from a specified file path back into `User` and `ModuleList` objects.
+
+### Key Functionalities
+
+#### 1. **Saving User and Module Data**
+- **Method**: `saveModulesToFile(String filePath)`
+- **Description**: This method saves serialized user information and a list of taken modules to a specified file.
+It first checks and, if necessary, creates the directory path provided in the filePath. It then initializes a 
+`BufferedWriter` to write the data efficiently.
+
+#### 2. **Loading User and Module Data**
+- **Method**: `loadDataFromFile(String filePath)`
+- **Description**: This method loads user information and module data from the specified file. If the file does not 
+exist, it creates a new one and returns early to avoid errors. It reads the file line by line, updating the user and 
+module data within the application.
+
+#### 3. **File and Directory Management**
+- **Methods**: `createFile(String filePath)`, `ensureDirectoryExists(String filePath)`
+- **Description**: These methods manage the file system interactions necessary for reading from and writing to files, 
+such as verifying directory existence and creating files as needed to prevent errors during the data load and 
+save processes.
+
+### Usage in Commands
+
+- **SetCommand and ViewCommand**: These commands utilize the `Storage` class to persist changes to the user and 
+modules immediately after modifications, ensuring data integrity and continuity.
+- **Startup and Shutdown**: On startup, `loadDataFromFile` is invoked to initialize the application state, and 
+on shutdown, `saveModulesToFile` is called to save the current state.
+
+### Purpose
+
+The main purpose of the `Storage` class is to abstract the complexities of file management and data serialization away 
+from the core application logic. This simplification allows other parts of the application, such as commands and 
+controllers, to interact with user and module data more efficiently and reliably.
+
+Additionally, by handling data persistence, the `Storage` class ensures that user progress and configurations are not
+lost between application sessions, thereby enhancing user experience and application reliability.
+
+### Interaction with Other Classes
+
+- **Interacts With**:
+    - `User`: To save and load user-specific data like name and current semester.
+    - `ModuleList`: To save and load the list of modules the user has taken.
+    - `FileWriter`/`BufferedWriter`: Used within `saveModulesToFile` to write data to files.
+    - `Scanner`/`FileReader`: Used within `loadDataFromFile` to read data from files.
+
+This robust functionality provided by the `Storage` class is critical for maintaining the long-term usability 
+and flexibility of the FAP application, making it a cornerstone of the application's architecture.
 
 ### Module, Module List
 **Code**:
@@ -202,20 +264,6 @@ Hence, these are not just simple getters and setters, instead actions that value
 
 This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
 
-**Overview:**
-
-Below is a sequence diagram that shows the flow of the implementation when a module is added by the user
-
-![AddModuleSequence.png](diagrams%2FAddCommand.png)
-
-
-The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
-for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
-and parsed arguments.** For every `Command` class, there would be a corresponding `CommandMetadata` class (with the
-exception of `Invalid` command) that overrides the method `createCommandInstance` to generate the `Command` instance of
-the specific `Command`.
-
-
 ### Command
 
 Here's how the `Command` class interact with the other classes:
@@ -231,10 +279,9 @@ How the `Command` component works (together with other classes):
 4. `execute()` is then called on the object to perform its task.
 
 ## Implementation
+This section describes some noteworthy details on how certain features are implemented.
 
-### Classes / Package
-
-**Parsing User Inputs**
+### Parsing User Inputs
 
 **Use of regular expressions (Regex) in FAP:**
 
@@ -247,10 +294,10 @@ course code at NUS, `SEMESTERTAKEN` should be a number value in some range. The 
 will thus have their own argument regex pattern.
 
 A simple regex example would be that `SEMESTERTAKEN` would be a number ranging from 1-8 to represent a normal honours
-pathway for a CEG student (FAP's target user). A regex pattern for that could look like `w/(?<semester>[1-8])` (In this 
-case, `w/` is used as a `delimitter` but it is not **strictly** neccessary **unless** the `regex` have special 
-conditions such as allowing whitespaces). An **argument name capturing group** `semester` is enclosed within the 
-brackets so that the argument group will be **named** and thus the argument value (anywhere between `1-8`) can be 
+pathway for a CEG student (FAP's target user). A regex pattern for that could look like `w/(?<semester>[1-8])` (In this
+case, `w/` is used as a `delimitter` but it is not **strictly** neccessary **unless** the `regex` have special
+conditions such as allowing whitespaces). An **argument name capturing group** `semester` is enclosed within the
+brackets so that the argument group will be **named** and thus the argument value (anywhere between `1-8`) can be
 referenced/called and retrieved by using the `Matcher` method `group()` with the argument `"semester"`.
 Meanwhile, the java utility classes `Pattern` and `Matcher` would handle the checks that the argument value given
 is indeed between `1-8`.
@@ -275,7 +322,7 @@ us **safety in the arguments** that passes through to the commands via the userI
 
 - First, we need a `Command` type class to return as an object. In the future, this may be expanded to any `T` type.
 - Second, we need a string that would be used to create this `Command` instance. This string should follow the
-  format `keyword argument_1 argument_2...` where the `keyword` is mandatory, `argument_1, argument_2...` 
+  format `keyword argument_1 argument_2...` where the `keyword` is mandatory, `argument_1, argument_2...`
   are **optional**.
 - Third, for every argument available, make a **regex pattern with name capturing** that encloses the value within the
   brackets. (e.g., `n/(?<name>[A-Za-z0-9 ]+)`, `g/(?<grade>[ab][+-]?|[cd][+]?|f|cs)`)
@@ -284,10 +331,10 @@ us **safety in the arguments** that passes through to the commands via the userI
 - Create a subclass that extends `CommandMetadata`.
 - Put in the `keyword` (e.g., `add`) and `groupArgumentNames` (e.g., `{"courseCode", "semester"}`) in the superclass
   constructor.
-- Define the argument regex pattern in the static variable `argsRegexMap` with the corresponding `groupArgumentName` and 
-argument `regex` pattern. 
-  - Note: Currently `argsRegexMap` is in the superclass `CommandMetadata` 
-  (e.g., `argRegexMap.put("semester", "w/(?<semester>[1-8])")`).
+- Define the argument regex pattern in the static variable `argsRegexMap` with the corresponding `groupArgumentName` and
+  argument `regex` pattern.
+    - Note: Currently `argsRegexMap` is in the superclass `CommandMetadata`
+      (e.g., `argRegexMap.put("semester", "w/(?<semester>[1-8])")`).
 - Override the method `createCommandInstance(Map<String, String> args)` to implement the method on how to create
   the `Command` object you want. Return the `Command` instance.
     - Note: `Map<String, String> args` contains the `groupArgumentName : argumentValue` pairing.
@@ -316,14 +363,14 @@ protected Command createCommandInstance(Map<String, String> args) {
 }
 ```
 
-`v2.1`: **Optional** regex arguments is now supported (eg. `userInput` regex expressions `view` and `view c/COURSECODE` 
+`v2.1`: **Optional** regex arguments is now supported (eg. `userInput` regex expressions `view` and `view c/COURSECODE`
 can now be both valid). This feature is still under testing.
 
 **Here is an extended developer usage guide:**
-- For every argument that can be optional, a new `String[]` has been introduced. This String[] should match the 
-length of the regular `String[]` containing the argument names. Each element in this new array should indicate whether 
-the corresponding argument is optional or mandatory. For instance, if `courseCode` is mandatory, and `semester` is 
-optional:
+- For every argument that can be optional, a new `String[]` has been introduced. This String[] should match the
+  length of the regular `String[]` containing the argument names. Each element in this new array should indicate whether
+  the corresponding argument is optional or mandatory. For instance, if `courseCode` is mandatory, and `semester` is
+  optional:
 
 ```java
 private static final String[] ADD_ARGUMENTS = {"courseCode", "semester"};
@@ -345,6 +392,8 @@ public AddCommandMetadata() {
     super(ADD_KEYWORD, ADD_ARGUMENTS);
 }
 ```
+---
+
 
 ### Saving modules to file
 
@@ -463,116 +512,118 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 
 ![ViewGraduateCommand Sequence Diagram](diagrams/ViewGraduateCommand-0.png)
 
-#### Adding a Module ####
+### Adding a Module ###
 
-1) #### **Classes Involved:**
-    - **`Module`**: Manages the important attributes of an academic module.
-    - **`ModuleList`**: Manages a collection of academic modules.
-    - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
-    - **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and handle them appropriately
+#### **Classes Involved:**
+- **`Module`**: Manages the important attributes of an academic module.
+- **`ModuleList`**: Manages a collection of academic modules.
+- **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
+- **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and
+  handle them appropriately
 
-2) #### **`Module` Class:**
-   #### Purpose
-   Represents an academic module, holding information such as the module code, credits (MCs), grade, and description.
-
-   #### Key Methods
-
-   - **`setModuleGrade(String moduleGrade)`**  
+**`Module` Class:**
+- Purpose
+    - Represents an academic module, holding information such as the module code, credits (MCs), grade, and description.
+- Key Methods
+    - **`setModuleGrade(String moduleGrade)`**  
       Sets the grade for the module. Validates the grade format and throws `ModuleException` if the module hasn't been
       taken yet.
-
-   - **`getGradeNumber()`**  
+    - **`getGradeNumber()`**  
       Returns a numerical value associated with the module's grade, used for GPA calculation.
 
-3) **`ModuleList` Class:**
+**`ModuleList` Class:**
+- Purpose
+    - Manages a collection of `Module` objects. It facilitates operations such as adding, removing, retrieving modules,
+      calculating GPA, and grouping modules by semester.
 
-   #### Purpose
-
-   Manages a collection of `Module` objects. It facilitates operations such as adding, removing, retrieving modules,
-   calculating GPA, and grouping modules by semester.
-
-   #### Key Methods
-
+- Key Methods
     - **`addModule(Module module)`**  
-      Adds a new module to the list.  
-      Throws `IllegalArgumentException` if the module is `null`.
-
+      Adds a new module to the list. Throws `IllegalArgumentException` if the module is `null`.
     - **`getModule(String courseCode)`**  
-      Retrieves a module by its course code.  
-      Throws `ModuleNotFoundException` if the module is not found.
-
+      Retrieves a module by its course code. Throws `ModuleNotFoundException` if the module is not found.
     - **`removeModule(Module module)`**  
       Removes a specified module from the list.
-
     - **`changeModuleGrade(String moduleCode, String grade)`**  
       Changes the grade of a module identified by its course code.
-
     - **`tallyGPA()`**  
-      Calculates and returns the GPA based on the modules in the list.  
-      Throws `GpaNullException` if there are no modules with countable grades.
-
+      Calculates and returns the GPA based on the modules in the list.
+      Throws `GpaNullException` if there are no modules
+      with countable grades
     - **`groupModulesBySemester()`**  
       Groups modules by their semester and returns a map where each key is a semester, and each value is a list of
       modules in that semester.
 
-   #### Flow and Interactions:
-    - Main point of entry is `AddCommand` class where it will check the usercommands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
-    - If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
-    - If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
+#### **Flow and Interactions:**
+- Main point of entry is `AddCommand` class where it will check the user commands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
+- If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
+- If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
 
-   #### Error Handling
-    - `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
-    - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
-    - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
+#### Error Handling
+- `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
+- `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
+- `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
 
-#### Getting module details from Json File (JsonManager Class): ####
+---
+### Getting module details from Json File (JsonManager Class):
 
-   1) **Overview**
+#### Overview
 
-       The `JsonManager` class is designed to manage and interact with module information stored in a JSON format. It
-       provides functionalities for checking the existence of modules, retrieving module information such as Modular
-       Credits (MCs), description, and title from a JSON file.
+The `JsonManager` class is designed to manage and interact with module information stored in a JSON format. It
+provides functionalities for checking the existence of modules, retrieving module information such as Modular
+Credits (MCs), description, and title from a JSON file.
 
-   2) **Key Methods**
+#### Constructor:
 
-   + **`moduleExist(String moduleCode)`**: Checks if a module with the specified code exists in the JSON data.
-       - ***Parameters***: `String moduleCode` - The code of the module to check for existence.
-       - ***Returns***: `boolean` - `true` if the module exists, `false` otherwise.
+- `JsonManager()`: Initializes a new instance of the `JsonManager` by loading the module information from a JSON
+  file located at `/moduleInfo.json`.
 
-   + **`getModuleInfo(String moduleCode)`**: Retrieves detailed information about a module, including its Modular
-    Credits, description, and title, based on the module code.
-      - ***Parameters***: `String moduleCode` - The code of the module for which information is to be retrieved.
-      - ***Note***: This method updates the internal state of the `JsonManager` object with the retrieved module
-        information.
+#### Methods:
 
-   + **`getModuleDescription()`**: Returns the description of the last module queried.
-      - ***Returns***: `String` - The description of the module.
+- Module Existence
 
-   + **`getModuleMC()`**: Returns the Modular Credits of the last module queried.
-        - ***Returns***: `int` - The Modular Credits of the module.
+    - **`moduleExist(String moduleCode)`**: Checks if a module with the specified code exists in the JSON data.
+        - **Parameters**: `String moduleCode` - The code of the module to check for existence.
+        - **Returns**: `boolean` - `true` if the module exists, `false` otherwise.
 
-   + **`getModuleTitle()`**: Returns the title of the last module queried.
-        - ***Returns***: `String` - The title of the module.
+- Module Information Retrieval
 
-   3) **Error Handling**
+    - **`getModuleInfo(String moduleCode)`**: Retrieves detailed information about a module, including its Modular
+      Credits, description, and title, based on the module code.
+        - **Parameters**: `String moduleCode` - The code of the module for which information is to be retrieved.
+        - **Note**: This method updates the internal state of the `JsonManager` object with the retrieved module
+          information.
 
-       The constructor throws a `RuntimeException` if the JSON file containing module information cannot be found or
-       accessed, ensuring that the application is aware of missing or inaccessible module data.
+- Information Accessors
 
+    - **`getModuleDescription()`**: Returns the description of the last module queried.
+        - **Returns**: `String` - The description of the module.
 
-   4) **Usage**
+    - **`getModuleMC()`**: Returns the Modular Credits of the last module queried.
+        - **Returns**: `int` - The Modular Credits of the module.
 
-       ```java
-       JsonManager jsonManager = new JsonManager();
-       if (jsonManager.moduleExist("CS1010")) {
-          jsonManager.getModuleInfo("CS1010");
-          System.out.println("Module Title: " + jsonManager.getModuleTitle());
-          System.out.println("Module Description: " + jsonManager.getModuleDescription());
-          System.out.println("Module MC: " + jsonManager.getModuleMC());
-       }
-       ```
-       Below is the sequence diagram for adding of module.
-       ![Adding a Module Sequence Diagram](diagrams/AddCommand.png)
+    - **`getModuleTitle()`**: Returns the title of the last module queried.
+        - **Returns**: `String` - The title of the module.
+
+#### Error Handling
+
+- The constructor throws a `RuntimeException` if the JSON file containing module information cannot be found or
+  accessed, ensuring that the application is aware of missing or inaccessible module data.
+
+#### Usage
+
+```java
+JsonManager jsonManager = new JsonManager();
+if (jsonManager.moduleExist("CS1010")) {
+   jsonManager.getModuleInfo("CS1010");
+   System.out.println("Module Title: " + jsonManager.getModuleTitle());
+   System.out.println("Module Description: " + jsonManager.getModuleDescription());
+   System.out.println("Module MC: " + jsonManager.getModuleMC());
+}
+```
+Below is a sequence diagram that shows the flow of the implementation when a module is added by the user.
+![Adding a Module Sequence Diagram](diagrams/AddCommand.png)
+
+--- 
 
 
 1. **Application Initialization and Entry Point:**
@@ -651,62 +702,33 @@ stop.
 
 If (GPA to attain) calculated is more than 5 or less than 0, it means that it is not feasible to reach the desired GPA.
 
-If (GPA to attain) is feasible, we can find a combination of grades that
+If (GPA to attain) is feasible, we will try to find the easiest way to achieve desired GPA. As there are many different 
+combinations, we will just work with two grades closest to (gpa to attain), the one directly above (named upperBound) 
+and directly below (named lowerBound).
 
+For example, if (GPA to attain) is 4.25, then upperBound will be "A-" (grade = 4.5), and lowerBound will be "B+" (grade
+= 4.0).
 
+Note:
+- Assume the remaining modules to be taken are all 4 MCs
 
+Initialise a variable, mockGPA, to keep track of the future GPA. mockGPA is initialised to lowerBound grade value.
 
-Design & Implementation
-Storage Class
+Using a while loop:
+- Checks if mockGPA is above (GPA to attain)
+- If yes, we will need one more upperBound grade
+- Else, the user can just take one more lowerBound grade
+- Update mockGPA
+- Stop the loop once total MCs is reached
 
-The Storage class is crucial for persisting user data between sessions, ensuring that module information and user
-preferences are not lost even after the application is closed. It interacts with the file system to load and save data,
-employing error handling to manage potential IO exceptions gracefully.
-Key Responsibilities
+After the final iteration, mockGPA could be below (GPA to attain) as adding one more lowerBound grade can push mockGPA 
+to be lower than (GPA to attain). To fix this, we just need to increment number of upperBound by 1 and decrement number
+of lowerBound by 1.
 
-- **File Management:** Ensures necessary directories and files exist at application startup or creates them if they
-  don't.
-- **Data Persistence:** Serializes and deserializes user data, including modules and user information, to and from a
-  designated file.
-- **Error Handling:** Captures and throws custom exceptions to signal file access or data integrity issues, facilitating
-  robust error management in higher-level components.
+With this, we can find the least number of upperBound grade the user need to attain to achieve their desired GPA.
 
-**Implementation Details**
-
-- **Initialization:** Verifies the presence of required directories/files or creates them. This is crucial for
-  first-time application runs on a user's machine.
-
-- **Saving Data:**
-  The `saveModulesToFile` method serializes the current state of moduleList and user into a human-readable format (or a
-  structured format like JSON/XML, depending on implementation) and writes it to a file. This method is invoked at
-  critical points, such as application shutdown or after any operation that alters user data.
-
-- **Loading Data:**
-  The `loadDataFromFile` method reads the file contents, deserializes them back into the application's data structures (
-  moduleList and user), and ensures that the application state reflects the persisted data. This method is typically
-  called at application startup.
-
-- **Data Integrity and Error Management:**
-  Implements `try-catch` blocks to manage `IOExceptions` and custom exceptions, ensuring the application can handle and
-  recover from unexpected issues during file operations.
-
-  ### UML Diagram
-
-  A simplified UML diagram for the Storage class and its interaction with the Module, User, and exception classes is
-  shown below:
-- ![View Storage Class](diagrams/Storage.png)
-
-### Integration with FAP
-
-The FAP class incorporates the Storage class to manage application data persistence. At startup, FAP calls
-Storage.loadDataFromFile to restore the previous session's state. Before termination or at regular intervals, FAP
-invokes Storage.saveModulesToFile to save the current state.
-
-This integration ensures that the application's data lifecycle is managed efficiently, providing a seamless user
-experience across sessions.
-
-
----
+Below is the sequence diagram of the entire function:
+![Desired GPA Sequence Diagram](diagrams/DesiredGpaSequence.png)
 
 ## Product scope
 
@@ -1047,7 +1069,42 @@ command will be explicitly stated. All provided test cases are assumed to be exe
 
 ### Storage
 
-{provide manual testing for storage class}
+1. Use `java -jar FAP.jar` to run the application
+2. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/CS2113 w/4
+    add c/CS1010 w/1
+    add c/ST2334 w/6
+    set n/JohnDoe curr/6
+    bye
+    ```
+    **Expected Results:** Application should terminate successfully, and the data should be saved to the file.
+
+
+3. Use `java -jar FAP.jar` to run the application
+4. Test Case: `view`
+
+   **Expected Results:** Table filled with modules based on what was previously added, categorized based on when it was
+taken, along with updated user data and other statistics as shown below:
+
+    ```
+    _____________________________________________________________
+    CEG Study Plan for: JohnDoe
+    _____________________________________________________________
+    | Y1S1 [Sem 1] | Y1S2 [Sem 2] | Y2S1 [Sem 3] | Y2S2 [Sem 4] |
+    |CS1010        |              |              |CS2113        |
+    _____________________________________________________________
+    | Y3S1 [Sem 5] | Y3S2 [Sem 6] | Y4S1 [Sem 7] | Y4S2 [Sem 8] |
+    |              |ST2334        |              |              |
+    _____________________________________________________________
+    - Current Study: Semester 6
+    - Total MCs taken: 12.00 / 160
+    - Total MCs listed: 12.00 / 160
+    _____________________________________________________________
+
+    ```
+
 
 #### [Back to Manual Testing](#instructions-for-manual-testing)
 
