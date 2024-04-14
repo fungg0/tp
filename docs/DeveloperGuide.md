@@ -737,18 +737,30 @@ With this, we can find the least number of upperBound grade the user need to att
 Below is the sequence diagram of the entire function:
 ![Desired GPA Sequence Diagram](diagrams/DesiredGpaSequence.png)
 
----
-## Appendix
 
+
+## Appendix: Requirements
+
+---
 ### Product scope
 
 #### Target user profile
 
-{Describe the target user profile}
++ has a lot of modules to manage
++ need to calculate the gpa fast without having to go to the school website
++ is reasonably comfortable using CLI apps
++ can type fast
++ wants to predict what grades to get to secure a certain GPA
 
 #### Value proposition
 
-{Describe the value proposition: what problem does it solve?}
++ User can plan the modules they want to take in the future
++ User can add the modules they have taken so far to keep track of them
++ User can calculate their current GPA
++ User can calculate what are the grades they need to get based on the input desired GPA
++ User can view their academic plan across all his/her semesters
++ User can save their academic plan upon quitting the program and view them later
+
 
 ### User Stories
 
@@ -768,13 +780,46 @@ Below is the sequence diagram of the entire function:
 
 ### Use Cases
 
+#### Use case: Adding of Module
+1. User request to add a module and input the name of the module and the semester to be taken in
+2. JsonManager checks the existence of the module in NUS and retrieves the necessary information
+3. Prints out the module that is added and its description
+4. Module is added into moduleList and save in the corresponding savefile
+    
+    Use case ends
+
+#### Extensions
++ 2a. JsonManager could not find the module in the Jsonfile (does not exist in NUS) 
+  + 2a1. ModuleNotFoundException is thrown 
++ 2b. ModuleList finds a duplicate module
+  + 2b1. ModuleAlreadyExistException is thrown
+    
+  Use case ends
+
+#### Use case: Deleteing of a Module
+1. User requests to delete a module and inputs the name of the module
+2. ModuleList finds the module in its list
+3. Module is deleted
+4. savefile is updated
+
+   Use case ends
+#### Extensions
++ 2a. ModuleList could not find the module in its list
+    + ModuleNotFoundException is thrown
+
+      Use case ends
 ### Non-Functional Requirements
 
-{Give non-functional requirements}
+1. Should work on any mainstream OS as long as it has Java 11 or above installed.
+2. Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
+3. A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+4. User must be a major of computer engineering
+5. User must be aware of what the prerequisites of the modules they are adding as the program do not check it for you
+6. If the user failed a mod, the user is not allowed to retake the module and add it into the program
 
 ### Glossary
 
-* *glossary item* - Definition
++ *JsonManager*: The class that manages the json file
 
 ## Instructions for manual testing
 
