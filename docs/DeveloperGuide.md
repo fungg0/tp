@@ -448,41 +448,13 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 
 ![ViewGraduateCommand Sequence Diagram](diagrams/ViewGraduateCommand-0.png)
 
-1. **Application Initialization and Entry Point:**
-
-   The `main` method, as the application's entry point, performs initial setups such as greeting the user and ensuring
-   critical components are initialized properly. It encapsulates high-level flow control and implements error handling
-   to manage assertion errors and unexpected exceptions.
-
-   ```java
-   public static void main(String[] args) {
-       try {
-           printGreeting();
-           assert moduleList != null : "moduleList should not be null";
-           runApplication();
-       } catch (AssertionError e) {
-           LOGGER.log(Level.SEVERE, "Assertion failed: " + e.getMessage(), e);
-           System.err.println("Critical assertion failure: " + e.getMessage());
-       } catch (Exception e) {
-           LOGGER.log(Level.SEVERE, "An unexpected error occurred: " + e.getMessage(), e);
-           System.err.println("An unexpected error occurred: " + e.getMessage());
-       }
-   }
-   ```
-   #### UML Diagram
-
-   ![FAP class diagram](diagrams/FAP.png)
-
-### UML Diagram Description
-
-
-2. **Adding a Module**
+### Adding a Module ###
 
    #### **Classes Involved:**
-   - **`Module`**: Manages the important attributes of an academic module.
-   - **`ModuleList`**: Manages a collection of academic modules.
-   - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
-   - **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and handle them appropriately
+    - **`Module`**: Manages the important attributes of an academic module.
+    - **`ModuleList`**: Manages a collection of academic modules.
+    - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
+    - **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and handle them appropriately
 
    **Module Class:**
    #### Purpose
@@ -530,16 +502,16 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
       modules in that semester.
 
    #### **Flow and Interactions:**
-   - Main point of entry is `AddCommand` class where it will check the usercommands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
-   - If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
-   - If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
-  
-   #### Error Handling
-   - `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
-   - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
-   - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
+    - Main point of entry is `AddCommand` class where it will check the usercommands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
+    - If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
+    - If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
 
-3. **Getting module details from Json File (JsonManager Class):**
+   #### Error Handling
+    - `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
+    - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
+    - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
+
+### Getting module details from Json File (JsonManager Class): ###
 
    #### Overview
 
@@ -595,6 +567,38 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
        System.out.println("Module MC: " + jsonManager.getModuleMC());
    }
    ```
+   Below is the sequence diagram for adding of module.
+   ![Adding a Module Sequence Diagram](diagrams/AddCommand.png)
+
+
+1. **Application Initialization and Entry Point:**
+
+   The `main` method, as the application's entry point, performs initial setups such as greeting the user and ensuring
+   critical components are initialized properly. It encapsulates high-level flow control and implements error handling
+   to manage assertion errors and unexpected exceptions.
+
+   ```java
+   public static void main(String[] args) {
+       try {
+           printGreeting();
+           assert moduleList != null : "moduleList should not be null";
+           runApplication();
+       } catch (AssertionError e) {
+           LOGGER.log(Level.SEVERE, "Assertion failed: " + e.getMessage(), e);
+           System.err.println("Critical assertion failure: " + e.getMessage());
+       } catch (Exception e) {
+           LOGGER.log(Level.SEVERE, "An unexpected error occurred: " + e.getMessage(), e);
+           System.err.println("An unexpected error occurred: " + e.getMessage());
+       }
+   }
+   ```
+   #### UML Diagram
+
+   ![FAP class diagram](diagrams/FAP.png)
+
+### UML Diagram Description
+
+
 
 4. **Viewing GPA**
 
