@@ -677,7 +677,7 @@ GPA = SUM(Course Grade Point * Course Units) / SUM(Course Units Counted Towards 
    ![View Gpa Command Sequence Diagram](diagrams/ViewGpaCommand.png)
 ---
 
-### **Feasbility of desired gpa**
+### **Desired Gpa**
 
 The `DesiredGpaCommand` class executes the program to calculate if desired GPA is feasible. 
 
