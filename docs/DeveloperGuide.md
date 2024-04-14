@@ -187,6 +187,67 @@ The method to parse and validate user inputs is handled in the `Parser` method `
 
 ### Storage
 
+![Storage diagram](diagrams/Storage.png)
+
+**Code** :
+[`Storage.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/storage/Storage.java)
+
+The `Storage` class in the Future Academic Planner (FAP) application is essential for handling the persistence 
+of user and module data. It allows the application to maintain state between sessions by reading from and writing 
+to files.
+
+As of `v2.1`, the `Storage` class is capable of handling several critical functionalities:
+1. **Saving Data**: It serializes the `User` and `ModuleList` objects into a text format and writes this information 
+to a specified file path.
+2. **Loading Data**: It deserializes text data from a specified file path back into `User` and `ModuleList` objects.
+
+### Key Functionalities
+
+#### 1. **Saving User and Module Data**
+- **Method**: `saveModulesToFile(String filePath)`
+- **Description**: This method saves serialized user information and a list of taken modules to a specified file.
+It first checks and, if necessary, creates the directory path provided in the filePath. It then initializes a 
+`BufferedWriter` to write the data efficiently.
+
+#### 2. **Loading User and Module Data**
+- **Method**: `loadDataFromFile(String filePath)`
+- **Description**: This method loads user information and module data from the specified file. If the file does not 
+exist, it creates a new one and returns early to avoid errors. It reads the file line by line, updating the user and 
+module data within the application.
+
+#### 3. **File and Directory Management**
+- **Methods**: `createFile(String filePath)`, `ensureDirectoryExists(String filePath)`
+- **Description**: These methods manage the file system interactions necessary for reading from and writing to files, 
+such as verifying directory existence and creating files as needed to prevent errors during the data load and 
+save processes.
+
+### Usage in Commands
+
+- **SetCommand and ViewCommand**: These commands utilize the `Storage` class to persist changes to the user and 
+modules immediately after modifications, ensuring data integrity and continuity.
+- **Startup and Shutdown**: On startup, `loadDataFromFile` is invoked to initialize the application state, and 
+on shutdown, `saveModulesToFile` is called to save the current state.
+
+### Purpose
+
+The main purpose of the `Storage` class is to abstract the complexities of file management and data serialization away 
+from the core application logic. This simplification allows other parts of the application, such as commands and 
+controllers, to interact with user and module data more efficiently and reliably.
+
+Additionally, by handling data persistence, the `Storage` class ensures that user progress and configurations are not
+lost between application sessions, thereby enhancing user experience and application reliability.
+
+### Interaction with Other Classes
+
+- **Interacts With**:
+    - `User`: To save and load user-specific data like name and current semester.
+    - `ModuleList`: To save and load the list of modules the user has taken.
+    - `FileWriter`/`BufferedWriter`: Used within `saveModulesToFile` to write data to files.
+    - `Scanner`/`FileReader`: Used within `loadDataFromFile` to read data from files.
+
+This robust functionality provided by the `Storage` class is critical for maintaining the long-term usability 
+and flexibility of the FAP application, making it a cornerstone of the application's architecture.
+
 ### Module, Module List
 **Code**:
 - [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java)
@@ -466,10 +527,10 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 ### Adding a Module ###
 
    #### **Classes Involved:**
-    - **`Module`**: Manages the important attributes of an academic module.
-    - **`ModuleList`**: Manages a collection of academic modules.
-    - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
-    - **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and handle them appropriately
+   - **`Module`**: Manages the important attributes of an academic module.
+   - **`ModuleList`**: Manages a collection of academic modules.
+   - **`JsonManager`**: Handles operations related to reading from and writing to JSON files.
+   - **`AddCommand`**: Check for the state of module (whether it exist in NUS and already exist in ModuleList) and handle them appropriately
 
    **Module Class:**
    #### Purpose
@@ -517,14 +578,14 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
       modules in that semester.
 
    #### **Flow and Interactions:**
-    - Main point of entry is `AddCommand` class where it will check the usercommands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
-    - If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
-    - If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
-
+   - Main point of entry is `AddCommand` class where it will check the usercommands passed by the Parser class. The check is to see if the module exist in NUS and in the moduleList.
+   - If the module exist in NUS and is not a duplicate (does not exist in moduleList), then the `addModule` method in ModuleList is called which will instantiate a `Module` object
+   - If the module does not exist in NUS or is a duplicate, an exception is throw which are shown are below,
+  
    #### Error Handling
-    - `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
-    - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
-    - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
+   - `ModuleAlreadyExistException`: Thrown if there are duplicate modules in ModuleList
+   - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
+   - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
 
 ### Getting module details from Json File (JsonManager Class): ###
 
@@ -1058,7 +1119,42 @@ command will be explicitly stated. All provided test cases are assumed to be exe
 
 ### Storage
 
-{provide manual testing for storage class}
+1. Use `java -jar FAP.jar` to run the application
+2. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/CS2113 w/4
+    add c/CS1010 w/1
+    add c/ST2334 w/6
+    set n/JohnDoe curr/6
+    bye
+    ```
+    **Expected Results:** Application should terminate successfully, and the data should be saved to the file.
+
+
+3. Use `java -jar FAP.jar` to run the application
+4. Test Case: `view`
+
+   **Expected Results:** Table filled with modules based on what was previously added, categorized based on when it was
+taken, along with updated user data and other statistics as shown below:
+
+    ```
+    _____________________________________________________________
+    CEG Study Plan for: JohnDoe
+    _____________________________________________________________
+    | Y1S1 [Sem 1] | Y1S2 [Sem 2] | Y2S1 [Sem 3] | Y2S2 [Sem 4] |
+    |CS1010        |              |              |CS2113        |
+    _____________________________________________________________
+    | Y3S1 [Sem 5] | Y3S2 [Sem 6] | Y4S1 [Sem 7] | Y4S2 [Sem 8] |
+    |              |ST2334        |              |              |
+    _____________________________________________________________
+    - Current Study: Semester 6
+    - Total MCs taken: 12.00 / 160
+    - Total MCs listed: 12.00 / 160
+    _____________________________________________________________
+
+    ```
+
 
 #### [Back to Manual Testing](#instructions-for-manual-testing)
 
