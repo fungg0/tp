@@ -127,6 +127,7 @@ The `Command` class and its subclasses will call methods in Ui class for anythin
 
 ![Ui diagram](diagrams/Ui.png)
 
+---
 ### User class
 **Code** : [`User.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/user/User.java)
 
@@ -144,6 +145,7 @@ methods such as `printUserInfo()` and `printGreeting()`.
 Additionally, the `User` class helps to verify the status of the modules in the user's plan, determining whether the 
 modules have been taken or not.
 
+---
 ### Parser package
 **Code**:
 - [`Parser.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/parser/Parser.java)
@@ -271,6 +273,7 @@ Below is the class diagram of how the module and modulelist class interacts with
 
 ![Module diagram](diagrams/ModuleList.png)
 
+---
 ### Command
 
 Here's how the `Command` class interact with the other classes:
