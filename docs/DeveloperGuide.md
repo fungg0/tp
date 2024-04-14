@@ -529,49 +529,50 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 
    1) **Overview**
 
-   The `JsonManager` class is designed to manage and interact with module information stored in a JSON format. It
-   provides functionalities for checking the existence of modules, retrieving module information such as Modular
-   Credits (MCs), description, and title from a JSON file.
+       The `JsonManager` class is designed to manage and interact with module information stored in a JSON format. It
+       provides functionalities for checking the existence of modules, retrieving module information such as Modular
+       Credits (MCs), description, and title from a JSON file.
 
    2) **Key Methods**
 
    + **`moduleExist(String moduleCode)`**: Checks if a module with the specified code exists in the JSON data.
-        - **Parameters**: `String moduleCode` - The code of the module to check for existence.
-        - **Returns**: `boolean` - `true` if the module exists, `false` otherwise.
+       - ***Parameters***: `String moduleCode` - The code of the module to check for existence.
+       - ***Returns***: `boolean` - `true` if the module exists, `false` otherwise.
 
    + **`getModuleInfo(String moduleCode)`**: Retrieves detailed information about a module, including its Modular
-      Credits, description, and title, based on the module code.
-        - **Parameters**: `String moduleCode` - The code of the module for which information is to be retrieved.
-        - **Note**: This method updates the internal state of the `JsonManager` object with the retrieved module
-          information.
+    Credits, description, and title, based on the module code.
+      - ***Parameters***: `String moduleCode` - The code of the module for which information is to be retrieved.
+      - ***Note***: This method updates the internal state of the `JsonManager` object with the retrieved module
+        information.
 
    + **`getModuleDescription()`**: Returns the description of the last module queried.
-        - **Returns**: `String` - The description of the module.
+      - ***Returns***: `String` - The description of the module.
 
    + **`getModuleMC()`**: Returns the Modular Credits of the last module queried.
-        - **Returns**: `int` - The Modular Credits of the module.
+        - ***Returns***: `int` - The Modular Credits of the module.
 
    + **`getModuleTitle()`**: Returns the title of the last module queried.
-        - **Returns**: `String` - The title of the module.
+        - ***Returns***: `String` - The title of the module.
 
-   3) Error Handling
+   3) **Error Handling**
 
-   + The constructor throws a `RuntimeException` if the JSON file containing module information cannot be found or
-   accessed, ensuring that the application is aware of missing or inaccessible module data.
+       The constructor throws a `RuntimeException` if the JSON file containing module information cannot be found or
+       accessed, ensuring that the application is aware of missing or inaccessible module data.
 
-   4) Usage
 
-   ```java
-   JsonManager jsonManager = new JsonManager();
-   if (jsonManager.moduleExist("CS1010")) {
-      jsonManager.getModuleInfo("CS1010");
-      System.out.println("Module Title: " + jsonManager.getModuleTitle());
-      System.out.println("Module Description: " + jsonManager.getModuleDescription());
-      System.out.println("Module MC: " + jsonManager.getModuleMC());
-   }
-   ```
-   Below is the sequence diagram for adding of module.
-   ![Adding a Module Sequence Diagram](diagrams/AddCommand.png)
+   4) **Usage**
+
+       ```java
+       JsonManager jsonManager = new JsonManager();
+       if (jsonManager.moduleExist("CS1010")) {
+          jsonManager.getModuleInfo("CS1010");
+          System.out.println("Module Title: " + jsonManager.getModuleTitle());
+          System.out.println("Module Description: " + jsonManager.getModuleDescription());
+          System.out.println("Module MC: " + jsonManager.getModuleMC());
+       }
+       ```
+       Below is the sequence diagram for adding of module.
+       ![Adding a Module Sequence Diagram](diagrams/AddCommand.png)
 
 
 1. **Application Initialization and Entry Point:**
