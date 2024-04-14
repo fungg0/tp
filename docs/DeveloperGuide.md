@@ -189,10 +189,9 @@ This design allows a separation of concern which separates the purpose of each o
 
 **Overview:**
 
-Below is a class diagram that shows the associations between `Module`, `ModuleList`, and other relevant classes
+Below is a sequence diagram that shows the flow of the implementation when a module is added by the user
 
-
-![Module.png](diagrams%2FModuleList.png)
+![AddModuleSequence.png](diagrams%2FAddCommand.png)
 
 
 The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
