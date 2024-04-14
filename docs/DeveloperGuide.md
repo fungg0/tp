@@ -772,28 +772,42 @@ With this, we can find the least number of upperBound grade the user need to att
 Below is the sequence diagram of the entire function:
 ![Desired GPA Sequence Diagram](diagrams/DesiredGpaSequence.png)
 
-## Product scope
+---
+## Appendix
 
-### Target user profile
+### Product scope
+
+#### Target user profile
 
 {Describe the target user profile}
 
-### Value proposition
+#### Value proposition
 
 {Describe the value proposition: what problem does it solve?}
 
-## User Stories
+### User Stories
 
-| Version | As a ... | I want to ...             | So that I can ...                                           |
-|---------|----------|---------------------------|-------------------------------------------------------------|
-| v1.0    | new user | see usage instructions    | refer to them when I forget how to use the application      |
-| v2.0    | user     | find a to-do item by name | locate a to-do without having to go through the entire list |
+| Version | As a ...               | I can ...                         | So that I can ...                                |
+|---------|------------------------|-----------------------------------|--------------------------------------------------|
+| v1.0    | Student User           | Add modules                       | add in modules that I have taken or plan to take |
+| v1.0    | Student User           | Remove modules                    | remove wrong inputs                              |
+| v1.0    | Student User           | View modules that I have inputted | track the modules I have added                   |
+| v1.0    | Student User           | Insert module grade               | track my grades                                  |
+| v1.0    | Recurrent Student User | View my GPA                       | keep track of my overall performance             |
+| v1.0    | New Student User       | Add my name                       | personalise my app                               |
+| v2.0    | Recurrent Student User | Input my current semester         | use features related to my current semester      |
+| v2.0    | Recurrent Student User | Store my data                     | personalise my app                               |
+| v2.0    | Student User           | View courses needed to graduate   | personalise my app                               |
+| v2.0    | Recurrent Student User | Check feasibility of desired GPA  | personalise my app                               |
+| v2.0    | New Student User       | View help command                 | personalise my app                               |
 
-## Non-Functional Requirements
+### Use Cases
+
+### Non-Functional Requirements
 
 {Give non-functional requirements}
 
-## Glossary
+### Glossary
 
 * *glossary item* - Definition
 
