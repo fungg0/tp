@@ -1,0 +1,37 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty members
+hide circle
+
+class Ui {
+    - in: Scanner
+    - COMMENT_LINE_FORMAT_REGEX: String
+    - COMMANDS_HELP_MESSAGE: String
+    + Ui()
+    + close(): void
+    + getUserCommand(): String
+    + printMessage(String): void
+    + shouldIgnore(String): boolean
+    + printGreeting(): void
+    + printGreeting(String): void
+    + printHelpInfoCommand(): void
+    + printCommandGuide(): void
+    + printUserInfo(String, int): void
+    + printScheduleHeader(String): void
+    + printScheduleDetails(int, float, float): void
+    + printModulePlan(Map<Integer, ArrayList<Module>>): void
+    + printModulesToComplete(ArrayList<String>): void
+    + printViewModule(String, String, String): void
+    + printWrappedText(String, int, int): void
+    + printHyphens(): void
+    + printExit(): void
+}
+
+Class FAP
+
+FAP ..> Ui : obtains user input
+Command ..> Ui : toPrint
+Ui ..> Parser : valid user input
+
+
+@enduml
