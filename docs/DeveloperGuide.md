@@ -38,7 +38,21 @@ resources. It embodies key software design principles and showcases thoughtful a
 
 ## Design
 
-### UI
+### UI Class
+
+Code: [`Ui.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/ui/Ui.java)
+
+**Overview:**
+
+The `Ui` class is responsible for handling all user interface interactions for the CEG (Computer Engineering) 
+Future Academic Planner application. It provides methods for displaying messages, obtaining user input, printing 
+schedules, module plans, and more.
+
+The `Ui` class retrieves input from the user and passes it on to the `Parser`.
+
+The `Command` class and its subclasses will call methods in Ui class for anything that needs to be printed.
+
+![Ui diagram](diagrams/Ui.png)
 
 ### User class
 **Code** : [`User.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/user/User.java)
