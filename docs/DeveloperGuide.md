@@ -135,7 +135,7 @@ matching command is found, it returns an `Invalid` command instance.
 
 Below is a class diagram that shows the associations between `Parser` and `CommandMetadata`
 
-![ParserClassDiagram.png](diagrams%2FParserClassDiagram.png)
+![ParserClassDiagram.png](diagrams/ParserClassDiagram.png)
 
 The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
 for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
@@ -144,7 +144,7 @@ exception of `Invalid` command) that overrides the method `createCommandInstance
 the specific `Command`.
 
 The `Parser` class maintains a list of these `CommandMetadata` subclasses instances and iterates through them to
-identify a given user command. 
+identify a given user command.
 
 Further implementation details are available at "Parsing User Inputs" section under Implementation.
 
@@ -153,7 +153,7 @@ Further implementation details are available at "Parsing User Inputs" section un
 Below is a sequence diagram that shows how the `FAP` main method calls `Parser` to parse a `userInput` 
 for a `Command` to return:
 
-![ParserSequenceDiagram.png](diagrams%2FParserSequenceDiagram.png)
+![ParserSequenceDiagram.png](diagrams/ParserSequenceDiagram.png)
 
 The method to parse and validate user inputs is handled in the `Parser` method `getCommand(String userInput)`:
 1. `userInput` is first checked to see if it is null or empty. If either condition is met, `Parser` returns an 'Invalid' 
@@ -302,6 +302,18 @@ public AddCommandMetadata() {
 }
 ```
 
+### Saving modules to file
+
+![StorageSequenceDiagram.png](diagrams/StorageSequenceDiagram.png)
+
+The `Storage` class is responsible for saving and loading user data to and from a file. 
+It interacts with the `ModuleList` and `User` classes to serialize and deserialize the data, ensuring that the user's
+module list and personal information are preserved between application sessions. The `Storage` class encapsulates file
+management operations, such as creating directories, reading and writing data, and handling exceptions gracefully. By 
+separating data storage concerns from other application logic, the `Storage` class promotes clean code architecture and 
+facilitates data persistence across multiple runs of the application. The sequence diagram above illustrates the flow of
+operations when saving user data to a file. The `Storage` class plays a crucial role in maintaining data integrity and 
+providing a seamless user experience by preserving user data between application sessions. 
 ### Commands
 
 #### View Commands
