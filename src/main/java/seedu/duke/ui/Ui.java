@@ -2,6 +2,7 @@ package seedu.duke.ui;
 
 import seedu.duke.enums.CEGModules;
 import seedu.duke.modules.Module;
+import seedu.duke.modules.ModuleList;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -34,6 +35,22 @@ public class Ui {
 
     public Ui() {
         this.in = new Scanner(System.in);
+    }
+
+    public static void printGradeExpectations(ModuleList moduleList, double desiredGPA, double acquiredGPA,
+                                              int upperBoundGradeNeeded, double upperBound, int lowerBoundGradeNeeded,
+                                              double lowerBound, float moduleCreditsNotTaken) {
+        String formattedDesiredGPA = String.format("%.02f", desiredGPA);
+        String formattedAcquiredGPA = String.format("%.02f", acquiredGPA);
+        System.out.println("MCs left to take: " + moduleCreditsNotTaken);
+        System.out.println("To obtain desired GPA of: " + formattedDesiredGPA);
+        if (upperBoundGradeNeeded == 0) {
+            System.out.println("You will need: " + lowerBoundGradeNeeded + " " + moduleList.numberToGrade(lowerBound));
+        } else {
+            System.out.println("You will need: " + upperBoundGradeNeeded + " " + moduleList.numberToGrade(upperBound) +
+                    " and " + lowerBoundGradeNeeded + " " + moduleList.numberToGrade(lowerBound));
+        }
+        System.out.println("With the above grades, your end GPA will be: " + formattedAcquiredGPA);
     }
 
     public void close() {

@@ -5,6 +5,7 @@ import seedu.duke.exceptions.GpaNullException;
 import seedu.duke.exceptions.InvalidGpaException;
 import seedu.duke.exceptions.ModuleException;
 import seedu.duke.exceptions.ModuleNotFoundException;
+import seedu.duke.ui.Ui;
 import seedu.duke.user.User;
 
 import java.util.ArrayList;
@@ -58,13 +59,6 @@ public class ModuleList {
             throw new IllegalArgumentException("Module cannot be null.");
         }
         moduleList.add(module);
-    }
-
-    // for debugging purposes
-    public void printModules() {
-        for (Module module : moduleList) {
-            System.out.println(module.getModuleCode());
-        }
     }
 
     public void removeModule(Module module) {
@@ -209,7 +203,7 @@ public class ModuleList {
         }
         double acquiredGPA = (currentGPA * moduleCreditsCountedToGPA + mockGPA *
                 (4 * (upperBoundGradeNeeded + lowerBoundGradeNeeded))) / totalModuleCreditsCountedToGPA;
-        printGradeExpectations(desiredGPA, acquiredGPA, upperBoundGradeNeeded,
+        Ui.printGradeExpectations(this, desiredGPA, acquiredGPA, upperBoundGradeNeeded,
                 upperBound, lowerBoundGradeNeeded, lowerBound, moduleCreditsNotTaken);
     }
 
@@ -242,22 +236,6 @@ public class ModuleList {
         if (requiredFutureAverageGrade < 0) {
             throw new InvalidGpaException("Your current GPA is too high to achieve desired GPA");
         }
-    }
-
-    private void printGradeExpectations(double desiredGPA, double acquiredGPA, int upperBoundGradeNeeded,
-                                        double upperBound, int lowerBoundGradeNeeded, double lowerBound,
-                                        float moduleCreditsNotTaken) {
-        String formattedDesiredGPA = String.format("%.02f", desiredGPA);
-        String formattedAcquiredGPA = String.format("%.02f", acquiredGPA);
-        System.out.println("MCs left to take: " + moduleCreditsNotTaken);
-        System.out.println("To obtain desired GPA of: " + formattedDesiredGPA);
-        if (upperBoundGradeNeeded == 0) {
-            System.out.println("You will need: " + lowerBoundGradeNeeded + " " + numberToGrade(lowerBound));
-        } else {
-            System.out.println("You will need: " + upperBoundGradeNeeded + " " + numberToGrade(upperBound) +
-                    " and " + lowerBoundGradeNeeded + " " + numberToGrade(lowerBound));
-        }
-        System.out.println("With the above grades, your end GPA will be: " + formattedAcquiredGPA);
     }
 
     public double getFutureAverageGradeUpperBound(double requiredFutureAverageGrade) {

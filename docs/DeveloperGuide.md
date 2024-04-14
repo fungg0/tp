@@ -504,10 +504,49 @@ This method is instrumental in understanding the dynamic interactions and proced
    calculation.
 
    This is the formula used for tabulation of GPA.
-   `GPA = SUM(Course Grade Point * Course Units) / SUM(Course Units Counted Towards GPA)`
+```
+GPA = SUM(Course Grade Point * Course Units) / SUM(Course Units Counted Towards GPA)
+```
 
    Below is the sequence diagram for `ViewGpaCommand`.
    ![View Gpa Command Sequence Diagram](diagrams/ViewGpaCommand.png)
+
+7. **Feasbility of desired gpa**
+
+The `DesiredGpaCommand` class executes the program to calculate if desired GPA is feasible. 
+
+Checking for feasibility depends on several conditions: 
+- The current GPA
+- The number of MCs taken (excluding mods that are S or CS)
+- The number of MCs user plan to take by graduation
+- The number of MCs left to take
+- The desired GPA
+
+Firstly, the current GPA will be obtained via tallyGPA() in moduleList. This will also tabulate the current number MCs 
+taken based on the number of modules that have been assigned a grade in the planner. One thing to look out for will be
+modules that have been assigned S or CS, as those modules will not be accounted for in GPA calculation, but will affect
+the number of MCs that the user have yet to take.
+
+Next, the program will tabulate the GPA needed for the remaining MCs in order to achieve desired GPA when combined with 
+current GPA. This is based on the formula
+```
+Desired GPA = (Current GPA * MCs taken) + (GPA to attain * MCs not taken) / (total MCs)
+```
+
+NOTE:
+- Total MCs is the total number of MCs that get contributes to GPA by graduation, thus not accounting for modules that 
+are CS/CU.
+- In this version, we assume user will only take a maximum of 160MCs. In future implementations, the user can change 
+that option, which will affect the GPA to attain.
+- In this version, if user has already inputted more than 160MCs worth of modules, the code will throw an exception and 
+stop.
+
+If (GPA to attain) calculated is more than 5 or less than 0, it means that it is not feasible to reach the desired GPA.
+
+If (GPA to attain) is feasible, we can find a combination of grades that
+
+
+
 
 Design & Implementation
 Storage Class
