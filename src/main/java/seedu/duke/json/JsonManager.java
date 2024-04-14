@@ -50,7 +50,11 @@ public class JsonManager {
     }
 
     public boolean correctSemester(int intendedSem) {
-        return moduleSemester.contains(intendedSem);
+        try {
+            return moduleSemester.contains(intendedSem);
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
     public boolean getGradedGradingBasis() {

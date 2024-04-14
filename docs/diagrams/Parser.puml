@@ -5,8 +5,8 @@ hide empty members
 hide circle
 
 class Parser {
-    - metadataList : ArrayList<CommandMetadata>
-    + getCommand(userInput : String) : Command
+    - {static} metadataList : ArrayList<CommandMetadata>
+    + {static} getCommand(userInput : String) : Command
 }
 
 abstract class CommandMetadata {
@@ -16,8 +16,8 @@ abstract class CommandMetadata {
     - keyword : String
     - groupArguments : String[]
 
-    + getCommandArguments(matcher : Matcher) : Map<String, String>
-    + {abstract} createCommandInstance(args : Map<String, String>) : Command
+    # getCommandArguments(matcher : Matcher) : Map<String, String>
+    # {abstract} createCommandInstance(args : Map<String, String>) : Command
 }
 
 class ABCCommandMetadata extends CommandMetadata {}

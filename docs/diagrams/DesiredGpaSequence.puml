@@ -1,11 +1,10 @@
 @startuml
 
-participant FAP
-participant DesiredGpaCommand
-participant GradeCommandMetadata
-participant moduleList
-participant InvalidGpaException
-participant Ui
+participant FAP <<Class>>
+participant DesiredGpaCommand as ":DesiredGpaCommand"
+participant moduleList as ":ModuleList"
+participant GradeCommandMetadata as ":GradeCommandMetadata"
+participant Ui as ":Ui"
 
 FAP -> DesiredGpaCommand: execute(userInput)
 activate DesiredGpaCommand

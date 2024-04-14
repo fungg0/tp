@@ -1,7 +1,7 @@
 @startuml
-participant FAP
-participant Parser
-participant CommandMetadata
+participant FAP as FAP <<class>>
+participant Parser as Parser <<class>>
+participant CommandMetadata as ":CommandMetadata"
 
 FAP -> Parser: getCommand(userInput)
 activate Parser
