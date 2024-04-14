@@ -645,8 +645,33 @@ stop.
 
 If (GPA to attain) calculated is more than 5 or less than 0, it means that it is not feasible to reach the desired GPA.
 
-If (GPA to attain) is feasible, we can find a combination of grades that
+If (GPA to attain) is feasible, we will try to find the easiest way to achieve desired GPA. As there are many different 
+combinations, we will just work with two grades closest to (gpa to attain), the one directly above (named upperBound) 
+and directly below (named lowerBound).
 
+For example, if (GPA to attain) is 4.25, then upperBound will be "A-" (grade = 4.5), and lowerBound will be "B+" (grade
+= 4.0).
+
+Note:
+- Assume the remaining modules to be taken are all 4 MCs
+
+Initialise a variable, mockGPA, to keep track of the future GPA. mockGPA is initialised to lowerBound grade value.
+
+Using a while loop:
+- Checks if mockGPA is above (GPA to attain)
+- If yes, we will need one more upperBound grade
+- Else, the user can just take one more lowerBound grade
+- Update mockGPA
+- Stop the loop once total MCs is reached
+
+After the final iteration, mockGPA could be below (GPA to attain) as adding one more lowerBound grade can push mockGPA 
+to be lower than (GPA to attain). To fix this, we just need to increment number of upperBound by 1 and decrement number
+of lowerBound by 1.
+
+With this, we can find the least number of upperBound grade the user need to attain to achieve their desired GPA.
+
+Below is the sequence diagram of the entire function:
+![Desired GPA Sequence Diagram](diagrams/DesiredGpaSequence.png)
 
 
 
