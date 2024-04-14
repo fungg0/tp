@@ -1102,7 +1102,42 @@ command will be explicitly stated. All provided test cases are assumed to be exe
 
 ### Storage
 
-{provide manual testing for storage class}
+1. Use `java -jar FAP.jar` to run the application
+2. Test Case: (The following test case requires multiple lines of inputs)
+
+    ```
+    add c/CS2113 w/4
+    add c/CS1010 w/1
+    add c/ST2334 w/6
+    set n/JohnDoe curr/6
+    bye
+    ```
+    **Expected Results:** Application should terminate successfully, and the data should be saved to the file.
+
+
+3. Use `java -jar FAP.jar` to run the application
+4. Test Case: `view`
+
+   **Expected Results:** Table filled with modules based on what was previously added, categorized based on when it was
+taken, along with updated user data and other statistics as shown below:
+
+    ```
+    _____________________________________________________________
+    CEG Study Plan for: JohnDoe
+    _____________________________________________________________
+    | Y1S1 [Sem 1] | Y1S2 [Sem 2] | Y2S1 [Sem 3] | Y2S2 [Sem 4] |
+    |CS1010        |              |              |CS2113        |
+    _____________________________________________________________
+    | Y3S1 [Sem 5] | Y3S2 [Sem 6] | Y4S1 [Sem 7] | Y4S2 [Sem 8] |
+    |              |ST2334        |              |              |
+    _____________________________________________________________
+    - Current Study: Semester 6
+    - Total MCs taken: 12.00 / 160
+    - Total MCs listed: 12.00 / 160
+    _____________________________________________________________
+
+    ```
+
 
 #### [Back to Manual Testing](#instructions-for-manual-testing)
 
