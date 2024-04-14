@@ -797,7 +797,7 @@ Below is the sequence diagram of the entire function:
     
   Use case ends
 
-#### Use case: Deleteing of a Module
+#### Use case: Deleting of a Module
 1. User requests to delete a module and inputs the name of the module
 2. ModuleList finds the module in its list
 3. Module is deleted
