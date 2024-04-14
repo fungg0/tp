@@ -66,6 +66,9 @@ private static void runApplication() {
 }
 ```
 
+Below is a **Sequence diagram** that shows this application loop:
+![ArchitectureSequenceDiagram.png](diagrams/ArchitectureSequenceDiagram.png)
+
 #### **Key Points:**
 
 - **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application loop appropriately.
@@ -137,40 +140,23 @@ Additionally, the `User` class helps to verify the status of the modules in the 
 modules have been taken or not.
 
 ### Parser package
-**Code**: 
-- [`Parser.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/parser/Parser.java) 
+**Code**:
+- [`Parser.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/parser/Parser.java)
 - [`CommandMetadata.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/parser/CommandMetadata.java)
 
 The `Parser` class, together with the `CommandMetadata` class parses user input to
 **return appropriate command objects** for the corresponding `Command` classes. If input validation fails or no
 matching command is found, it returns an `Invalid` command instance.
 
-### Module and ModuleList
-**Code**: 
-- [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java) 
-- [`ModuleList.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/ModuleList.java) 
-
-The `Module` class and `ModuleList` class work together to store the data of the modules added by the user
-
-The `Module` class is responsible for containing the main attributes of a module such as moduleCode, moduleGrade, moduleMC, moduleTaken, moduleDate, gradedGradingBasis, and moduleDescription. These are relevant attributes that other classes use for certain actions done by the user. 
-
-The `ModuleList` class is responsible for managing the attributes contained in the `Module` class. They are mainly actions that value add to these attributes. For example, calculating the total amount of MC (module credit) the user has, calculating the GPA the user has, changing the grade of a certain mod, or adding a new module. 
-
-Hence, these are not just simple getters and setters, instead actions that value add to the attributes of the `Module` class, letting the user use them for different purposes in real life.
-
-This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
-
 **Overview:**
 
-Below is a class diagram that shows the associations between `Module`, `ModuleList`, and other relevant classes
+Below is a class diagram that shows the associations between `Parser` and `CommandMetadata`
 
-
-![Module.png](diagrams/ModuleList.png)
-
+![ParserClassDiagram.png](diagrams/ParserClassDiagram.png)
 
 The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
 for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
-and parsed arguments.** For every `Command` class, there would be a corresponding `CommandMetadata` class (with the 
+and parsed arguments.** For every `Command` class, there would be a corresponding `CommandMetadata` class (with the
 exception of `Invalid` command) that overrides the method `createCommandInstance` to generate the `Command` instance of
 the specific `Command`.
 
@@ -181,23 +167,23 @@ Further implementation details are available at "Parsing User Inputs" section un
 
 **How it works (Sequence):**
 
-Below is a sequence diagram that shows how the `FAP` main method calls `Parser` to parse a `userInput` 
+Below is a sequence diagram that shows how the `FAP` main method calls `Parser` to parse a `userInput`
 for a `Command` to return:
 
 ![ParserSequenceDiagram.png](diagrams/ParserSequenceDiagram.png)
 
 The method to parse and validate user inputs is handled in the `Parser` method `getCommand(String userInput)`:
-1. `userInput` is first checked to see if it is null or empty. If either condition is met, `Parser` returns an 'Invalid' 
-command instance.
-2. The first `word` of the `userInput` string is then checked to see if it matches with a valid command 
-`keyword` (Eg. `add`, `remove`, `view` etc)
+1. `userInput` is first checked to see if it is null or empty. If either condition is met, `Parser` returns an 'Invalid'
+   command instance.
+2. The first `word` of the `userInput` string is then checked to see if it matches with a valid command
+   `keyword` (Eg. `add`, `remove`, `view` etc)
 3. If there is no match, return an `Invalid` command instance (on loop end)
-4. If there is a match, the corresponding `CommandMetadata` class for the `keyword` is called upon, 
-and there will be a further attempt to match the `userInput` string with the command `regex` expression
-5. If it does not match, the `CommandMetadata` class will validate the error in user string syntax, print out 
-an error message, and return an `Invalid` command instance
+4. If there is a match, the corresponding `CommandMetadata` class for the `keyword` is called upon,
+   and there will be a further attempt to match the `userInput` string with the command `regex` expression
+5. If it does not match, the `CommandMetadata` class will validate the error in user string syntax, print out
+   an error message, and return an `Invalid` command instance
 6. If it matches, the command `arguments` will be extracted out and the respective command class instance will be
-created based on the overwritten method `createCommandInstance` in the respective `CommandMetadata` class
+   created based on the overwritten method `createCommandInstance` in the respective `CommandMetadata` class
 
 ### Storage
 
@@ -262,7 +248,34 @@ lost between application sessions, thereby enhancing user experience and applica
 This robust functionality provided by the `Storage` class is critical for maintaining the long-term usability 
 and flexibility of the FAP application, making it a cornerstone of the application's architecture.
 
-### Module, Module List, JSON
+### Module, Module List
+**Code**:
+- [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java)
+- [`ModuleList.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/ModuleList.java)
+
+The `Module` class and `ModuleList` class work together to store the data of the modules added by the user
+
+The `Module` class is responsible for containing the main attributes of a module such as moduleCode, moduleGrade, moduleMC, moduleTaken, moduleDate, gradedGradingBasis, and moduleDescription. These are relevant attributes that other classes use for certain actions done by the user.
+
+The `ModuleList` class is responsible for managing the attributes contained in the `Module` class. They are mainly actions that value add to these attributes. For example, calculating the total amount of MC (module credit) the user has, calculating the GPA the user has, changing the grade of a certain mod, or adding a new module.
+
+Hence, these are not just simple getters and setters, instead actions that value add to the attributes of the `Module` class, letting the user use them for different purposes in real life.
+
+This design allows a separation of concern which separates the purpose of each of these two classes and ultimately leads to higher cohesion and lower coupling.
+
+**Overview:**
+
+Below is a sequence diagram that shows the flow of the implementation when a module is added by the user
+
+![AddModuleSequence.png](diagrams%2FAddCommand.png)
+
+
+The`CommandMetadata` class is an abstract class that manages regular expressions (regex) and validation
+for command arguments, allowing subclasses to generate specific **`Command` instances** based on **command keywords
+and parsed arguments.** For every `Command` class, there would be a corresponding `CommandMetadata` class (with the
+exception of `Invalid` command) that overrides the method `createCommandInstance` to generate the `Command` instance of
+the specific `Command`.
+
 
 ### Command
 
@@ -511,35 +524,7 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
 
 ![ViewGraduateCommand Sequence Diagram](diagrams/ViewGraduateCommand-0.png)
 
-1. **Application Initialization and Entry Point:**
-
-   The `main` method, as the application's entry point, performs initial setups such as greeting the user and ensuring
-   critical components are initialized properly. It encapsulates high-level flow control and implements error handling
-   to manage assertion errors and unexpected exceptions.
-
-   ```java
-   public static void main(String[] args) {
-       try {
-           printGreeting();
-           assert moduleList != null : "moduleList should not be null";
-           runApplication();
-       } catch (AssertionError e) {
-           LOGGER.log(Level.SEVERE, "Assertion failed: " + e.getMessage(), e);
-           System.err.println("Critical assertion failure: " + e.getMessage());
-       } catch (Exception e) {
-           LOGGER.log(Level.SEVERE, "An unexpected error occurred: " + e.getMessage(), e);
-           System.err.println("An unexpected error occurred: " + e.getMessage());
-       }
-   }
-   ```
-   #### UML Diagram
-
-   ![FAP class diagram](diagrams/FAP.png)
-
-### UML Diagram Description
-
-
-2. **Adding a Module**
+### Adding a Module ###
 
    #### **Classes Involved:**
    - **`Module`**: Manages the important attributes of an academic module.
@@ -602,7 +587,7 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
    - `ModuleNotFoundException`: Thrown if module does not exist in the NUS list of modules
    - `WrongSemesterException`: Thrown if the user attempts to add a module in a semester which it is not available to be taken in
 
-3. **Getting module details from Json File (JsonManager Class):**
+### Getting module details from Json File (JsonManager Class): ###
 
    #### Overview
 
@@ -658,6 +643,38 @@ The following diagram illustrates how `ViewGraduateCommand` operates when its `e
        System.out.println("Module MC: " + jsonManager.getModuleMC());
    }
    ```
+   Below is the sequence diagram for adding of module.
+   ![Adding a Module Sequence Diagram](diagrams/AddCommand.png)
+
+
+1. **Application Initialization and Entry Point:**
+
+   The `main` method, as the application's entry point, performs initial setups such as greeting the user and ensuring
+   critical components are initialized properly. It encapsulates high-level flow control and implements error handling
+   to manage assertion errors and unexpected exceptions.
+
+   ```java
+   public static void main(String[] args) {
+       try {
+           printGreeting();
+           assert moduleList != null : "moduleList should not be null";
+           runApplication();
+       } catch (AssertionError e) {
+           LOGGER.log(Level.SEVERE, "Assertion failed: " + e.getMessage(), e);
+           System.err.println("Critical assertion failure: " + e.getMessage());
+       } catch (Exception e) {
+           LOGGER.log(Level.SEVERE, "An unexpected error occurred: " + e.getMessage(), e);
+           System.err.println("An unexpected error occurred: " + e.getMessage());
+       }
+   }
+   ```
+   #### UML Diagram
+
+   ![FAP class diagram](diagrams/FAP.png)
+
+### UML Diagram Description
+
+
 
 4. **Viewing GPA**
 
