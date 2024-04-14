@@ -1,5 +1,37 @@
 # Developer Guide
 
+- [Acknowledgements](#acknowledgements)
+- [Design](#design)
+    - [Architecture](#architecture)
+        - [Classes Involved](#classes-involved)
+        - [Flow and Interactions](#flow-and-interactions)
+    - [Running the Application Loop](#running-the-application-loop)
+        - [Key points](#key-points)
+    - [UI Class](#ui-class)
+    - [User Class](#user-class)
+    - [Parser Package](#parser-package)
+    - [Storage](#storage)
+    - [Module Class and Module List Class](#module-class-and-module-list-class)
+    - [Command Class](#command)
+- [Implementation](#implementation)
+    - [Parsing User Inputs](#parsing-user-inputs)
+    - [Saving modules to file](#saving-modules-to-file)
+    - [View Commands](#view-commands)
+        - [View Schedule](#view-schedule-without-ccourse_code)
+        - [View Specific Course Information](#view-specific-course-information-with-ccourse_code)
+        - [View Courses Needed to Graduate](#view-courses-needed-to-graduate)
+    - [Adding a Module](#adding-a-module)
+    - [Getting module details from Json File](#getting-module-details-from-json-file-jsonmanager-class)
+    - [GPA](#gpa)
+    - [Desired GPA](#desired-gpa)
+- [Appendix: Requirements](#appendix)
+    - [Product Scope](#product-scope)
+    - [User Stories](#user-stories)
+    - [Use Cases](#use-cases)
+    - [Non-Functional Requirements](#non-functional-requirements)
+    - [Glossary](#glossary)
+- [Appendix: Instructions for manual testing](#instructions-for-manual-testing)
+
 ## Acknowledgements
 
 ---
@@ -254,7 +286,7 @@ lost between application sessions, thereby enhancing user experience and applica
     - `Scanner`/`FileReader`: Used within `loadDataFromFile` to read data from files.
 
 ---
-### Module, Module List
+### Module Class and Module List Class
 **Code**:
 - [`Module.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/Module.java)
 - [`ModuleList.java`](https://github.com/AY2324S2-CS2113-W14-3/tp/blob/master/src/main/java/seedu/duke/modules/ModuleList.java)
@@ -477,9 +509,7 @@ between components during the file-saving process.
       which also flushes the buffer to the file, finalizing the write operation.
 
 ---
-### Commands
-
-#### View Commands
+### View Commands
 
 User input is passed to `Parser.getCommand()`, which determines that the input contains the keyword `view`, which
 branches out depending on whether it is followed by a `c/COURSE_CODE` (refer to the `Parser` implementation
@@ -630,39 +660,8 @@ if (jsonManager.moduleExist("CS1010")) {
 Below is a sequence diagram that shows the flow of the implementation when a module is added by the user.
 ![Adding a Module Sequence Diagram](diagrams/AddCommand.png)
 
---- 
-
-
-1. **Application Initialization and Entry Point:**
-
-   The `main` method, as the application's entry point, performs initial setups such as greeting the user and ensuring
-   critical components are initialized properly. It encapsulates high-level flow control and implements error handling
-   to manage assertion errors and unexpected exceptions.
-
-   ```java
-   public static void main(String[] args) {
-       try {
-           printGreeting();
-           assert moduleList != null : "moduleList should not be null";
-           runApplication();
-       } catch (AssertionError e) {
-           LOGGER.log(Level.SEVERE, "Assertion failed: " + e.getMessage(), e);
-           System.err.println("Critical assertion failure: " + e.getMessage());
-       } catch (Exception e) {
-           LOGGER.log(Level.SEVERE, "An unexpected error occurred: " + e.getMessage(), e);
-           System.err.println("An unexpected error occurred: " + e.getMessage());
-       }
-   }
-   ```
-   #### UML Diagram
-
-   ![FAP class diagram](diagrams/FAP.png)
-
-### UML Diagram Description
-
-
-
-4. **Viewing GPA**
+---
+### **Viewing GPA**
 
    The `ViewGpaCommand` class is responsible for displaying the current GPA attained by the student. It
    accesses `ModuleList`, which looks through all `Module` object contained in the list. If the `Module` is marked as
@@ -676,8 +675,9 @@ GPA = SUM(Course Grade Point * Course Units) / SUM(Course Units Counted Towards 
 
    Below is the sequence diagram for `ViewGpaCommand`.
    ![View Gpa Command Sequence Diagram](diagrams/ViewGpaCommand.png)
+---
 
-7. **Feasbility of desired gpa**
+### **Desired Gpa**
 
 The `DesiredGpaCommand` class executes the program to calculate if desired GPA is feasible. 
 
@@ -737,28 +737,42 @@ With this, we can find the least number of upperBound grade the user need to att
 Below is the sequence diagram of the entire function:
 ![Desired GPA Sequence Diagram](diagrams/DesiredGpaSequence.png)
 
-## Product scope
+---
+## Appendix
 
-### Target user profile
+### Product scope
+
+#### Target user profile
 
 {Describe the target user profile}
 
-### Value proposition
+#### Value proposition
 
 {Describe the value proposition: what problem does it solve?}
 
-## User Stories
+### User Stories
 
-| Version | As a ... | I want to ...             | So that I can ...                                           |
-|---------|----------|---------------------------|-------------------------------------------------------------|
-| v1.0    | new user | see usage instructions    | refer to them when I forget how to use the application      |
-| v2.0    | user     | find a to-do item by name | locate a to-do without having to go through the entire list |
+| Version | As a ...               | I can ...                         | So that I can ...                                |
+|---------|------------------------|-----------------------------------|--------------------------------------------------|
+| v1.0    | Student User           | Add modules                       | add in modules that I have taken or plan to take |
+| v1.0    | Student User           | Remove modules                    | remove wrong inputs                              |
+| v1.0    | Student User           | View modules that I have inputted | track the modules I have added                   |
+| v1.0    | Student User           | Insert module grade               | track my grades                                  |
+| v1.0    | Recurrent Student User | View my GPA                       | keep track of my overall performance             |
+| v1.0    | New Student User       | Add my name                       | personalise my app                               |
+| v2.0    | Recurrent Student User | Input my current semester         | use features related to my current semester      |
+| v2.0    | Recurrent Student User | Store my data                     | personalise my app                               |
+| v2.0    | Student User           | View courses needed to graduate   | personalise my app                               |
+| v2.0    | Recurrent Student User | Check feasibility of desired GPA  | personalise my app                               |
+| v2.0    | New Student User       | View help command                 | personalise my app                               |
 
-## Non-Functional Requirements
+### Use Cases
+
+### Non-Functional Requirements
 
 {Give non-functional requirements}
 
-## Glossary
+### Glossary
 
 * *glossary item* - Definition
 
