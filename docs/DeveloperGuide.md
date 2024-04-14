@@ -66,6 +66,9 @@ private static void runApplication() {
 }
 ```
 
+Below is a **Sequence diagram** that shows this application loop:
+![ArchitectureSequenceDiagram.png](diagrams/ArchitectureSequenceDiagram.png)
+
 #### **Key Points:**
 
 - **Error Handling**: Implements comprehensive error management that logs severe issues and terminates the application loop appropriately.
