@@ -1,12 +1,11 @@
 @startuml
 skinparam participantPadding 20
 
-participant User
-participant ViewGpaCommand
-participant ModuleList
-participant Module
-participant GpaNullException
-participant LOGGER
+participant FAP as User <<Class>>
+participant ViewGpaCommand as ":ViewGpaCommand"
+participant ModuleList as ":ModuleList"
+participant Module as ":Module"
+participant GpaNullException as ":GpaNullException"
 
 User -> ViewGpaCommand: execute(userInput)
 activate ViewGpaCommand
@@ -29,10 +28,6 @@ Loop For each Module
 end
     deactivate Module
     alt Total MC is zero
-        ModuleList -> LOGGER: Log message
-        activate LOGGER
-        LOGGER --> ModuleList: Log message
-        deactivate LOGGER
         ModuleList -> GpaNullException: Throw GpaNullException
         activate GpaNullException
         GpaNullException --> ModuleList: GpaNullException
