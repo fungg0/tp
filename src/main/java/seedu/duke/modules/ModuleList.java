@@ -165,7 +165,7 @@ public class ModuleList {
      * This method determines existence based on direct match or equivalence with any CEG module.
      *
      * @param moduleCode The module code to search for.
-     * @return {@code true} if a module with the given code exists in the CEGModule enum or is equivalent, {@code false} otherwise.
+     * @return {@code true} if a module with the given code exists or equivalent CEGModules, {@code false} otherwise.
      */
     public boolean containsCEGModuleInList(String moduleCode) {
         for (Module takenModule : moduleList) {
@@ -255,7 +255,8 @@ public class ModuleList {
             upperBoundGradeNeeded += 1;
             mockGPA = calculateMockGPA(upperBound, upperBoundGradeNeeded, lowerBound, lowerBoundGradeNeeded);
         }
-        totalModuleCreditsCountedToGPA = moduleCreditsCountedToGPA + (lowerBoundGradeNeeded + upperBoundGradeNeeded) * 4;
+        totalModuleCreditsCountedToGPA = moduleCreditsCountedToGPA +
+                (lowerBoundGradeNeeded + upperBoundGradeNeeded) * 4;
         double acquiredGPA = (currentGPA * moduleCreditsCountedToGPA + mockGPA *
                 (4 * (upperBoundGradeNeeded + lowerBoundGradeNeeded))) / totalModuleCreditsCountedToGPA;
         Ui.printGradeExpectations(this, desiredGPA, acquiredGPA, upperBoundGradeNeeded,

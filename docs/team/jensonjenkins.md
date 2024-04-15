@@ -34,6 +34,7 @@ faster than your traditional GUI app.
       request [#85](https://github.com/AY2324S2-CS2113-W14-3/tp/pull/85)).
     - Thorough JUnit tests for `ViewGraduateCommand` (Pull
       request [#147](https://github.com/AY2324S2-CS2113-W14-3/tp/pull/147/files#diff-87fdfa2f8184225c382d809a9d22c48adff277781c7d5dedc3e71bf811063153)).
+    - Thorough JUnit tests for `RemoveCommand` (Pull request [#66](https://github.com/AY2324S2-CS2113-W14-3/tp/pull/66))
 
 - **Documentation:**
     - User Guide:
