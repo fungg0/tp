@@ -49,3 +49,8 @@ faster than your traditional GUI app.
 - About Us:
   - Updated the table format (Pull request [#191](https://github.com/AY2324S2-CS2113-W14-3/tp/pull/191)).
 
+### Contributions to team-based tasks:
+
+- Actively participate in discussions.
+- Help out with the activities in the tutorials.
+- Replied to issues from PE-D, and assigned the issues to corresponding teammates in charge.
