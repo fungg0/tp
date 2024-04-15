@@ -70,6 +70,12 @@ public class ModuleList {
         }
     }
 
+    /**
+     * Changes the grade of a module.
+     *
+     * @param moduleCode The module code of the module.
+     * @param grade      The new grade for the module.
+     */
     public void changeModuleGrade(String moduleCode, String grade) {
         if (moduleCode == null || moduleCode.trim().isEmpty()) {
             throw new IllegalArgumentException("Module code cannot be null or empty.");
@@ -87,6 +93,11 @@ public class ModuleList {
         }
     }
 
+    /**
+     * Calculates the current GPA based on the grades of taken modules.
+     *
+     * @throws GpaNullException If there are no countable grades taken.
+     */
     public void tallyGPA() throws GpaNullException {
         float totalMC = 0;
         double sumOfGPA = 0;
@@ -108,6 +119,11 @@ public class ModuleList {
         this.currentGPA = sumOfGPA / (double) totalMC;
     }
 
+    /**
+     * Retrieves the current GPA.
+     *
+     * @return The current GPA.
+     */
     public double getCurrentGPA() {
         return this.currentGPA;
     }
@@ -174,6 +190,12 @@ public class ModuleList {
         moduleList.clear();
     }
 
+    /**
+     * Calculates the grades needed to achieve a desired GPA.
+     *
+     * @param desiredGPA The desired GPA.
+     * @throws InvalidGpaException If the desired GPA is not achievable, or if user has inputted more than 160 MCs
+     */
     public void calcGradesExpectations(double desiredGPA) throws InvalidGpaException {
         tallyGPAForCalcGradesExpectations();
         float moduleCreditsTaken = getValidCreditsTaken();
@@ -201,12 +223,19 @@ public class ModuleList {
             upperBoundGradeNeeded += 1;
             mockGPA = calculateMockGPA(upperBound, upperBoundGradeNeeded, lowerBound, lowerBoundGradeNeeded);
         }
+        totalModuleCreditsCountedToGPA = moduleCreditsCountedToGPA + (lowerBoundGradeNeeded+upperBoundGradeNeeded) * 4;
         double acquiredGPA = (currentGPA * moduleCreditsCountedToGPA + mockGPA *
                 (4 * (upperBoundGradeNeeded + lowerBoundGradeNeeded))) / totalModuleCreditsCountedToGPA;
         Ui.printGradeExpectations(this, desiredGPA, acquiredGPA, upperBoundGradeNeeded,
                 upperBound, lowerBoundGradeNeeded, lowerBound, moduleCreditsNotTaken);
     }
 
+    /**
+     * Checks if the sum of module credits taken are more than 160. Throws an exception if yes.
+     *
+     * @return The current sum of module credits taken.
+     * @throws InvalidGpaException If the sum exceeds 160.
+     */
     private float getValidCreditsTaken() throws InvalidGpaException {
         if (getModuleCreditsTaken() >= 160) {
             throw new InvalidGpaException("You have already taken 160 MCs or more");
@@ -214,6 +243,9 @@ public class ModuleList {
         return getModuleCreditsTaken();
     }
 
+    /**
+     * Tally GPA for calculating grade expectations and handles exceptions if no countable grades are present.
+     */
     private void tallyGPAForCalcGradesExpectations() {
         try {
             tallyGPA();
@@ -223,12 +255,28 @@ public class ModuleList {
         }
     }
 
+    /**
+     * Calculates the mock GPA, which represents the GPA only from future modules
+     *
+     * @param upperBound           The upper bound of the future average grade.
+     * @param upperBoundGradeNeeded The number of upper bound grades needed.
+     * @param lowerBound           The lower bound of the future average grade.
+     * @param lowerBoundGradeNeeded The number of lower bound grades needed.
+     * @return The calculated mock GPA.
+     */
     private static double calculateMockGPA(double upperBound, int upperBoundGradeNeeded,
                                            double lowerBound, int lowerBoundGradeNeeded) {
         return (upperBound * upperBoundGradeNeeded + lowerBound * lowerBoundGradeNeeded) /
                 (upperBoundGradeNeeded + lowerBoundGradeNeeded);
     }
 
+    /**
+     * Verify if the future average grade required is between 0 and 5, which means desired grade is attainable.
+     * Else, throw an exception.
+     *
+     * @param requiredFutureAverageGrade The required future average grade.
+     * @throws InvalidGpaException If the required future average grade is out of range.
+     */
     private static void validateFutureAverageGrade(double requiredFutureAverageGrade) throws InvalidGpaException {
         if (requiredFutureAverageGrade > 5) {
             throw new InvalidGpaException("Your current GPA is too low to achieve desired GPA :(");
@@ -238,6 +286,12 @@ public class ModuleList {
         }
     }
 
+    /**
+     * Find the upper bound of the grade based on the required future average grade.
+     *
+     * @param requiredFutureAverageGrade The required future average grade to achieve desired GPA.
+     * @return The upper bound of the future average grade.
+     */
     public double getFutureAverageGradeUpperBound(double requiredFutureAverageGrade) {
         if (requiredFutureAverageGrade > 4.5) {
             return 5.0;
@@ -261,6 +315,12 @@ public class ModuleList {
         return 0;
     }
 
+    /**
+     * Find the lower bound of the grade based on the required future average grade.
+     *
+     * @param requiredFutureAverageGrade The required future average grade to achieve desired GPA.
+     * @return The lower bound of the future average grade.
+     */
     public double getFutureAverageGradeLowerBound(double requiredFutureAverageGrade) {
         if (requiredFutureAverageGrade < 1.0) {
             return 0;
@@ -284,6 +344,12 @@ public class ModuleList {
         return 5;
     }
 
+    /**
+     * Converts a numeric grade to its corresponding letter grade.
+     *
+     * @param grade The numeric grade to convert.
+     * @return The corresponding letter grade.
+     */
     public String numberToGrade(double grade) {
         if (grade == 5.0) {
             return "A";
@@ -309,7 +375,11 @@ public class ModuleList {
         return "non-vaLid number";
     }
 
-
+    /**
+     * Calculates the total credits taken. Only account for modules that are taken and is assigned a grade.
+     *
+     * @return The total credits taken.
+     */
     private float getModuleCreditsTaken() {
         float moduleCreditsTaken = 0;
         for (Module module : moduleList) {
