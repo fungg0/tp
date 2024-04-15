@@ -53,43 +53,21 @@ public class Module {
         return moduleCode;
     }
 
-<<<<<<< HEAD
-    public void setModuleCode(String moduleCode) {
-        if (moduleCode == null || moduleCode.trim().isEmpty()) {
-            throw new IllegalArgumentException("Module code cannot be null or empty.");
-        }
-        this.moduleCode = moduleCode;
-    }
-
     /**
      * Gets the grade of the module.
      *
      * @return The grade of the module.
-=======
-    /**
-     * Calculates the numeric value of the module grade.
-     *
-     * @return The numeric value of the current module grade.
-     * @throws IllegalStateException If the module grade is unassigned or invalid.
->>>>>>> 350ea03a801d02f1112f90febc9e67dd22e5fb75
      */
     public String getModuleGrade() {
         return moduleGrade;
     }
 
     /**
-<<<<<<< HEAD
      * Sets the grade of the module. Throws an exception if moduleGrade is an invalid string, if a Graded mod is
      * assigned with "CS", or if a CS/CU mod is assigned with a letter grade.
      *
-     * @param moduleGrade The grade to set for the module.
-     * @throws ModuleException If the module grade is invalid or does not fit the module.
-=======
-     * Sets the module grade after validating it against a set of allowed values.
-     *
      * @param moduleGrade The new grade to be set.
      * @throws ModuleException If the module is not taken yet or grading basis mismatch occurs.
->>>>>>> 350ea03a801d02f1112f90febc9e67dd22e5fb75
      */
     public void setModuleGrade(String moduleGrade) throws ModuleException {
 
