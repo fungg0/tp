@@ -797,6 +797,7 @@ Computer Engineering (CEG) Student at NUS
 + 2b. ModuleList finds a duplicate module
   + 2b1. ModuleAlreadyExistException is thrown
     
+
   Use case ends
 
 #### Use case: Deleting of a Module
@@ -804,6 +805,7 @@ Computer Engineering (CEG) Student at NUS
 2. ModuleList finds the module in its list
 3. Module is deleted
 4. savefile is updated
+
 
    Use case ends
 #### Extensions
