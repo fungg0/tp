@@ -9,34 +9,39 @@ skinparam rectangle {
 }
 
 rectangle {
-  rectangle main #E1E1E1
+  rectangle FAP as main #E1E1E1
   rectangle ModuleList #ADC2A9
-  rectangle UI #B4A7D6
+  rectangle Ui as UI #B4A7D6
   rectangle Parser #FFD966
   rectangle Command #A2C4C9
   rectangle JsonManager #D5A6BD
   rectangle Storage #8E7CC3
+  rectangle User #F9E79F
 }
 
 file DataFile #LightGrey
 
-actor User
+actor "CEG Student"
 
-User --> main
+"CEG Student" --> main
+main --> User
+User --.> main
 main --> ModuleList
-main --> UI
+main --.> UI
 main --> Parser
-main --> Storage
-main --> JsonManager
+main --.> Storage
+main --.> JsonManager
 
 JsonManager --> Command
 JsonManager --> Storage
 
 Parser --> Command
-Command --> UI
+Command <--.> main
 Command --> Storage
-Storage --.> DataFile
-Storage <.-- DataFile
-Storage --.> ModuleList
+Command --> ModuleList
+ModuleList <--.> UI
+Storage <--.> User
+Storage <.--> DataFile
+Storage <--.> ModuleList
 
 @enduml

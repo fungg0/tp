@@ -1,0 +1,59 @@
+@startuml
+participant "Fap" as Fap <<class>>
+participant "Parser" as Parser <<class>>
+participant "AddCommand" as AddCommand
+participant "AddCommandMetaData" as AddCommandMetaData
+participant "ModuleList" as ModuleList
+participant "JsonManager" as JsonManager
+participant "Module" as Module
+
+activate Fap
+activate ModuleList
+activate JsonManager
+
+Fap -> Parser : getCommand(userInput)
+activate Parser
+
+Parser -> AddCommandMetaData : createCommandInstance(commandArgument)
+activate AddCommandMetaData
+
+
+AddCommandMetaData -> "AddCommand"** : new AddCommand(moduleCode, moduleDate)
+activate AddCommand
+
+AddCommand -> AddCommand : tryAddingModule(moduleCode, moduleDate)
+
+
+AddCommand -> ModuleList : getModule(moduleCode)
+ModuleList -> ModuleList : <<loop>>\nsearch module
+ModuleList --> AddCommand : ModuleNotFoundException
+
+AddCommand -> JsonManager : moduleExist(moduleCode)
+
+JsonManager --> AddCommand : moduleExists=true
+
+AddCommand -> JsonManager : getModuleInfo(moduleCode)
+
+JsonManager --> AddCommand : moduleCode=nameOfAModule
+
+AddCommand -> JsonManager : correctSemester(plannedSem)
+
+JsonManager --> AddCommand : correctSemester=true
+
+AddCommand --> AddCommandMetaData
+AddCommandMetaData --> Parser
+Parser --> Fap
+
+Fap -> AddCommand: execute(userInput)
+
+
+AddCommand -> Module : Module(moduleCode, moduleMC, moduleDate, jsonManager.getModuleTitle(), gradedGradingBasis)
+
+
+Module -> AddCommand : newModule
+AddCommand -> ModuleList : addCommand(newModule)
+ModuleList -> ModuleList : add(newModule)
+ModuleList --> AddCommand
+AddCommand --> Fap
+
+@enduml

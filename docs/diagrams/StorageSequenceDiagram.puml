@@ -1,0 +1,39 @@
+@startuml
+participant FAP as FAP <<Class>>
+participant "Storage" as Storage <<Class>>
+participant ":User" as User
+participant ":ModuleList" as ModuleList
+participant "BufferedWriter" as BW
+database "File" as File
+
+activate FAP
+FAP -> Storage : saveModulesToFile(filePath)
+activate Storage
+
+Storage -> BW : new BufferedWriter(new FileWriter(filePath))
+activate BW
+
+
+Storage -> User : toString()
+activate User
+User --> Storage : user data as string
+deactivate User
+Storage -> BW : write(user data + System.lineSeparator())
+BW -> File : write user data
+
+
+Storage -> ModuleList : getTakenModuleList()
+activate ModuleList
+ModuleList --> Storage : list of Modules
+deactivate ModuleList
+
+loop for each Module
+    Storage -> BW : write(toString(module) + System.lineSeparator())
+    BW -> File : write module data
+end
+
+deactivate BW
+Storage --> FAP : Data saved
+deactivate Storage
+
+@enduml

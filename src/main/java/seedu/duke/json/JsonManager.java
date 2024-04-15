@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * Manages the JSON operations related to module data, such as checking module existence,
+ * and retrieving module information.
+ */
 public class JsonManager {
 
     InputStream inputStream;
@@ -30,6 +34,9 @@ public class JsonManager {
     ArrayList<Integer> moduleSemester;
     boolean gradedGradingBasis = false;
 
+    /**
+     * Initializes JsonManager with module data loaded from a JSON file.
+     */
     public JsonManager() {
 
         this.inputStream = this.getClass().getResourceAsStream("/moduleInfo.json");
@@ -49,14 +56,35 @@ public class JsonManager {
         }
     }
 
+    /**
+     * Checks if a module can be taken in a specified semester.
+     *
+     * @param intendedSem The semester to check.
+     * @return true if the semester is valid for the module, false otherwise.
+     */
     public boolean correctSemester(int intendedSem) {
-        return moduleSemester.contains(intendedSem);
+        try {
+            return moduleSemester.contains(intendedSem);
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
+    /**
+     * Returns whether the module uses a graded grading basis.
+     *
+     * @return true if graded, false otherwise.
+     */
     public boolean getGradedGradingBasis() {
         return gradedGradingBasis;
     }
 
+    /**
+     * Checks if the specified module exists in the JSON data.
+     *
+     * @param moduleCode The code of the module to check.
+     * @return true if the module exists, false otherwise.
+     */
     public boolean moduleExist(String moduleCode) {
         for (JsonObject obj : jsonArray) {
             String name = obj.get("moduleCode").getAsString();
@@ -74,6 +102,11 @@ public class JsonManager {
         return false;
     }
 
+    /**
+     * Retrieves and stores detailed information about a module from JSON.
+     *
+     * @param moduleCode The code of the module for which information is retrieved.
+     */
     public void getModuleInfo(String moduleCode) {
         for (JsonObject obj : jsonArray) {
             String name = obj.get("moduleCode").getAsString();
@@ -96,6 +129,12 @@ public class JsonManager {
         }
     }
 
+    /**
+     * Queries and returns detailed information about a module.
+     *
+     * @param moduleCode The module code to query.
+     * @return A map of module attributes like title and credits.
+     */
     public Map<String, String> queryModuleInfo(String moduleCode) {
         Map<String, String> moduleInfo = new HashMap<>();
         for (JsonObject obj : jsonArray) {

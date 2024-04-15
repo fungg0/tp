@@ -2,6 +2,9 @@ package seedu.duke.modules;
 
 import seedu.duke.exceptions.ModuleException;
 
+/**
+ * Represents a university module with attributes such as module code, grade, credit points, and semester details.
+ */
 public class Module {
     private String moduleCode;
     private String moduleGrade;
@@ -12,6 +15,15 @@ public class Module {
 
     private String moduleDescription;
 
+    /**
+     * Constructs a Module with specified attributes.
+     *
+     * @param moduleCode The code identifying the module.
+     * @param moduleMC Modular credits of the module.
+     * @param moduleDate The semester date the module is associated with.
+     * @param moduleDescription A description of the module.
+     * @param gradedGradingBasis Indicates if the module uses a graded grading basis.
+     */
     public Module(String moduleCode, float moduleMC, int moduleDate, String moduleDescription,
                   boolean gradedGradingBasis) {
         this.moduleCode = moduleCode;
@@ -23,25 +35,40 @@ public class Module {
         this.gradedGradingBasis = gradedGradingBasis;
     }
 
+    /**
+     * Retrieves the module description.
+     *
+     * @return A string representing the description of the module.
+     */
     public String getModuleDescription() {
         return moduleDescription;
     }
 
+    /**
+     * Retrieves the module code.
+     *
+     * @return A string representing the module code.
+     */
     public String getModuleCode() {
         return moduleCode;
     }
 
-    public void setModuleCode(String moduleCode) {
-        if (moduleCode == null || moduleCode.trim().isEmpty()) {
-            throw new IllegalArgumentException("Module code cannot be null or empty.");
-        }
-        this.moduleCode = moduleCode;
-    }
-
+    /**
+     * Gets the grade of the module.
+     *
+     * @return The grade of the module.
+     */
     public String getModuleGrade() {
         return moduleGrade;
     }
 
+    /**
+     * Sets the grade of the module. Throws an exception if moduleGrade is an invalid string, if a Graded mod is
+     * assigned with "CS", or if a CS/CU mod is assigned with a letter grade.
+     *
+     * @param moduleGrade The new grade to be set.
+     * @throws ModuleException If the module is not taken yet or grading basis mismatch occurs.
+     */
     public void setModuleGrade(String moduleGrade) throws ModuleException {
 
         if (moduleGrade == null || !moduleGrade.matches("[AB][+-]?|[CD][+]?|F|CS|S")) {
@@ -67,13 +94,6 @@ public class Module {
         return moduleMC;
     }
 
-    public void setModuleMC(int moduleMC) {
-        if (moduleMC <= 0) {
-            throw new IllegalArgumentException("Module MC (Modular Credits) must be positive.");
-        }
-        this.moduleMC = moduleMC;
-    }
-
     public boolean getModuleStatus() {
         return moduleTaken;
     }
@@ -82,17 +102,21 @@ public class Module {
         this.moduleTaken = moduleTaken;
     }
 
+    /**
+     * Retrieves the semester date for the module.
+     *
+     * @return An integer representing the semester date.
+     */
     public int getModuleDate() {
         return moduleDate;
     }
 
-    public void setModuleDate(int moduleDate) {
-        if (moduleDate <= 0) {
-            throw new IllegalArgumentException("Module date must be a positive number.");
-        }
-        this.moduleDate = moduleDate;
-    }
-
+    /**
+     * Returns the numerical value of the grade based on the module grade.
+     *
+     * @return The numerical value of the grade.
+     * @throws IllegalStateException If the module grade is invalid or unassigned.
+     */
     public double getGradeNumber () {
         switch (moduleGrade) {
         case "A+":
@@ -122,10 +146,20 @@ public class Module {
         }
     }
 
+    /**
+     * Checks if the module has been assigned a grade, which is no if module grade is null.
+     *
+     * @return true if the module grade is null, false otherwise.
+     */
     public boolean gradeIsNull() {
         return moduleGrade == null;
     }
 
+    /**
+     * Converts the state of this module to a string format.
+     *
+     * @return A string representation of this module.
+     */
     @Override
     public String toString() {
         return "Module{" +
@@ -133,9 +167,5 @@ public class Module {
                 ", moduleGrade='" + moduleGrade + '\'' +
                 ", moduleMC='" + moduleMC + '\'' +
                 '}';
-    }
-
-    public boolean isGradedGradingBasis() {
-        return gradedGradingBasis;
     }
 }

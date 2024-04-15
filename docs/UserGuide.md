@@ -49,12 +49,12 @@ faster than your traditional GUI app.
 
 ## Features
 
-> [!IMPORTANT]  
-> All arguments **must be provided** and **must follow the specified order** in Format
->
-> Words in `UPPER_CASE` are the parameters to be **supplied by the user**
->
-> - Eg. For the command `remove c/COURSE_CODE`, `COURSE_CODE` is a parameter which can be used as `remove c/CS2113`
+**IMPORTANT:**
+All arguments **must be provided** and **must follow the specified order** in Format
+
+Words in `UPPER_CASE` are the parameters to be **supplied by the user**
+
+- Eg. For the command `remove c/COURSE_CODE`, `COURSE_CODE` is a parameter which can be used as `remove c/CS2113`
 
 ## User Management
 
@@ -99,9 +99,7 @@ Format: `add c/COURSE_CODE w/WHEN`
 - `WHEN` must be a valid semester from 1-8
 - The module must not already be in the list
 - The module must be a valid module from NUS mods from AY23-24
-- The module must not be a duplicate of another module in the list
 - The module must not be a core module that has already been completed
-- The module must not be a core module that has already been added to the list
 
 Example usage:
 
@@ -269,6 +267,8 @@ Format: `grade c/COURSE_CODE g/GRADE`
 `GRADE` represents the grade you attained for that module
 
 - The module should be added into the list first with the add module function
+- CS/CU modules can only have their grades be set to CS
+- Currently unable to account for modules that are under GRADED grading basis but cannot be S/U
 - `GRADE` only accepts alphabetical grade. Following are the allowed inputs for `GRADE`
     - `A+, A, A-, B+, B, B-, C+, C, D+, D, F, CS, S`
     - For U, CU, W, IP grade, user can simply remove the module from the list 
@@ -399,7 +399,11 @@ Bye. Enjoy your studies!
 
 **Q**: What if I S\U the mod, and the mod in the list originally has a grade?
 
-**A**: You can use the command `grade c/COURSE_CODE g/GRADE, then in the GRADE section put CS.
+**A**: You can use the command `grade c/COURSE_CODE g/GRADE, then in the GRADE section put S.
+
+**Q**: How can I change the current semester I am currently in?
+
+**A**: You can type the set command again to indicate the current semester you are in.
 
 ## Command Summary
 
