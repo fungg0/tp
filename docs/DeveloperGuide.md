@@ -835,8 +835,8 @@ command will be explicitly stated. All provided test cases are assumed to be exe
     - [Modules to Graduate](#modules-to-graduate)
 - [Set Grade](#set-grade)
 - [GPA](#gpa)
-- [Desired GPA](#desired-gpa)
-- [Storage](#storage)
+- [Desired GPA](#check-desired-gpa)
+- [Storage](#test-storage)
 
 ---
 
@@ -1125,7 +1125,7 @@ command will be explicitly stated. All provided test cases are assumed to be exe
 
 ---
 
-### Desired GPA
+### Check Desired GPA
 
 1. Test Case: `desiredgpa 4.75`
 
@@ -1149,7 +1149,7 @@ command will be explicitly stated. All provided test cases are assumed to be exe
 
 ---
 
-### Storage
+### Test Storage
 
 1. Use `java -jar FAP.jar` to run the application
 2. Test Case: (The following test case requires multiple lines of inputs)
