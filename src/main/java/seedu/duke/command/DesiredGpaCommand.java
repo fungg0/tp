@@ -2,7 +2,9 @@ package seedu.duke.command;
 import seedu.duke.exceptions.InvalidGpaException;
 import seedu.duke.parser.GradeCommandMetadata;
 
-
+/**
+ * Represents the command to check for feasibility of desired GPA.
+ */
 public class DesiredGpaCommand extends Command{
     public final float desiredGPA;
 

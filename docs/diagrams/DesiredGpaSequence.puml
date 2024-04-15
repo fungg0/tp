@@ -1,0 +1,33 @@
+@startuml
+
+participant FAP <<Class>>
+participant DesiredGpaCommand as ":DesiredGpaCommand"
+participant moduleList as ":ModuleList"
+participant GradeCommandMetadata as ":GradeCommandMetadata"
+participant Ui as ":Ui"
+
+FAP -> DesiredGpaCommand: execute(userInput)
+activate DesiredGpaCommand
+DesiredGpaCommand -> GradeCommandMetadata: validateGPA(desiredGPA)
+activate GradeCommandMetadata
+GradeCommandMetadata --> DesiredGpaCommand
+deactivate GradeCommandMetadata
+
+
+DesiredGpaCommand -> moduleList: calcGradesExpectations(desiredGPA)
+activate moduleList
+moduleList -> moduleList: tallyGPAForCalcGradesExpectations()
+moduleList -> moduleList: getValidCreditsTaken()
+moduleList -> moduleList: calculate future average grade
+moduleList -> moduleList: validateFutureAverageGrade()
+alt
+moduleList -> moduleList: calculateMockGPA()
+moduleList -> Ui: printGradeExpectations()
+Ui --> moduleList
+moduleList --> DesiredGpaCommand
+deactivate moduleList
+DesiredGpaCommand --> FAP
+
+deactivate DesiredGpaCommand
+
+@enduml
