@@ -49,12 +49,12 @@ faster than your traditional GUI app.
 
 ## Features
 
-> [!IMPORTANT]  
-> All arguments **must be provided** and **must follow the specified order** in Format
->
-> Words in `UPPER_CASE` are the parameters to be **supplied by the user**
->
-> - Eg. For the command `remove c/COURSE_CODE`, `COURSE_CODE` is a parameter which can be used as `remove c/CS2113`
+**IMPORTANT:**
+All arguments **must be provided** and **must follow the specified order** in Format
+
+Words in `UPPER_CASE` are the parameters to be **supplied by the user**
+
+- Eg. For the command `remove c/COURSE_CODE`, `COURSE_CODE` is a parameter which can be used as `remove c/CS2113`
 
 ## User Management
 
@@ -99,9 +99,7 @@ Format: `add c/COURSE_CODE w/WHEN`
 - `WHEN` must be a valid semester from 1-8
 - The module must not already be in the list
 - The module must be a valid module from NUS mods from AY23-24
-- The module must not be a duplicate of another module in the list
 - The module must not be a core module that has already been completed
-- The module must not be a core module that has already been added to the list
 
 Example usage:
 
