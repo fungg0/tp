@@ -16,6 +16,9 @@ import java.util.logging.Level;
 
 import static seedu.duke.FAP.LOGGER;
 
+/**
+ * Manages a list of modules for a student. Allows for addition, removal, and querying of modules.
+ */
 public class ModuleList {
     private static final float DEFAULT_MC_REQUIRED = 160;
 
@@ -24,10 +27,20 @@ public class ModuleList {
     private double currentGPA;
     private float moduleCreditsCountedToGPA;
 
+    /**
+     * Constructs an empty list of modules.
+     */
     public ModuleList() {
         this.moduleList = new ArrayList<Module>();
     }
 
+    /**
+     * Retrieves a module by its course code.
+     *
+     * @param courseCode The course code of the module to be retrieved.
+     * @return The module with the specified course code.
+     * @throws ModuleNotFoundException If the module is not found.
+     */
     public Module getModule(String courseCode) throws ModuleNotFoundException {
         if (courseCode == null || courseCode.trim().isEmpty()) {
             throw new IllegalArgumentException("Course code cannot be null or empty.");
@@ -46,6 +59,12 @@ public class ModuleList {
         return moduleList;
     }
 
+    /**
+     * Adds a new module to the list after validation.
+     *
+     * @param module The module to be added.
+     * @throws IllegalArgumentException If the module is null.
+     */
     public void addModule(Module module) {
         if (module == null) {
             throw new IllegalArgumentException("Module cannot be null.");
