@@ -812,11 +812,10 @@ Below is the sequence diagram of the entire function:
 ### Non-Functional Requirements
 
 1. Should work on any mainstream OS as long as it has Java 11 or above installed.
-2. Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
-3. A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
-4. User must be a major of computer engineering
-5. User must be aware of what the prerequisites of the modules they are adding as the program do not check it for you
-6. If the user failed a mod, the user is not allowed to retake the module and add it into the program
+2. A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+3. User must be a major of computer engineering
+4. User must be aware of what the prerequisites of the modules they are adding as the program do not check it for you
+5. If the user failed a mod, the user is not allowed to retake the module and add it into the program
 
 ### Glossary
 
