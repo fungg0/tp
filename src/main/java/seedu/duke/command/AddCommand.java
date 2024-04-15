@@ -11,6 +11,10 @@ import java.util.logging.Level;
 import static seedu.duke.FAP.LOGGER;
 import static seedu.duke.FAP.jsonManager;
 
+/**
+ * Represents an add command that adds a module into the system.
+ * This command handles checking for duplicate modules, validating the semester, and updating system data.
+ */
 public class AddCommand extends Command {
 
     private String moduleCode;
@@ -19,6 +23,13 @@ public class AddCommand extends Command {
     private float moduleMC;
     private boolean gradedGradingBasis = false;
 
+    /**
+     * Constructs an AddCommand to add a specified module on a given date.
+     *
+     * @param moduleCode The code of the module to be added.
+     * @param moduleDate The semester date when the module is to be added.
+     * @throws AssertionError if module code is null or empty, or module date is not positive.
+     */
     public AddCommand(String moduleCode, int moduleDate) {
         assert moduleCode != null && !moduleCode.trim().isEmpty() : "Module code cannot be null or empty";
         assert moduleDate > 0 : "Module date must be a positive number";
@@ -34,6 +45,14 @@ public class AddCommand extends Command {
         }
     }
 
+    /**
+     * Tries to add a module to the list by checking for duplicates and validating the semester.
+     *
+     * @param moduleCode The code of the module to be added.
+     * @param moduleDate The semester date when the module is to be added.
+     * @throws ModuleNotFoundException if the module does not exist.
+     * @throws WrongSemesterException if the module cannot be taken in the specified semester.
+     */
     private void tryAddingModule(String moduleCode, int moduleDate) throws ModuleNotFoundException,
             WrongSemesterException {
         // try getting a module to see if it already exists, if it does then throw the exception
@@ -70,6 +89,11 @@ public class AddCommand extends Command {
         }
     }
 
+    /**
+     * Executes the add module command using the user input.
+     *
+     * @param userInput The input provided by the user.
+     */
     @Override
     public void execute(String userInput) {
         if (this.moduleCode == null) {
