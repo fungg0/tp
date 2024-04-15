@@ -45,6 +45,7 @@ loop over metadataList
 
         Parser --> FAP: invalid command (loop end)
     end
+    deactivate Parser
 end
 @enduml
 
