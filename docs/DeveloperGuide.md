@@ -32,6 +32,8 @@
     - [Glossary](#glossary)
 - [Appendix: Instructions for manual testing](#instructions-for-manual-testing)
 
+<div style="page-break-after: always;"></div>
+
 ## Acknowledgements
 
 ---
@@ -103,6 +105,8 @@ its design focused on modularity, maintainability, and extensibility.
 The `runApplication` method encapsulates the application's runtime loop, processing user commands until an
 exit condition is met (either through an error or the 'bye' command). This method highlights the application of
 polymorphism (via the `Command` class) and encapsulation, detailing interactions with other components.
+
+<div style="page-break-after: always;"></div>
 
 ```java
 private static void runApplication() {
