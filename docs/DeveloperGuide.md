@@ -68,6 +68,8 @@ information & module credits, which are crucial for planning academic modules ef
   available, which significantly enhances the functionality of academic applications like ours by providing reliable and
   up-to-date academic information.
 
+<div style="page-break-after: always;"></div>
+
 ## Design
 
 ---
